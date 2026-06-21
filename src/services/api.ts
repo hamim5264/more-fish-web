@@ -598,8 +598,17 @@ export const api = {
         asset_id: Number(assetId),
         feed_weight_kg: feedWeightKg,
         weight_gained_kg: weightGainedKg,
-        notes: notes || '',
+        notes: notes || 'FCR Record',
       }),
+    });
+    return parseResponse(res);
+  },
+
+  async getFcrHistory(assetId: number | string, flow: AquacultureFlow = 'fish') {
+    const token = getAquacultureToken(flow);
+    const res = await fetch(`${BASE_URL}/devices/fcr/history/?asset_id=${Number(assetId)}`, {
+      method: 'GET',
+      headers: getHeaders(token),
     });
     return parseResponse(res);
   },
