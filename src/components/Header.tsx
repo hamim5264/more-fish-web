@@ -267,34 +267,34 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
   const languageLabel = lang === 'en' ? 'বাংলা' : 'Eng';
 
   return (
-    <header className="relative min-h-28 shrink-0 overflow-hidden border-b border-black/5 bg-linear-to-r from-[#d4fcfd] via-[#e8feff] to-[#c9f7fb] px-4 py-3 shadow-sm md:px-6">
-      <div className="pointer-events-none absolute -left-12 -top-20 h-40 w-40 rounded-full bg-cyan-300/20 blur-3xl" />
-      <div className="pointer-events-none absolute -right-8 -top-16 h-44 w-44 rounded-full bg-blue-300/20 blur-3xl" />
-      <div className="relative flex h-full flex-wrap items-center justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-3">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-white/80 bg-white/70 p-1.5 shadow-md shadow-cyan-900/10">
+    <header className="relative min-h-32 shrink-0 overflow-hidden border-b border-[#0ea5e9]/20 bg-linear-to-r from-[#ccfbf1]/65 via-[#e0f2fe]/75 to-[#bae6fd]/65 px-6 py-4 shadow-md backdrop-blur-md">
+      <div className="pointer-events-none absolute -left-12 -top-20 h-48 w-48 rounded-full bg-cyan-300/30 blur-3xl" />
+      <div className="pointer-events-none absolute -right-8 -top-16 h-52 w-52 rounded-full bg-blue-300/30 blur-3xl" />
+      <div className="relative flex h-full flex-wrap items-center justify-between gap-5">
+        <div className="flex min-w-0 items-center gap-4">
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl border-2 border-white bg-white/90 p-2 shadow-lg shadow-cyan-900/10">
             <img src={headerLogo} alt={isPharma ? 'Pharma Care' : 'MoreFish'} className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0">
-            <h1 className="truncate text-base font-black text-font-dark md:text-lg">{title}</h1>
-            <div className="mt-0.5 flex flex-wrap gap-x-3 text-xs font-semibold text-font-light">
-              <span>{date}</span>
-              <span className="font-bold text-font-dark">{clock}</span>
+            <h1 className="truncate text-xl font-black text-font-dark md:text-2xl tracking-wide">{title}</h1>
+            <div className="mt-2 flex flex-wrap items-center gap-x-4 text-base md:text-lg font-black text-font-light">
+              <span className="bg-white/60 border border-cyan-100/50 px-3.5 py-1 rounded-xl shadow-2xs text-base md:text-[17px] font-black">{date}</span>
+              <span className="font-black text-primary">{clock}</span>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4 relative z-20">
           {/* Notification functional icon */}
           <button
             type="button"
             onClick={() => onNavigate?.('notifications')}
-            className="relative flex items-center justify-center rounded-xl border border-cyan-200 bg-white/80 p-2.5 text-primary shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-md cursor-pointer"
+            className="relative flex h-12 w-12 items-center justify-center rounded-2xl border-2 border-cyan-200/60 bg-white/95 text-primary shadow-md transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:border-cyan-300 hover:shadow-lg cursor-pointer"
             title="Notifications"
           >
-            <Bell className="h-4 w-4" />
+            <Bell className="h-6 w-6" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[8px] font-black text-white">
+              <span className="absolute -top-1.5 -right-1.5 flex h-6 w-6 items-center justify-center rounded-full bg-red-500 text-[10px] font-black text-white border-2 border-white shadow-sm">
                 {unreadCount > 99 ? '99+' : unreadCount}
               </span>
             )}
@@ -302,55 +302,60 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
 
           <button
             type="button"
-            onClick={() => setLang(lang === 'en' ? 'bn' : 'en')}
-            className="flex items-center gap-2 rounded-xl border border-cyan-200 bg-white/80 px-3 py-2 text-xs font-bold text-primary shadow-sm transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:shadow-md cursor-pointer"
+            onClick={() => {
+              console.log('[MoreFish Header] Language toggle clicked. Old:', lang);
+              const target = lang === 'en' ? 'bn' : 'en';
+              setLang(target);
+              console.log('[MoreFish Header] Language toggle clicked. New:', target);
+            }}
+            className="flex h-12 items-center gap-2.5 rounded-2xl border-2 border-cyan-200/60 bg-white/95 px-4.5 text-[14px] font-black text-primary shadow-md transition duration-300 hover:-translate-y-0.5 hover:bg-white hover:border-cyan-300 hover:shadow-lg cursor-pointer relative z-30 pointer-events-auto"
           >
-            <Languages className="h-4 w-4" />
-            {languageLabel}
+            <Languages className="h-5 w-5" />
+            <span>{languageLabel}</span>
           </button>
         </div>
 
         <div className="ml-auto min-w-0 text-right">
           {weatherLoading ? (
-            <div className="flex min-h-20 min-w-52 items-center justify-center rounded-2xl border border-white/80 bg-white/55 px-5 shadow-sm">
-              <RefreshCw className="h-5 w-5 animate-spin text-cyan-600" />
+            <div className="flex min-h-24 min-w-64 items-center justify-center rounded-2xl border-2 border-white/80 bg-white/55 px-6 shadow-md">
+              <RefreshCw className="h-6 w-6 animate-spin text-cyan-600" />
             </div>
           ) : weather ? (
-            <div className="weather-card group flex min-w-0 items-center gap-3 rounded-2xl border border-white/90 bg-white/65 p-2.5 shadow-lg shadow-cyan-900/10 backdrop-blur-xl sm:min-w-110">
-              <div className="weather-float hidden h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-amber-100 to-cyan-100 shadow-inner sm:flex">
-                <div className="scale-125">{getWeatherIcon()}</div>
+            <div className="weather-card group flex min-w-0 items-center gap-4 rounded-2xl border-2 border-white bg-white/80 p-3 shadow-xl shadow-cyan-900/10 backdrop-blur-xl sm:min-w-120">
+              <div className="weather-float hidden h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-linear-to-br from-amber-100 to-cyan-100 shadow-inner border border-white sm:flex">
+                <div className="scale-135">{getWeatherIcon()}</div>
               </div>
               <div className="min-w-0 flex-1">
-                <div className="flex items-center justify-between gap-3">
-                  <p className="truncate text-[11px] font-bold capitalize text-font-light">{translateDescription(weather.description)}</p>
-                  <div className="flex items-center justify-end gap-1 text-sm font-black text-font-dark">
-                    <span className="relative flex h-5 w-5 items-center justify-center">
-                      <span className="weather-location-pulse absolute h-4 w-4 rounded-full bg-emerald-400/30" />
-                      <MapPin className="relative h-4 w-4 shrink-0 text-[#00a651]" />
+                <div className="flex items-center justify-between gap-3 border-b border-gray-100 pb-1.5 mb-1.5">
+                  <p className="truncate text-xs font-black capitalize text-font-light">{translateDescription(weather.description)}</p>
+                  <div className="flex items-center justify-end gap-1 text-[15px] font-black text-font-dark">
+                    <span className="relative flex h-6 w-6 items-center justify-center">
+                      <span className="weather-location-pulse absolute h-5 w-5 rounded-full bg-emerald-400/40" />
+                      <MapPin className="relative h-5 w-5 shrink-0 text-[#00a651]" />
                     </span>
                     <span className="truncate">{translateLocation(weather.location)}</span>
                   </div>
                 </div>
-                <div className="mt-2 grid grid-cols-2 gap-1.5 text-left text-[11px] sm:grid-cols-3">
-                  <div className="rounded-xl border border-cyan-100 bg-white/75 px-2.5 py-1.5 transition group-hover:border-cyan-200">
-                    <span className="block text-[9px] font-bold uppercase tracking-wide text-font-light">{airTempLabel}</span>
-                    <strong className="text-sm text-font-dark">{weather.temperature?.toFixed(2) ?? '--'}°C</strong>
+                <div className="grid grid-cols-2 gap-2 text-left text-xs sm:grid-cols-3">
+                  <div className="rounded-xl border border-cyan-100 bg-white/90 px-3 py-1.5 transition group-hover:border-cyan-200">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-font-light">{airTempLabel}</span>
+                    <strong className="text-base text-font-dark">{weather.temperature?.toFixed(1) ?? '--'}°C</strong>
                   </div>
-                  <div className="rounded-xl border border-blue-100 bg-white/75 px-2.5 py-1.5 transition group-hover:border-blue-200">
-                    <span className="block text-[9px] font-bold uppercase tracking-wide text-font-light">{humidityLabel}</span>
-                    <strong className="text-sm text-font-dark">{weather.humidity?.toFixed(2) ?? '--'}%</strong>
+                  <div className="rounded-xl border border-blue-100 bg-white/90 px-3 py-1.5 transition group-hover:border-blue-200">
+                    <span className="block text-[10px] font-bold uppercase tracking-wider text-font-light">{humidityLabel}</span>
+                    <strong className="text-base text-font-dark">{weather.humidity?.toFixed(0) ?? '--'}%</strong>
                   </div>
                   {weather.source === 'dashboard' && weather.sunlight && (
-                    <div className="col-span-2 rounded-xl border border-orange-100 bg-orange-50/80 px-2.5 py-1.5 sm:col-span-1">
-                      <span className="block text-[9px] font-bold uppercase tracking-wide text-orange-600/70">{sunlightLabel}</span>
-                      <strong className="text-sm capitalize text-orange-500">{lang === 'bn' ? t(weather.sunlight.toLowerCase()) : weather.sunlight}</strong>
+                    <div className="col-span-2 rounded-xl border border-orange-100 bg-orange-50/90 px-3 py-1.5 sm:col-span-1">
+                      <span className="block text-[10px] font-bold uppercase tracking-wider text-orange-600/70">{sunlightLabel}</span>
+                      <strong className="text-base capitalize text-orange-600">{lang === 'bn' ? t(weather.sunlight.toLowerCase()) : weather.sunlight}</strong>
                     </div>
                   )}
                 </div>
               </div>
             </div>
           ) : (
-            <span className="text-xs font-bold text-red-500">Weather unavailable</span>
+            <span className="text-sm font-black text-red-500">Weather unavailable</span>
           )}
         </div>
       </div>

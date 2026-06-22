@@ -62,12 +62,12 @@ export const LiveConsultancy: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-cyan-50 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
-            <Video className="w-5 h-5" />
+          <div className="p-2.5 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
+            <Video className="w-6 h-6" />
           </div>
           <div>
-            <h4 className="font-bold text-font-dark">{t('live_consultancy')}</h4>
-            <p className="text-[10px] font-bold text-font-light uppercase">Expert Consultations & Hotline Support</p>
+            <h4 className="font-black text-2xl text-font-dark">{t('live_consultancy')}</h4>
+            <p className="text-[11px] font-black text-font-light uppercase">Expert Consultations & Hotline Support</p>
           </div>
         </div>
       </div>
@@ -75,22 +75,22 @@ export const LiveConsultancy: React.FC = () => {
       {/* Main Support Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Phone Call Card */}
-        <div className="bg-linear-to-br from-cyan-500 to-blue-600 rounded-3xl p-6 text-white shadow-md flex flex-col justify-between h-56 transition-transform hover:scale-[1.01]">
+        <div className="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-3xl p-6 text-white shadow-md flex flex-col justify-between h-56 transition-transform hover:scale-[1.01]">
           <div className="space-y-2">
-            <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center border border-white/10">
-              <Phone className="w-6 h-6 text-white" />
+            <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center border border-white/10 shadow-xs">
+              <Phone className="w-7 h-7 text-white" />
             </div>
-            <h3 className="font-black text-xl">24/7 Technical Support Hotline</h3>
-            <p className="text-white/80 text-xs font-semibold">
+            <h3 className="font-black text-2xl">24/7 Technical Support Hotline</h3>
+            <p className="text-white/90 text-sm font-bold">
               Get immediate solutions to your farm equipment, sensor queries, and urgent pond emergencies.
             </p>
           </div>
 
           <div className="flex items-center justify-between mt-4">
-            <span className="font-mono font-black text-base">+880 1898-938355</span>
+            <span className="font-mono font-black text-lg">+880 1898-938355</span>
             <button
               onClick={handleCall}
-              className="px-6 py-2.5 bg-white text-blue-600 font-bold text-xs rounded-xl shadow-md hover:bg-cyan-50 transition-colors cursor-pointer"
+              className="px-6 py-3 bg-white text-blue-600 font-black text-sm rounded-xl shadow-md hover:bg-cyan-50 transition-colors cursor-pointer"
             >
               {t('call_now')}
             </button>
@@ -98,22 +98,22 @@ export const LiveConsultancy: React.FC = () => {
         </div>
 
         {/* WhatsApp Chat Card */}
-        <div className="bg-linear-to-br from-emerald-500 to-teal-600 rounded-3xl p-6 text-white shadow-md flex flex-col justify-between h-56 transition-transform hover:scale-[1.01]">
+        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-6 text-white shadow-md flex flex-col justify-between h-56 transition-transform hover:scale-[1.01]">
           <div className="space-y-2">
-            <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center border border-white/10">
-              <MessageSquare className="w-6 h-6 text-white" />
+            <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center border border-white/10 shadow-xs">
+              <MessageSquare className="w-7 h-7 text-white" />
             </div>
-            <h3 className="font-black text-xl">Chat with Expert Vet</h3>
-            <p className="text-white/80 text-xs font-semibold">
+            <h3 className="font-black text-2xl">Chat with Expert Vet</h3>
+            <p className="text-white/90 text-sm font-bold">
               Share images of infected fish, water test kit colors, and receive instant diagnostic support.
             </p>
           </div>
 
           <div className="flex items-center justify-between mt-4">
-            <span className="font-mono font-black text-base">WhatsApp Available</span>
+            <span className="font-mono font-black text-lg">WhatsApp Available</span>
             <button
               onClick={handleWhatsApp}
-              className="px-6 py-2.5 bg-white text-emerald-600 font-bold text-xs rounded-xl shadow-md hover:bg-emerald-50 transition-colors cursor-pointer"
+              className="px-6 py-3 bg-white text-emerald-600 font-black text-sm rounded-xl shadow-md hover:bg-emerald-50 transition-colors cursor-pointer"
             >
               {t('chat_expert')}
             </button>
@@ -122,18 +122,18 @@ export const LiveConsultancy: React.FC = () => {
       </div>
 
       {/* Expert Panel Info */}
-      <div className="bg-white border border-cyan-100/40 rounded-3xl p-6 shadow-sm space-y-6">
-        <div className="flex items-center justify-between border-b border-cyan-50 pb-3">
+      <div className="bg-gradient-to-br from-indigo-50 to-purple-100/40 border border-indigo-200 rounded-3xl p-6 shadow-md space-y-6">
+        <div className="flex items-center justify-between border-b border-indigo-100 pb-3">
           <div className="flex items-center gap-2">
-            <UserCheck className="w-5 h-5 text-primary" />
-            <h4 className="font-extrabold text-sm text-font-dark">{t('expert_panel')}</h4>
+            <UserCheck className="w-6 h-6 text-primary" />
+            <h4 className="font-black text-lg text-font-dark">{t('expert_panel')}</h4>
           </div>
-          <span className="text-[10px] font-black bg-cyan-50 text-primary border border-cyan-100 px-2.5 py-0.5 rounded-full uppercase">
+          <span className="text-[10px] font-black bg-white text-primary border border-indigo-200 px-3 py-1 rounded-full uppercase shadow-xs">
             Premium Panel
           </span>
         </div>
 
-        <p className="text-xs text-font-light font-semibold leading-relaxed">
+        <p className="text-sm text-font-dark font-black leading-relaxed bg-white p-4 rounded-2xl border border-indigo-100 shadow-xs">
           Our panel of certified fishery experts, biologists, and veterinary doctors provide one-on-one video consultations for premium club members. Ensure your water test data is synced before booking.
         </p>
 
@@ -141,36 +141,36 @@ export const LiveConsultancy: React.FC = () => {
           {experts.map((exp, idx) => (
             <div
               key={idx}
-              className="border border-cyan-100/30 rounded-2xl p-5 bg-cyan-50/10 space-y-4 hover:shadow-xs transition-shadow"
+              className="border border-indigo-200 rounded-2xl p-5 bg-white space-y-4 shadow-xs hover:shadow-md transition-shadow"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-linear-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white font-extrabold text-sm shadow-sm uppercase">
+                <div className="w-12 h-12 rounded-full bg-linear-to-tr from-cyan-400 to-blue-500 flex items-center justify-center text-white font-black text-base shadow-sm uppercase">
                   {exp.name.split(' ').pop()?.slice(0, 2) || 'EX'}
                 </div>
                 <div>
-                  <h5 className="font-extrabold text-xs text-font-dark">
+                  <h5 className="font-black text-sm text-font-dark">
                     {lang === 'bn' ? exp.nameBn : exp.name}
                   </h5>
-                  <p className="text-[10px] text-font-light font-bold">
+                  <p className="text-[11px] text-font-light font-bold">
                     {lang === 'bn' ? exp.titleBn : exp.title}
                   </p>
                 </div>
               </div>
 
-              <div className="border-t border-cyan-100/30 pt-3 space-y-2 text-[10px]">
-                <div className="flex items-center gap-1.5 font-semibold text-font-dark">
-                  <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
+              <div className="border-t border-indigo-100 pt-3 space-y-2 text-[11px]">
+                <div className="flex items-center gap-1.5 font-bold text-font-dark">
+                  <ShieldCheck className="w-4 h-4 text-primary shrink-0" />
                   <span>{lang === 'bn' ? exp.specialtyBn : exp.specialty}</span>
                 </div>
-                <div className="flex items-center gap-1.5 text-font-light font-semibold">
-                  <Clock className="w-3.5 h-3.5 text-cyan-500 shrink-0" />
+                <div className="flex items-center gap-1.5 text-font-light font-bold">
+                  <Clock className="w-4 h-4 text-cyan-500 shrink-0" />
                   <span>{lang === 'bn' ? exp.availabilityBn : exp.availability}</span>
                 </div>
               </div>
 
               <button
                 onClick={() => alert('Video consultations require a Smart Khamari Premium Club Membership.')}
-                className="w-full py-2 bg-white hover:bg-cyan-50/50 border border-cyan-100 text-primary text-[10px] font-extrabold rounded-lg transition-colors cursor-pointer"
+                className="w-full py-2.5 bg-primary hover:bg-primary-hover text-white text-xs font-black rounded-lg transition-colors cursor-pointer shadow-xs border border-primary"
               >
                 {t('premium_consultation')}
               </button>

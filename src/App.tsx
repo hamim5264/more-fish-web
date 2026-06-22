@@ -240,7 +240,7 @@ function AppInner() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden" style={{ backgroundColor: 'var(--color-bg-light)' }}>
+    <div className="flex h-screen w-screen overflow-hidden bg-transparent">
       <Sidebar
         activeEcosystem={activeEcosystem}
         setActiveEcosystem={setActiveEcosystem}

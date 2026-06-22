@@ -136,12 +136,12 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-cyan-50 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
-            <Radio className="w-5 h-5" />
+          <div className="p-2.5 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
+            <Radio className="w-6 h-6" />
           </div>
           <div>
-            <h4 className="font-bold text-font-dark">{t('auto_feeder_connection')}</h4>
-            <p className="text-[10px] font-bold text-font-light uppercase">Automatic Dispenser Registry & Timers</p>
+            <h4 className="font-black text-2xl text-font-dark">{t('auto_feeder_connection')}</h4>
+            <p className="text-[11px] font-black text-font-light uppercase">Automatic Dispenser Registry & Timers</p>
           </div>
         </div>
 
@@ -150,7 +150,7 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
           <select
             value={selectedPondId}
             onChange={(e) => setSelectedPondId(e.target.value)}
-            className="px-3 py-1.5 bg-white border border-cyan-100 rounded-xl text-xs font-bold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-xs"
+            className="px-4 py-2 bg-white border border-cyan-100 rounded-xl text-sm font-bold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-xs"
           >
             {ponds.map((p) => (
               <option key={p.id} value={p.id}>{p.asset_name}</option>
@@ -172,13 +172,13 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
         </div>
       ) : !hasHardware && !showDemo ? (
         /* Fallback Empty State */
-        <div className="bg-white border border-cyan-100/40 rounded-3xl p-10 text-center shadow-sm space-y-6 flex flex-col items-center">
-          <div className="w-16 h-16 rounded-3xl bg-cyan-50 border border-cyan-100 flex items-center justify-center text-primary">
-            <Radio className="w-8 h-8 text-primary animate-pulse" />
+        <div className="bg-gradient-to-br from-cyan-50 to-sky-100/40 border border-cyan-200 rounded-3xl p-10 text-center shadow-md space-y-6 flex flex-col items-center">
+          <div className="w-20 h-20 rounded-3xl bg-white border border-cyan-200 flex items-center justify-center text-primary shadow-sm">
+            <Radio className="w-10 h-10 text-primary animate-pulse" />
           </div>
-          <div className="space-y-2">
-            <h3 className="font-extrabold text-font-dark text-base">{t('no_data')}</h3>
-            <p className="text-xs text-font-light max-w-md font-semibold leading-relaxed">
+          <div className="space-y-3">
+            <h3 className="font-black text-font-dark text-xl">{t('no_data')}</h3>
+            <p className="text-sm text-font-light max-w-md font-semibold leading-relaxed">
               {t('no_feeder_device')} Pair or connect an Auto Feeder hardware unit to manage scheduling and automated feeding cycles.
             </p>
           </div>
@@ -186,13 +186,13 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
           <div className="flex items-center gap-4 mt-2">
             <button
               onClick={() => setShowDemo(true)}
-              className="px-6 py-2.5 bg-primary hover:bg-primary-hover text-white font-bold text-xs rounded-xl shadow-md transition-all cursor-pointer"
+              className="px-6 py-3 bg-primary hover:bg-primary-hover text-white font-black text-sm rounded-xl shadow-md transition-all cursor-pointer"
             >
               Simulate Demo Feeder
             </button>
             <button
               onClick={() => alert('Contact DMA Technologies sales for Auto Feeder hardware units: +8801898938355')}
-              className="px-6 py-2.5 bg-white hover:bg-cyan-50/50 border border-cyan-100 text-font-dark font-bold text-xs rounded-xl transition-all cursor-pointer"
+              className="px-6 py-3 bg-white hover:bg-cyan-50/50 border border-cyan-100 text-font-dark font-black text-sm rounded-xl transition-all cursor-pointer shadow-xs"
             >
               Purchase Hardware
             </button>
@@ -221,8 +221,8 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Feeders Grid */}
-            <div className="bg-white border border-cyan-100/40 rounded-3xl p-6 shadow-sm space-y-6">
-              <h4 className="font-extrabold text-sm text-font-dark border-b border-cyan-50 pb-3">
+            <div className="bg-gradient-to-br from-indigo-50 to-purple-100/40 border border-indigo-200 rounded-3xl p-6 shadow-md space-y-6">
+              <h4 className="font-black text-lg text-font-dark border-b border-indigo-100 pb-3">
                 {t('feeder_status')}
               </h4>
 
@@ -232,12 +232,12 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
                   return (
                     <div
                       key={feeder.id}
-                      className="bg-cyan-50/10 border border-cyan-100/30 rounded-2xl p-5 flex flex-col justify-between h-44 space-y-4 hover:shadow-xs transition-shadow"
+                      className="bg-white border border-indigo-100 rounded-2xl p-5 flex flex-col justify-between h-44 space-y-4 hover:shadow-md transition-shadow"
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <h5 className="font-extrabold text-sm text-font-dark">{feeder.name}</h5>
-                          <span className="text-[10px] text-font-light font-bold block mt-1">
+                          <h5 className="font-black text-lg text-font-dark">{feeder.name}</h5>
+                          <span className="text-[11px] text-font-light font-bold block mt-1">
                             Last Feeding: {feeder.lastFed}
                           </span>
                         </div>
@@ -247,14 +247,14 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
                       </div>
 
                       <div className="flex items-center justify-between border-t border-cyan-50 pt-4">
-                        <div className="flex items-center gap-1.5 text-[10px] text-font-light font-bold">
+                        <div className="flex items-center gap-1.5 text-[11px] text-font-light font-bold">
                           {isFeeding ? (
-                            <span className="flex h-2 w-2 relative">
+                            <span className="flex h-2.5 w-2.5 relative">
                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-red-500"></span>
                             </span>
                           ) : (
-                            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
                           )}
                           <span>{isFeeding ? 'Dispensing...' : 'Standby Mode'}</span>
                         </div>
@@ -262,12 +262,12 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
                         <button
                           onClick={() => handleTriggerFeed(feeder.id)}
                           disabled={isFeeding}
-                          className="px-4 py-2 bg-primary hover:bg-primary-hover disabled:bg-gray-200 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all cursor-pointer"
+                          className="px-4 py-2 bg-primary hover:bg-primary-hover disabled:bg-gray-200 text-white font-black text-xs rounded-xl flex items-center gap-1.5 transition-all cursor-pointer shadow-sm"
                         >
                           {isFeeding ? (
-                            <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                            <RefreshCw className="w-4 h-4 animate-spin" />
                           ) : (
-                            <Play className="w-3.5 h-3.5" />
+                            <Play className="w-4 h-4" />
                           )}
                           <span>{t('manual_feed_trigger')}</span>
                         </button>
@@ -279,38 +279,38 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
             </div>
 
             {/* Scheduler Panel */}
-            <div className="bg-white border border-cyan-100/40 rounded-3xl p-6 shadow-sm space-y-6">
-              <h4 className="font-extrabold text-sm text-font-dark border-b border-cyan-50 pb-3">
+            <div className="bg-gradient-to-br from-emerald-50 to-teal-100/40 border border-emerald-200 rounded-3xl p-6 shadow-md space-y-6">
+              <h4 className="font-black text-lg text-font-dark border-b border-emerald-100 pb-3">
                 {t('feeder_schedule')}
               </h4>
 
               {/* Add Schedule Form */}
               <form onSubmit={handleAddSchedule} className="flex gap-3 items-end">
                 <div className="flex-1 space-y-1.5">
-                  <label className="text-[10px] font-bold text-font-light uppercase">Time</label>
+                  <label className="text-[11px] font-black text-font-light uppercase">Time</label>
                   <input
                     type="time"
                     value={newTime}
                     onChange={(e) => setNewTime(e.target.value)}
-                    className="w-full px-3 py-2 bg-cyan-50/20 border border-cyan-100 rounded-xl text-xs font-semibold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 py-2 bg-white border border-emerald-100 rounded-xl text-sm font-semibold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-xs"
                   />
                 </div>
                 <div className="flex-1 space-y-1.5">
-                  <label className="text-[10px] font-bold text-font-light uppercase">Amount (kg)</label>
+                  <label className="text-[11px] font-black text-font-light uppercase">Amount (kg)</label>
                   <input
                     type="number"
                     step="0.1"
                     min="0.1"
                     value={newAmount}
                     onChange={(e) => setNewAmount(e.target.value)}
-                    className="w-full px-3 py-2 bg-cyan-50/20 border border-cyan-100 rounded-xl text-xs font-semibold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full px-3 py-2 bg-white border border-emerald-100 rounded-xl text-sm font-semibold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-xs"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="p-2.5 bg-cyan-50 hover:bg-cyan-100 border border-cyan-100 text-primary rounded-xl transition-colors cursor-pointer"
+                  className="p-2.5 bg-primary hover:bg-primary-hover text-white rounded-xl transition-colors cursor-pointer shadow-md"
                 >
-                  <Plus className="w-5 h-5" />
+                  <Plus className="w-6 h-6" />
                 </button>
               </form>
 
@@ -319,15 +319,15 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
                 {schedules.map((schedule) => (
                   <div
                     key={schedule.id}
-                    className="flex items-center justify-between p-3.5 border border-cyan-100/30 bg-cyan-50/10 rounded-2xl"
+                    className="flex items-center justify-between p-4 border border-emerald-100 bg-white rounded-2xl shadow-xs"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-white rounded-xl border border-cyan-50">
-                        <Clock className="w-4 h-4 text-primary" />
+                      <div className="p-2.5 bg-emerald-50 rounded-xl border border-emerald-100">
+                        <Clock className="w-5 h-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-extrabold text-xs text-font-dark">{schedule.time}</p>
-                        <p className="text-[10px] text-font-light font-bold">Release: {schedule.amountKg} kg</p>
+                        <p className="font-black text-sm text-font-dark">{schedule.time}</p>
+                        <p className="text-[11px] text-font-light font-bold">Release: {schedule.amountKg} kg</p>
                       </div>
                     </div>
 
@@ -342,14 +342,14 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
                         onClick={() => handleDeleteSchedule(schedule.id)}
                         className="p-1.5 hover:bg-red-50 text-red-500 rounded-lg transition-colors cursor-pointer"
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
                 ))}
 
                 {schedules.length === 0 && (
-                  <p className="text-center py-6 text-[10px] font-bold text-font-light uppercase">
+                  <p className="text-center py-6 text-[11px] font-black text-font-light uppercase">
                     No Scheduled Timers Configured.
                   </p>
                 )}

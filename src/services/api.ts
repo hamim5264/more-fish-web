@@ -434,7 +434,17 @@ export const api = {
           id: device.device_id || device.id || device._id || null,
           device_status: String(device.device_status || '').toLowerCase(),
           is_online: String(device.device_status || '').toLowerCase() === 'online',
-          aerators: device.aerators || device.relays || device.switches || device.relay || device.relay_list || [],
+          aerators: (device.aerators || device.relays || device.switches || device.relay || device.relay_list || []).map((it: any) => {
+            const id = it.aerator_id || it.relay_id || it.switch_id || it.id || it.relay || '';
+            return {
+              ...it,
+              id: String(id),
+              aerator_id: String(id),
+              aerator_name: it.aerator_name || it.name || it.relay_name || `Aerator ${id}`,
+              command: typeof it.command === 'number' ? it.command : (it.status === 1 || it.state === 1 || it.switch_status === 1 || String(it.status).toLowerCase() === 'on' || it.on === true ? 1 : 0),
+              is_online: it.is_online === true || it.status_online === true || String(it.status).toLowerCase() === 'online' || it.online === true || String(it.device_status).toLowerCase() === 'online',
+            };
+          }),
           sensors: device.sensors || [],
           last_reading_time:
             device.last_reading_time ||

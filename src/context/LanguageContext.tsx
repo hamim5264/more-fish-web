@@ -1,5 +1,5 @@
 // H:\DMA Hamim\DMA-Web-App\src\context\LanguageContext.tsx
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { STORAGE_KEYS } from '../services/api.ts';
 
 const enUS: Record<string, string> = {
@@ -504,6 +504,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     setLangState(newLang);
     localStorage.setItem(STORAGE_KEYS.LANG, newLang);
   };
+
+  useEffect(() => {
+    document.documentElement.setAttribute('lang', lang);
+  }, [lang]);
 
   const t = (key: string): string => {
     const dict = lang === 'bn' ? bnBD : enUS;

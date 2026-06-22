@@ -66,32 +66,32 @@ export const NotificationList: React.FC<NotificationListProps> = ({ activeEcosys
 
   if (!hasToken) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-linear-to-tr from-bg-light to-cyan-50 animate-fade-in select-none">
-        <Bell className="w-16 h-16 text-cyan-400 mb-4 animate-pulse" />
-        <h3 className="text-xl font-bold text-font-dark">{t('please_login')}</h3>
-        <p className="text-sm text-font-light max-w-sm mt-2">Authentication is required to pull historical safety notifications from the farm logs.</p>
+      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 animate-fade-in select-none min-h-[400px]">
+        <Bell className="w-20 h-20 text-primary mb-4 animate-bounce" />
+        <h3 className="text-3xl font-black text-font-dark tracking-wide">{t('please_login')}</h3>
+        <p className="text-base text-font-light max-w-md mt-3 font-bold leading-relaxed">Authentication is required to pull historical safety notifications from the farm logs.</p>
       </div>
     );
   }
 
   return (
     <div className="flex-1 overflow-y-auto p-6 space-y-6 select-none max-w-4xl mx-auto w-full">
-      <div className="flex items-center justify-between border-b border-cyan-50 pb-4">
+      <div className="flex items-center justify-between border-b border-cyan-55 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
-            <Bell className="w-5 h-5 animate-swing" />
+          <div className="p-2.5 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
+            <Bell className="w-6 h-6 animate-swing" />
           </div>
           <div>
-            <h4 className="font-bold text-font-dark">{t('notifications')}</h4>
-            <p className="text-[10px] font-bold text-font-light uppercase">Real-time alerts & safety log history</p>
+            <h4 className="font-black text-2xl text-font-dark">{t('notifications')}</h4>
+            <p className="text-[11px] font-black text-font-light uppercase">Real-time alerts & safety log history</p>
           </div>
         </div>
         <button
           onClick={fetchNotifications}
           disabled={loading}
-          className="p-2 bg-gray-50 border border-gray-100 hover:bg-gray-100 rounded-xl text-primary transition-colors cursor-pointer"
+          className="p-3 bg-white border border-cyan-200 hover:bg-cyan-50 rounded-xl text-primary transition-colors cursor-pointer shadow-xs"
         >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          <RefreshCw className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
@@ -100,36 +100,36 @@ export const NotificationList: React.FC<NotificationListProps> = ({ activeEcosys
           <RefreshCw className="w-8 h-8 text-primary animate-spin" />
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="bg-gradient-to-br from-red-50 to-orange-100/40 border border-red-200 p-6 rounded-3xl shadow-md space-y-4">
           {notifications.map((item) => (
             <div
               key={item.id}
-              className="bg-white/80 border border-cyan-100/30 p-5 rounded-3xl shadow-sm flex items-start gap-4 hover:shadow-md transition-shadow"
+              className="bg-white border border-red-100 p-5 rounded-2xl shadow-xs flex items-start gap-4 hover:shadow-md transition-shadow"
             >
-              <div className="p-2 bg-red-50 text-red-500 rounded-xl border border-red-100 shrink-0">
-                <AlertCircle className="w-5 h-5" />
+              <div className="p-2.5 bg-red-50 text-red-500 rounded-xl border border-red-150 shrink-0">
+                <AlertCircle className="w-6 h-6" />
               </div>
-              <div className="space-y-1 w-full">
+              <div className="space-y-1.5 w-full">
                 <div className="flex justify-between items-start gap-4">
-                  <h5 className="font-extrabold text-sm text-font-dark leading-snug">
+                  <h5 className="font-black text-base text-font-dark leading-snug">
                     {item.title}
                   </h5>
                   {item.timestamp && (
-                    <span className="text-[9px] text-font-light font-bold flex items-center gap-1 shrink-0">
-                      <Calendar className="w-3 h-3" />
+                    <span className="text-[10px] text-font-light font-black uppercase flex items-center gap-1 shrink-0">
+                      <Calendar className="w-3.5 h-3.5 text-primary" />
                       {formatNotificationTimestamp(item.timestamp)}
                     </span>
                   )}
                 </div>
                 {item.message && (
-                  <p className="text-xs text-font-light font-semibold leading-relaxed">{item.message}</p>
+                  <p className="text-sm text-font-light font-bold leading-relaxed">{item.message}</p>
                 )}
               </div>
             </div>
           ))}
 
           {notifications.length === 0 && (
-            <div className="text-center py-20 text-font-light font-bold">
+            <div className="text-center py-20 text-font-light text-base font-bold bg-white rounded-2xl border border-red-100/50">
               {t('no_notifications')}
             </div>
           )}

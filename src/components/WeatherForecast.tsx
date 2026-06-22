@@ -101,8 +101,8 @@ export const WeatherForecast: React.FC = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-cyan-50 pb-4 gap-4">
         <div>
-          <h4 className="font-bold text-font-dark text-lg">{t('weather_forecast')}</h4>
-          <p className="text-[10px] font-bold text-font-light uppercase">Bilingual 24h & detail outlook</p>
+          <h4 className="font-black text-2xl text-font-dark">{t('weather_forecast')}</h4>
+          <p className="text-[11px] font-black text-font-light uppercase">Bilingual 24h & detail outlook</p>
         </div>
 
         {/* Searchable Dropdown Selector */}
@@ -110,26 +110,26 @@ export const WeatherForecast: React.FC = () => {
           <button
             type="button"
             onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="w-full flex items-center justify-between px-4 py-2.5 bg-white border border-cyan-100 rounded-xl text-xs font-bold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-xs cursor-pointer"
+            className="w-full flex items-center justify-between px-4 py-3 bg-white border border-cyan-200 rounded-xl text-sm font-black text-font-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-md cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <Search className="w-4 h-4 text-font-light" />
+              <Search className="w-4.5 h-4.5 text-font-light" />
               <span>{selectedDistrict}</span>
             </div>
-            <ChevronDown className={`w-4 h-4 text-font-light transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`w-4.5 h-4.5 text-font-light transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
           </button>
 
           {dropdownOpen && (
-            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-cyan-100 rounded-xl shadow-xl z-50 overflow-hidden flex flex-col max-h-60 animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-cyan-200 rounded-xl shadow-xl z-50 overflow-hidden flex flex-col max-h-60 animate-in fade-in slide-in-from-top-2 duration-150 select-text">
               {/* Search input inside dropdown */}
-              <div className="p-2 border-b border-cyan-50 bg-cyan-50/20 flex items-center gap-2">
-                <Search className="w-3.5 h-3.5 text-font-light shrink-0" />
+              <div className="p-2 border-b border-cyan-100 bg-cyan-50/20 flex items-center gap-2">
+                <Search className="w-4 h-4 text-font-light shrink-0" />
                 <input
                   type="text"
                   placeholder="Search district..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-transparent border-0 text-xs font-bold text-font-dark focus:outline-none focus:ring-0"
+                  className="w-full bg-transparent border-0 text-xs font-black text-font-dark focus:outline-none focus:ring-0"
                 />
               </div>
 
@@ -140,7 +140,7 @@ export const WeatherForecast: React.FC = () => {
                     key={district}
                     type="button"
                     onClick={() => handleSelectDistrict(district)}
-                    className={`w-full text-left px-4 py-2 hover:bg-cyan-50/50 transition-colors text-xs font-bold ${
+                    className={`w-full text-left px-4 py-2 hover:bg-cyan-50/50 transition-colors text-xs font-black cursor-pointer ${
                       selectedDistrict === district ? 'bg-cyan-50/70 text-primary' : 'text-font-dark'
                     }`}
                   >
@@ -148,7 +148,7 @@ export const WeatherForecast: React.FC = () => {
                   </button>
                 ))}
                 {filteredDistricts.length === 0 && (
-                  <p className="p-4 text-center text-xs font-semibold text-font-light uppercase">
+                  <p className="p-4 text-center text-xs font-black text-font-light uppercase">
                     No matching districts
                   </p>
                 )}
@@ -162,21 +162,21 @@ export const WeatherForecast: React.FC = () => {
         /* Loading State */
         <div className="flex flex-col justify-center items-center py-32 space-y-3">
           <RefreshCw className="w-10 h-10 text-primary animate-spin" />
-          <span className="text-xs font-bold text-font-light uppercase tracking-wider">Syncing Climate Data...</span>
+          <span className="text-xs font-black text-font-light uppercase tracking-wider">Syncing Climate Data...</span>
         </div>
       ) : error ? (
         /* Error State */
-        <div className="bg-red-50 border border-red-100 p-8 rounded-3xl text-center space-y-4 max-w-md mx-auto">
-          <div className="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto">
+        <div className="bg-red-50 border border-red-200 p-8 rounded-3xl text-center space-y-4 max-w-md mx-auto shadow-md">
+          <div className="w-14 h-14 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto shadow-sm">
             <AlertTriangle className="w-6 h-6" />
           </div>
-          <h4 className="font-extrabold text-sm text-red-800">Connection Error</h4>
-          <p className="text-xs text-red-600 font-semibold leading-relaxed">{error}</p>
+          <h4 className="font-black text-base text-red-800">Connection Error</h4>
+          <p className="text-xs text-red-600 font-bold leading-relaxed">{error}</p>
           <button
             onClick={() => fetchWeatherData(selectedDistrict)}
-            className="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white font-bold text-xs rounded-xl shadow-md transition-colors cursor-pointer inline-flex items-center gap-1.5"
+            className="px-6 py-3 bg-red-500 hover:bg-red-600 text-white font-black text-sm rounded-xl shadow-md transition-colors cursor-pointer inline-flex items-center gap-1.5"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-4 h-4 animate-spin" />
             <span>Retry Fetch</span>
           </button>
         </div>
@@ -185,20 +185,20 @@ export const WeatherForecast: React.FC = () => {
         <div className="space-y-6">
           {/* Main Card (Current) */}
           {currentWeather && (
-            <div className="bg-linear-to-r from-cyan-400 to-blue-500 rounded-3xl p-6 text-white shadow-md flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="bg-gradient-to-r from-cyan-400 to-blue-500 rounded-3xl p-8 text-white shadow-lg flex flex-col md:flex-row justify-between items-center gap-6">
               <div className="space-y-2 text-center md:text-left">
-                <span className="text-[10px] font-black tracking-widest bg-white/20 px-3 py-1 rounded-full uppercase border border-white/10">
+                <span className="text-[10px] font-black tracking-widest bg-white/20 px-3.5 py-1.5 rounded-full uppercase border border-white/10 shadow-xs">
                   Current Status
                 </span>
-                <h2 className="text-2xl font-black">{currentWeather.name}, BD</h2>
-                <p className="text-4xl font-extrabold">{currentWeather.main?.temp?.toFixed(1)}°C</p>
-                <p className="text-sm font-semibold capitalize opacity-90">
+                <h2 className="text-3xl font-black">{currentWeather.name}, BD</h2>
+                <p className="text-5xl font-black">{currentWeather.main?.temp?.toFixed(1)}°C</p>
+                <p className="text-base font-bold capitalize opacity-90">
                   {currentWeather.weather?.[0]?.description}
                 </p>
               </div>
 
               {currentWeather.weather?.[0]?.icon && (
-                <div className="w-28 h-28 bg-white/10 rounded-full border border-white/10 flex items-center justify-center shadow-inner">
+                <div className="w-32 h-32 bg-white/10 rounded-full border border-white/10 flex items-center justify-center shadow-inner">
                   <img
                     src={`https://openweathermap.org/img/wn/${currentWeather.weather[0].icon}@4x.png`}
                     alt="Weather Icon"
@@ -210,8 +210,8 @@ export const WeatherForecast: React.FC = () => {
           )}
 
           {/* 24-Hour Forecast Scroll list */}
-          <div className="bg-white border border-cyan-100/40 rounded-3xl p-6 shadow-sm space-y-4">
-            <h4 className="font-extrabold text-sm text-font-dark border-b border-cyan-50 pb-2">
+          <div className="bg-gradient-to-br from-indigo-50 to-blue-100/40 border border-indigo-200 rounded-3xl p-6 shadow-md space-y-4">
+            <h4 className="font-black text-base text-font-dark border-b border-indigo-100 pb-2">
               Next 24 Hours Forecast
             </h4>
             
@@ -224,9 +224,9 @@ export const WeatherForecast: React.FC = () => {
                 return (
                   <div
                     key={idx}
-                    className="flex flex-col items-center justify-between bg-cyan-50/10 border border-cyan-100/20 rounded-2xl p-4 min-w-[80px] h-32 hover:shadow-xs transition-shadow"
+                    className="flex flex-col items-center justify-between bg-white border border-indigo-150 rounded-2xl p-4 min-w-[90px] h-32 hover:shadow-md transition-shadow shadow-xs"
                   >
-                    <span className="text-[10px] font-bold text-font-light">{hourFormatted}</span>
+                    <span className="text-[10px] font-black text-font-light">{hourFormatted}</span>
                     
                     {iconCode && (
                       <img
@@ -247,34 +247,34 @@ export const WeatherForecast: React.FC = () => {
           {currentWeather && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Humidity */}
-              <div className="bg-white border border-cyan-100/40 rounded-3xl p-5 shadow-sm flex items-center gap-4">
-                <div className="p-3 bg-cyan-50 text-cyan-600 rounded-2xl border border-cyan-100">
-                  <Droplets className="w-6 h-6" />
+              <div className="bg-gradient-to-br from-blue-50 to-cyan-100/40 border border-blue-200 rounded-3xl p-5 shadow-md flex items-center gap-4 hover:shadow-lg transition-shadow">
+                <div className="p-3 bg-white text-cyan-600 rounded-2xl border border-blue-200 shadow-xs">
+                  <Droplets className="w-7 h-7" />
                 </div>
                 <div>
-                  <span className="text-[9px] font-black text-font-light uppercase">Humidity</span>
+                  <span className="text-[10px] font-black text-font-light uppercase tracking-wider">Humidity</span>
                   <h4 className="text-lg font-black text-font-dark">{currentWeather.main?.humidity}%</h4>
                 </div>
               </div>
 
               {/* Wind Speed */}
-              <div className="bg-white border border-cyan-100/40 rounded-3xl p-5 shadow-sm flex items-center gap-4">
-                <div className="p-3 bg-cyan-50 text-cyan-600 rounded-2xl border border-cyan-100">
-                  <Wind className="w-6 h-6" />
+              <div className="bg-gradient-to-br from-teal-50 to-emerald-100/40 border border-teal-200 rounded-3xl p-5 shadow-md flex items-center gap-4 hover:shadow-lg transition-shadow">
+                <div className="p-3 bg-white text-cyan-600 rounded-2xl border border-teal-200 shadow-xs">
+                  <Wind className="w-7 h-7" />
                 </div>
                 <div>
-                  <span className="text-[9px] font-black text-font-light uppercase">Wind Speed</span>
+                  <span className="text-[10px] font-black text-font-light uppercase tracking-wider">Wind Speed</span>
                   <h4 className="text-lg font-black text-font-dark">{currentWeather.wind?.speed} m/s</h4>
                 </div>
               </div>
 
               {/* Pressure */}
-              <div className="bg-white border border-cyan-100/40 rounded-3xl p-5 shadow-sm flex items-center gap-4">
-                <div className="p-3 bg-cyan-50 text-cyan-600 rounded-2xl border border-cyan-100">
-                  <Gauge className="w-6 h-6" />
+              <div className="bg-gradient-to-br from-purple-50 to-pink-100/40 border border-purple-200 rounded-3xl p-5 shadow-md flex items-center gap-4 hover:shadow-lg transition-shadow">
+                <div className="p-3 bg-white text-cyan-600 rounded-2xl border border-purple-200 shadow-xs">
+                  <Gauge className="w-7 h-7" />
                 </div>
                 <div>
-                  <span className="text-[9px] font-black text-font-light uppercase">Pressure</span>
+                  <span className="text-[10px] font-black text-font-light uppercase tracking-wider">Pressure</span>
                   <h4 className="text-lg font-black text-font-dark">{currentWeather.main?.pressure} hPa</h4>
                 </div>
               </div>

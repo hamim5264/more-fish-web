@@ -98,12 +98,12 @@ export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish' }) => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-cyan-50 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
-            <Radio className="w-5 h-5 animate-pulse" />
+          <div className="p-2.5 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
+            <Radio className="w-6 h-6 animate-pulse" />
           </div>
           <div>
-            <h4 className="font-bold text-font-dark">Auto Aerator Connection</h4>
-            <p className="text-[10px] font-bold text-font-light uppercase">Hardware Pairing & Control Registry</p>
+            <h4 className="font-black text-2xl text-font-dark">Auto Aerator Connection</h4>
+            <p className="text-[11px] font-black text-font-light uppercase">Hardware Pairing & Control Registry</p>
           </div>
         </div>
 
@@ -112,7 +112,7 @@ export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish' }) => {
           <select
             value={selectedPondId}
             onChange={(e) => setSelectedPondId(e.target.value)}
-            className="px-3 py-1.5 bg-white border border-cyan-100 rounded-xl text-xs font-bold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-xs"
+            className="px-4 py-2 bg-white border border-cyan-100 rounded-xl text-sm font-bold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-xs"
           >
             {ponds.map((p) => (
               <option key={p.id} value={p.id}>{p.asset_name}</option>
@@ -139,9 +139,9 @@ export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish' }) => {
       )}
 
       {/* Connection Grid */}
-      <div className="bg-white border border-cyan-100/40 rounded-3xl p-6 shadow-sm space-y-6">
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-100/30 border border-blue-200 rounded-3xl p-6 shadow-md space-y-6">
         <div className="flex justify-between items-center border-b border-cyan-50 pb-3">
-          <h4 className="font-extrabold text-sm text-font-dark">Paired Aerator Node Interfaces</h4>
+          <h4 className="font-black text-lg text-font-dark">Paired Aerator Node Interfaces</h4>
           {deviceData && (
             <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border ${
               deviceData.is_online 
@@ -171,11 +171,11 @@ export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish' }) => {
               return (
                 <div 
                   key={aerator.id}
-                  className="bg-cyan-50/10 border border-cyan-100/30 rounded-3xl p-5 flex flex-col justify-between h-48 space-y-4 hover:shadow-xs transition-shadow"
+                  className="bg-gradient-to-br from-cyan-50 to-sky-100/40 border border-cyan-200 rounded-3xl p-5 flex flex-col justify-between h-48 space-y-4 shadow-sm hover:shadow-md transition-all"
                 >
                   <div className="flex justify-between items-start">
                     <div className="space-y-1 min-w-0">
-                      <h5 className="font-extrabold text-sm text-font-dark truncate">
+                      <h5 className="font-black text-base text-font-dark truncate">
                         {aerator.name || `Aerator-${aerator.id}`}
                       </h5>
                       <span className="text-[10px] font-bold text-font-light block uppercase tracking-wider">

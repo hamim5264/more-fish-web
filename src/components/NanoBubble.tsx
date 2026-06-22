@@ -93,23 +93,23 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-cyan-50 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
-            <Waves className="w-5 h-5 animate-pulse" />
+          <div className="p-2.5 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
+            <Waves className="w-6 h-6 animate-pulse" />
           </div>
           <div>
-            <h4 className="font-bold text-font-dark">Nano Bubble Aeration System</h4>
-            <p className="text-[10px] font-bold text-font-light uppercase">High-Precision Hardware Control Node</p>
+            <h4 className="font-black text-2xl text-font-dark">Nano Bubble Aeration System</h4>
+            <p className="text-[11px] font-black text-font-light uppercase">High-Precision Hardware Control Node</p>
           </div>
         </div>
 
         {/* Pond Selector */}
         {ponds.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-font-light uppercase">Active Pond:</span>
+            <span className="text-xs font-black text-font-light uppercase">Active Pond:</span>
             <select
               value={selectedPondId}
               onChange={(e) => setSelectedPondId(e.target.value)}
-              className="px-3 py-1.5 bg-white border border-cyan-100 rounded-xl text-xs font-bold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-xs"
+              className="px-4 py-2 bg-white border border-cyan-150 rounded-xl text-sm font-bold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary shadow-xs"
             >
               {ponds.map((p) => (
                 <option key={p.id} value={p.id}>{p.asset_name}</option>
@@ -130,11 +130,11 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         
         {/* DO Level Telemetry Card */}
-        <div className="bg-white border border-cyan-100/40 rounded-3xl p-6 shadow-sm flex flex-col justify-between min-h-[300px]">
+        <div className="bg-gradient-to-br from-indigo-50 to-blue-100/40 border border-indigo-200 rounded-3xl p-6 shadow-md flex flex-col justify-between min-h-[320px]">
           <div className="space-y-4">
-            <div className="flex justify-between items-center border-b border-cyan-50 pb-3">
-              <h4 className="font-extrabold text-sm text-font-dark flex items-center gap-2">
-                <Database className="w-4 h-4 text-primary animate-pulse" />
+            <div className="flex justify-between items-center border-b border-indigo-100 pb-3">
+              <h4 className="font-black text-base text-font-dark flex items-center gap-2">
+                <Database className="w-5 h-5 text-primary animate-pulse" />
                 Live DO (Dissolved Oxygen) Index
               </h4>
               <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase border ${
@@ -146,7 +146,7 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
               </span>
             </div>
             
-            <p className="text-xs text-font-light font-semibold leading-relaxed">
+            <p className="text-sm text-font-light font-bold leading-relaxed">
               Dissolved Oxygen (DO) is vital to fish respiration. Levels below 3.0 ppm trigger severe stress, and below 2.0 ppm causes mass mortality. Nano bubble systems maintain stable aeration levels.
             </p>
           </div>
@@ -157,10 +157,10 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
               <RefreshCw className="w-10 h-10 text-primary animate-spin" />
             ) : doValue !== null ? (
               <div className="text-center space-y-1">
-                <div className={`text-5xl font-black ${isDoPerfect ? 'text-emerald-500' : 'text-red-500'}`}>
+                <div className={`text-6xl font-black ${isDoPerfect ? 'text-emerald-600' : 'text-red-500'}`}>
                   {doValue.toFixed(2)}
                 </div>
-                <div className="text-xs font-bold text-font-light uppercase">ppm / mg/L</div>
+                <div className="text-xs font-black text-font-light uppercase">ppm / mg/L</div>
               </div>
             ) : (
               <div className="text-center py-6 text-font-light text-xs font-bold">
@@ -169,16 +169,16 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
             )}
           </div>
 
-          <div className="flex gap-2.5 p-4 bg-cyan-50/50 border border-cyan-100/40 rounded-2xl text-[10px] text-primary leading-relaxed font-bold">
-            <Info className="w-4 h-4 text-primary shrink-0" />
+          <div className="flex gap-2.5 p-4 bg-white border border-indigo-150 rounded-2xl text-xs text-primary leading-relaxed font-bold shadow-xs">
+            <Info className="w-4.5 h-4.5 text-primary shrink-0" />
             <span>Reading auto-refreshes every 10 seconds. Keep aerators active during low DO alerts.</span>
           </div>
         </div>
 
         {/* Aerators Control List Card */}
-        <div className="bg-white border border-cyan-100/40 rounded-3xl p-6 shadow-sm space-y-4">
-          <div className="border-b border-cyan-50 pb-3">
-            <h4 className="font-extrabold text-sm text-font-dark">Hardware Switches (Aerators)</h4>
+        <div className="bg-gradient-to-br from-cyan-50 to-sky-100/40 border border-cyan-200 rounded-3xl p-6 shadow-md space-y-4">
+          <div className="border-b border-cyan-100 pb-3">
+            <h4 className="font-black text-base text-font-dark">Hardware Switches (Aerators)</h4>
             <p className="text-[10px] text-font-light font-bold mt-0.5 uppercase">Remote controller command center</p>
           </div>
 
@@ -196,18 +196,18 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
                 return (
                   <div 
                     key={aerator.id} 
-                    className="p-4 border border-cyan-50 bg-cyan-50/5 rounded-2xl flex items-center justify-between transition-all"
+                    className="p-4 border border-cyan-150 bg-white rounded-2xl flex items-center justify-between shadow-xs"
                   >
                     <div className="space-y-1">
-                      <h5 className="font-bold text-xs text-font-dark">{aerator.name || `Aerator Unit-${aerator.id}`}</h5>
-                      <span className="text-[9px] font-bold text-font-light font-mono block">ID: {aerator.id}</span>
+                      <h5 className="font-black text-sm text-font-dark">{aerator.name || `Aerator Unit-${aerator.id}`}</h5>
+                      <span className="text-[10px] font-bold text-font-light font-mono block">ID: {aerator.id}</span>
                     </div>
 
                     <div className="flex items-center gap-4">
                       {/* Status indicator */}
-                      <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded ${
+                      <span className={`text-[10px] font-black uppercase px-2.5 py-1 rounded border ${
                         isOnline 
-                          ? (isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-500') 
+                          ? (isActive ? 'bg-emerald-50 text-emerald-600 border-emerald-100' : 'bg-slate-50 text-slate-400 border-slate-200') 
                           : 'bg-red-50 text-red-600 border border-red-100'
                       }`}>
                         {isOnline ? (isActive ? 'Running' : 'Stopped') : 'Offline'}
@@ -217,7 +217,7 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
                       <button
                         onClick={() => handleToggleAerator(aerator.id, isActive ? 1 : 0)}
                         disabled={!isOnline || isLoading}
-                        className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
+                        className={`p-2.5 rounded-xl border transition-all cursor-pointer shadow-xs ${
                           isActive 
                             ? 'bg-red-50 hover:bg-red-100 text-red-500 border-red-100' 
                             : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-600 border-emerald-100'
@@ -225,9 +225,9 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
                         title={isActive ? "Stop Aerator" : "Start Aerator"}
                       >
                         {isLoading ? (
-                          <RefreshCw className="w-4 h-4 animate-spin" />
+                          <RefreshCw className="w-4.5 h-4.5 animate-spin" />
                         ) : (
-                          <Power className="w-4 h-4" />
+                          <Power className="w-4.5 h-4.5" />
                         )}
                       </button>
                     </div>

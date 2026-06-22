@@ -138,50 +138,52 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const activeProfile = authFlow ? profiles[authFlow] : null;
 
   return (
-    <div className="w-68 h-full glass border-r border-cyan-100 flex flex-col justify-between shrink-0 shadow-lg select-none">
-      <div className="flex flex-col">
-        <div className="p-5 flex items-center gap-3 border-b border-cyan-100/60 bg-white/45">
-          <div className="w-14 h-12 rounded-xl bg-white flex items-center justify-center p-1.5 shadow-md border border-cyan-100/70">
+    <div className="w-76 h-full bg-gradient-to-b from-[#f0fdfa] via-sky-50/60 to-blue-50/70 border-r border-sky-100/90 flex flex-col justify-between shrink-0 shadow-xl select-none text-font-dark">
+      <div className="flex flex-col min-h-0 flex-1">
+        <div className="p-6 flex items-center gap-3 border-b border-sky-100/60 bg-white/60 shrink-0">
+          <div className="w-14 h-12 rounded-2xl bg-white flex items-center justify-center p-2 shadow-md border border-cyan-100/95 shrink-0">
             <img src={brandLogo} alt="DMA Technologies" className="h-full w-full object-contain" />
           </div>
           <div className="min-w-0">
-            <h1 className="font-bold text-base text-primary leading-tight">DMA Technologies</h1>
-            <p className="text-[10px] text-font-light font-semibold tracking-wide">Harmonising Nature & Technology</p>
+            <div className="font-black text-[14.5px] text-primary leading-tight tracking-wide break-words">
+              DMA <br /> Technologies
+            </div>
+            <p className="text-[9.5px] text-font-light font-bold tracking-wider uppercase mt-0.5">Harmonising Nature</p>
           </div>
         </div>
 
-        <div className="p-4 relative">
+        <div className="p-4 relative shrink-0">
           <button
             onClick={() => setEcoDropdownOpen(!ecoDropdownOpen)}
-            className="w-full flex items-center justify-between p-3 bg-white/70 hover:bg-white rounded-xl border border-cyan-100/50 shadow-sm transition-all duration-200 cursor-pointer"
+            className="w-full flex items-center justify-between p-4 bg-white/90 hover:bg-white rounded-2xl border border-sky-100/80 shadow-sm transition-all duration-200 cursor-pointer text-font-dark"
           >
             <div className="flex items-center gap-3">
-              <currentEco.icon className={`w-5 h-5 ${currentEco.color}`} />
-              <span className="font-bold text-sm text-font-dark">{currentEco.name}</span>
+              <currentEco.icon className={`w-6 h-6 ${currentEco.color}`} />
+              <span className="font-extrabold text-base text-font-dark">{currentEco.name}</span>
             </div>
             <ChevronDown
-              className={`w-4 h-4 text-font-light transition-transform duration-200 ${ecoDropdownOpen ? 'rotate-180' : ''}`}
+              className={`w-5 h-5 text-font-light transition-transform duration-200 ${ecoDropdownOpen ? 'rotate-180' : ''}`}
             />
           </button>
 
           {ecoDropdownOpen && (
-            <div className="absolute top-full left-4 right-4 mt-2 bg-white border border-cyan-100 rounded-xl shadow-xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
-              <div className="py-1">
+            <div className="absolute top-full left-4 right-4 mt-2 bg-white/95 backdrop-blur-md border border-cyan-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+              <div className="py-1.5">
                 {ecosystems.map((eco) => (
                   <button
                     key={eco.id}
                     disabled={eco.disabled}
                     onClick={() => handleEcosystemSelect(eco.id as Ecosystem)}
-                    className={`w-full flex items-center justify-between px-4 py-3 text-left hover:bg-cyan-50/50 transition-colors duration-150 border-b border-gray-50 last:border-0 ${
+                    className={`w-full flex items-center justify-between px-5 py-4 text-left hover:bg-cyan-50 transition-colors duration-150 border-b border-gray-50 last:border-0 ${
                       eco.disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'
-                    } ${activeEcosystem === eco.id ? 'bg-cyan-50/70 font-semibold' : ''}`}
+                    } ${activeEcosystem === eco.id ? 'bg-cyan-50 font-extrabold' : ''}`}
                   >
                     <div className="flex items-center gap-3">
-                      <eco.icon className={`w-4 h-4 ${eco.color}`} />
-                      <span className="text-sm text-font-dark font-medium">{eco.name}</span>
+                      <eco.icon className={`w-5 h-5 ${eco.color}`} />
+                      <span className="text-base text-font-dark font-semibold">{eco.name}</span>
                     </div>
                     {eco.disabled && (
-                      <span className="text-[10px] bg-gray-100 text-gray-400 font-semibold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                      <span className="text-[11px] bg-gray-100 text-gray-400 font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                         Soon
                       </span>
                     )}
@@ -192,7 +194,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
         </div>
 
-        <nav className="px-3 space-y-1 overflow-y-auto max-h-[calc(100vh-290px)]">
+        <nav className="px-3 pb-4 space-y-1.5 overflow-y-auto flex-1 scrollbar-thin">
           {menuItems.map((item) => {
             const Icon = item.icon;
             const isActive = activePage === item.id || (item.id === 'pond' && activePage === 'farm');
@@ -201,16 +203,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => setActivePage(item.id)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition-all duration-200 cursor-pointer ${
+                className={`w-full flex items-center gap-3.5 px-4.5 py-3.5 rounded-2xl text-left transition-all duration-200 cursor-pointer hover:scale-[1.01] ${
                   isActive
-                    ? 'bg-primary text-white shadow-md font-bold'
-                    : 'text-font-dark hover:bg-cyan-50/60 font-medium'
+                    ? 'bg-linear-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/20 font-black'
+                    : 'text-font-dark hover:bg-cyan-50/70 font-bold'
                 }`}
               >
-                <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-white' : 'text-primary'}`} />
-                <span className="text-sm flex-1 truncate">{item.label}</span>
+                <Icon className={`w-6 h-6 shrink-0 ${isActive ? 'text-white' : 'text-primary'}`} />
+                <span className="text-[15px] flex-1 truncate">{item.label}</span>
                 {showBadge && (
-                  <span className="text-[10px] font-black bg-red-500 text-white px-2 py-0.5 rounded-full min-w-[20px] text-center">
+                  <span className="text-xs font-black bg-red-500 text-white px-2.5 py-1 rounded-full min-w-[24px] text-center shadow-sm">
                     {unreadCount > 99 ? '99+' : unreadCount}
                   </span>
                 )}
@@ -220,30 +222,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      <div className="p-4 border-t border-cyan-100/60 bg-white/30">
+      <div className="p-5 border-t border-sky-100/80 bg-white/60 shrink-0">
         {activeProfile ? (
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0 flex-1">
-              <p className="text-xs text-font-light truncate font-semibold">
+              <p className="text-sm text-font-dark truncate font-bold">
                 {activeProfile.email || activeProfile.phone || 'Authenticated'}
               </p>
             </div>
             <button
               onClick={handleLogout}
-              className="p-2 hover:bg-red-50 text-red-500 rounded-lg transition-colors cursor-pointer shrink-0"
+              className="p-2.5 hover:bg-red-50 text-red-500 rounded-xl transition-colors cursor-pointer shrink-0 shadow-sm border border-red-100"
               title={t('logout')}
             >
-              <LogOut className="w-4 h-4" />
+              <LogOut className="w-5 h-5" />
             </button>
           </div>
         ) : (
           <div className="text-center py-2">
-            <p className="text-xs text-font-light font-medium mb-2">{t('please_login')}</p>
+            <p className="text-xs text-font-light font-bold mb-3">{t('please_login')}</p>
             <button
               onClick={() => setActivePage('profile')}
-              className="w-full flex items-center justify-center gap-2 py-2 px-4 bg-primary text-white font-bold text-sm rounded-xl hover:bg-primary-hover shadow transition-all duration-200 cursor-pointer"
+              className="w-full flex items-center justify-center gap-2.5 py-3 px-5 bg-linear-to-r from-sky-500 to-blue-600 text-white font-extrabold text-sm rounded-2xl hover:opacity-90 shadow-md transition-all duration-200 cursor-pointer"
             >
-              <User className="w-4 h-4" />
+              <User className="w-5 h-5" />
               <span>{t('login')}</span>
             </button>
           </div>

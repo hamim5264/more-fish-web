@@ -148,22 +148,22 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
   };
 
   return (
-    <div className="flex-1 w-full h-full flex items-center justify-center p-6 bg-linear-to-tr from-bg-light via-cyan-50 to-blue-50 overflow-y-auto select-none">
-      <div className="w-full max-w-md bg-white/80 backdrop-blur-xl border border-cyan-100 rounded-3xl shadow-xl overflow-hidden p-8 animate-in fade-in zoom-in-95 duration-200">
+    <div className="flex-1 w-full h-full flex items-center justify-center p-6 bg-gradient-to-tr from-cyan-100 via-blue-50 to-indigo-100 overflow-y-auto select-none">
+      <div className="w-full max-w-lg bg-gradient-to-br from-white to-blue-50/95 backdrop-blur-xl border-2 border-cyan-100/90 rounded-[2.5rem] shadow-2xl overflow-hidden p-10 animate-in fade-in zoom-in-95 duration-200">
         
         {/* Flow Header */}
         <div className="text-center mb-8">
-          <span className="text-xs font-bold bg-cyan-100 text-primary px-3 py-1 rounded-full uppercase tracking-wider">
+          <span className="text-sm font-black bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-2 rounded-full uppercase tracking-wider shadow-md">
             {flow === 'fish' ? 'More Fish' : flow === 'cattle' ? 'Cattle Care' : 'Poultry Care'}
           </span>
-          <h2 className="text-2xl font-black text-font-dark mt-3">
+          <h2 className="text-3xl font-black text-font-dark mt-5 tracking-tight">
             {mode === 'login' && t('login')}
             {mode === 'register' && t('registration')}
             {mode === 'forgot' && t('forgot_password_q')}
             {mode === 'otp' && 'Verify OTP'}
             {mode === 'reset' && 'Reset Password'}
           </h2>
-          <p className="text-sm text-font-light mt-1 font-medium">
+          <p className="text-base text-font-light mt-2 font-semibold">
             {mode === 'login' && 'Enter your credentials to access your dashboard'}
             {mode === 'register' && 'Create your DMA Smart Farm manager profile'}
             {mode === 'forgot' && 'Provide your contact info to get OTP code'}
@@ -172,23 +172,23 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
 
         {/* Message banners */}
         {error && (
-          <div className="mb-6 flex items-center gap-3 p-4 bg-red-50 text-red-600 rounded-2xl border border-red-100 text-sm font-semibold">
-            <AlertCircle className="w-5 h-5 shrink-0" />
+          <div className="mb-6 flex items-center gap-3 p-5 bg-red-50 text-red-700 rounded-2xl border-2 border-red-100 text-base font-extrabold shadow-sm animate-bounce">
+            <AlertCircle className="w-6 h-6 shrink-0 text-red-500" />
             <span>{error}</span>
           </div>
         )}
         {success && (
-          <div className="mb-6 flex items-center gap-3 p-4 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 text-sm font-semibold">
-            <CheckCircle className="w-5 h-5 shrink-0" />
+          <div className="mb-6 flex items-center gap-3 p-5 bg-emerald-50 text-emerald-700 rounded-2xl border-2 border-emerald-100 text-base font-extrabold shadow-sm">
+            <CheckCircle className="w-6 h-6 shrink-0 text-emerald-500" />
             <span>{success}</span>
           </div>
         )}
 
         {/* LOGIN MODE */}
         {mode === 'login' && (
-          <form onSubmit={handleLogin} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-6">
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">{t('email')}</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">{t('email')}</label>
               <div className="relative">
                 <input
                   type="email"
@@ -196,19 +196,19 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm"
                 />
-                <Mail className="absolute left-4 top-3.5 w-4 h-4 text-cyan-500" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <div>
-              <div className="flex justify-between mb-1.5">
-                <label className="block text-xs font-bold text-font-dark uppercase tracking-wide">{t('password')}</label>
+              <div className="flex justify-between mb-2">
+                <label className="block text-sm font-black text-font-dark uppercase tracking-wide">{t('password')}</label>
                 <button
                   type="button"
                   onClick={() => { setMode('forgot'); clearMessages(); }}
-                  className="text-xs text-primary font-bold hover:underline"
+                  className="text-sm text-primary font-black hover:underline cursor-pointer"
                 >
                   {t('forgot_password_q')}
                 </button>
@@ -220,26 +220,26 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_password')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm"
                 />
-                <Lock className="absolute left-4 top-3.5 w-4 h-4 text-cyan-500" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 px-4 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white rounded-2xl font-bold shadow-md shadow-cyan-100 transition-all cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.01]"
+              className="w-full py-4 px-5 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 disabled:from-primary/50 disabled:to-blue-500/50 text-white rounded-2xl text-base font-black shadow-lg shadow-cyan-200 transition-all cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.01]"
             >
-              {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : t('login')}
+              {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : t('login')}
             </button>
 
-            <div className="text-center text-xs font-semibold text-font-light mt-6">
+            <div className="text-center text-sm font-bold text-font-light mt-6">
               {t('dont_have_account')}{' '}
               <button
                 type="button"
                 onClick={() => { setMode('register'); clearMessages(); }}
-                className="text-primary font-bold hover:underline"
+                className="text-primary font-black hover:underline cursor-pointer"
               >
                 {t('register')}
               </button>
@@ -249,10 +249,10 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
 
         {/* REGISTER MODE */}
         {mode === 'register' && (
-          <form onSubmit={handleRegister} className="space-y-4 max-h-105 overflow-y-auto pr-1">
+          <form onSubmit={handleRegister} className="space-y-5 max-h-120 overflow-y-auto pr-2 scrollbar-thin">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">{t('first_name')}</label>
+                <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">{t('first_name')}</label>
                 <div className="relative">
                   <input
                     type="text"
@@ -260,13 +260,13 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                     placeholder={t('enter_first_name')}
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="w-full pl-10 pr-3 py-2.5 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                    className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
                   />
-                  <User className="absolute left-3.5 top-3 w-4 h-4 text-cyan-500" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">{t('last_name')}</label>
+                <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">{t('last_name')}</label>
                 <div className="relative">
                   <input
                     type="text"
@@ -274,15 +274,15 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                     placeholder={t('enter_last_name')}
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="w-full pl-10 pr-3 py-2.5 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                    className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
                   />
-                  <User className="absolute left-3.5 top-3 w-4 h-4 text-cyan-500" />
+                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
                 </div>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">{t('email')}</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">{t('email')}</label>
               <div className="relative">
                 <input
                   type="email"
@@ -290,14 +290,14 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
                 />
-                <Mail className="absolute left-3.5 top-3 w-4 h-4 text-cyan-500" />
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">{t('phone_number')}</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">{t('phone_number')}</label>
               <div className="relative">
                 <input
                   type="tel"
@@ -305,14 +305,14 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="01712345678"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
                 />
-                <Phone className="absolute left-3.5 top-3 w-4 h-4 text-cyan-500" />
+                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">{t('address')}</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">{t('address')}</label>
               <div className="relative">
                 <input
                   type="text"
@@ -320,14 +320,14 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_address')}
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
                 />
-                <MapPin className="absolute left-3.5 top-3 w-4 h-4 text-cyan-500" />
+                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">{t('password')}</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">{t('password')}</label>
               <div className="relative">
                 <input
                   type="password"
@@ -335,14 +335,14 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_password')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
                 />
-                <Lock className="absolute left-3.5 top-3.5 w-4 h-4 text-cyan-500" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">{t('confirm_password')}</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">{t('confirm_password')}</label>
               <div className="relative">
                 <input
                   type="password"
@@ -350,26 +350,26 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('confirm_password_error')}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2.5 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
                 />
-                <Lock className="absolute left-3.5 top-3.5 w-4 h-4 text-cyan-500" />
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-3 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white rounded-2xl font-bold shadow-md shadow-cyan-100 transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="w-full mt-3 py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 disabled:from-primary/50 disabled:to-blue-500/50 text-white rounded-2xl text-base font-black shadow-lg shadow-cyan-200 transition-all cursor-pointer flex items-center justify-center gap-2"
             >
-              {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : t('submit')}
+              {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : t('submit')}
             </button>
 
-            <div className="text-center text-xs font-semibold text-font-light mt-4">
+            <div className="text-center text-sm font-bold text-font-light mt-4">
               Already have an account?{' '}
               <button
                 type="button"
                 onClick={() => { setMode('login'); clearMessages(); }}
-                className="text-primary font-bold hover:underline"
+                className="text-primary font-black hover:underline cursor-pointer"
               >
                 {t('login')}
               </button>
@@ -379,10 +379,10 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
 
         {/* FORGOT PASSWORD MODE */}
         {mode === 'forgot' && (
-          <form onSubmit={handleForgot} className="space-y-5">
-            <p className="text-xs text-font-light font-medium italic">We need your Email and Phone number to verify your identity.</p>
+          <form onSubmit={handleForgot} className="space-y-6">
+            <p className="text-sm text-font-light font-bold italic">We need your Email and Phone number to verify your identity.</p>
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">{t('email')}</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">{t('email')}</label>
               <div className="relative">
                 <input
                   type="email"
@@ -390,14 +390,14 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm"
                 />
-                <Mail className="absolute left-4 top-3.5 w-4 h-4 text-cyan-500" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">{t('phone_number')}</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">{t('phone_number')}</label>
               <div className="relative">
                 <input
                   type="tel"
@@ -405,24 +405,24 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="017XXXXXXXX"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm"
                 />
-                <Phone className="absolute left-4 top-3.5 w-4 h-4 text-cyan-500" />
+                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white rounded-2xl font-bold shadow-md shadow-cyan-100 transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 disabled:from-primary/50 disabled:to-blue-500/50 text-white rounded-2xl text-base font-black shadow-lg shadow-cyan-200 transition-all cursor-pointer flex items-center justify-center gap-2"
             >
-              {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Get OTP Code'}
+              {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : 'Get OTP Code'}
             </button>
 
             <button
               type="button"
               onClick={() => { setMode('login'); clearMessages(); }}
-              className="w-full text-center text-xs font-bold text-font-light hover:underline mt-4 cursor-pointer"
+              className="w-full text-center text-sm font-black text-font-light hover:underline mt-4 cursor-pointer"
             >
               Back to Login
             </button>
@@ -431,9 +431,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
 
         {/* VERIFY OTP MODE */}
         {mode === 'otp' && (
-          <form onSubmit={handleVerifyOtp} className="space-y-5">
+          <form onSubmit={handleVerifyOtp} className="space-y-6">
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">Enter 6-Digit OTP Code</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">Enter 6-Digit OTP Code</label>
               <input
                 type="text"
                 required
@@ -441,22 +441,22 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                 placeholder="XXXXXX"
                 value={otpCode}
                 onChange={(e) => setOtpCode(e.target.value)}
-                className="w-full text-center py-4 bg-white/60 border border-cyan-100/80 rounded-2xl text-lg font-black tracking-widest focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                className="w-full text-center py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-xl font-black tracking-widest focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white rounded-2xl font-bold shadow-md shadow-cyan-100 transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 disabled:from-primary/50 disabled:to-blue-500/50 text-white rounded-2xl text-base font-black shadow-lg shadow-cyan-200 transition-all cursor-pointer flex items-center justify-center gap-2"
             >
-              {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Verify Code'}
+              {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : 'Verify Code'}
             </button>
 
             <button
               type="button"
               onClick={() => { setMode('forgot'); clearMessages(); }}
-              className="w-full text-center text-xs font-bold text-font-light hover:underline mt-4 cursor-pointer"
+              className="w-full text-center text-sm font-black text-font-light hover:underline mt-4 cursor-pointer"
             >
               Resend OTP Code
             </button>
@@ -465,9 +465,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
 
         {/* RESET PASSWORD MODE */}
         {mode === 'reset' && (
-          <form onSubmit={handleResetPassword} className="space-y-5">
+          <form onSubmit={handleResetPassword} className="space-y-6">
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">New Password</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">New Password</label>
               <div className="relative">
                 <input
                   type="password"
@@ -475,14 +475,14 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="Enter new password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
                 />
-                <Lock className="absolute left-4 top-3.5 w-4 h-4 text-cyan-500" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-font-dark mb-1.5 uppercase tracking-wide">Confirm New Password</label>
+              <label className="block text-sm font-black text-font-dark mb-2 uppercase tracking-wide">Confirm New Password</label>
               <div className="relative">
                 <input
                   type="password"
@@ -490,18 +490,18 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="Confirm new password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white/60 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
                 />
-                <Lock className="absolute left-4 top-3.5 w-4 h-4 text-cyan-500" />
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-primary hover:bg-primary-hover disabled:bg-primary/50 text-white rounded-2xl font-bold shadow-md shadow-cyan-100 transition-all cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 disabled:from-primary/50 disabled:to-blue-500/50 text-white rounded-2xl text-base font-black shadow-lg shadow-cyan-200 transition-all cursor-pointer flex items-center justify-center gap-2"
             >
-              {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : 'Update Password'}
+              {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : 'Update Password'}
             </button>
           </form>
         )}
