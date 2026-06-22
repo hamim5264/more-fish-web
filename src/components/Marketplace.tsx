@@ -216,17 +216,17 @@ export const Marketplace: React.FC<MarketplaceProps> = ({
   };
 
   return (
-    <div className="flex-1 overflow-hidden flex select-none bg-linear-to-br from-bg-light/10 to-cyan-50/10">
+    <div className="flex-1 overflow-hidden flex select-none bg-gradient-to-br from-indigo-50/20 to-cyan-50/20">
       
       {/* Category / Company Selection Panel (Left Column) */}
-      <div className="w-72 border-r border-cyan-100/50 bg-white/40 p-5 space-y-6 overflow-y-auto flex flex-col shrink-0">
+      <div className="w-72 border-r border-indigo-100 bg-gradient-to-br from-indigo-50 to-purple-100/40 p-5 space-y-6 overflow-y-auto flex flex-col shrink-0">
         
         {/* Marketplace Label */}
         <div className="space-y-1">
-          <span className="text-[10px] font-black text-primary bg-cyan-100/60 px-3 py-1 rounded-full uppercase tracking-wider">
+          <span className="text-[10px] font-black text-primary bg-white border border-indigo-200 px-3 py-1 rounded-full uppercase tracking-wider shadow-xs">
             {propCategoryName || 'Marketplace'}
           </span>
-          <h2 className="text-sm font-black text-font-dark pt-1">Select Supplier</h2>
+          <h2 className="text-lg font-black text-font-dark pt-2">Select Supplier</h2>
         </div>
 
         {loadingCategory || loadingCompanies ? (
@@ -239,25 +239,25 @@ export const Marketplace: React.FC<MarketplaceProps> = ({
               <button
                 key={comp.guid}
                 onClick={() => setSelectedCompany(comp)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-left transition-all border cursor-pointer ${
+                className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-left transition-all border cursor-pointer shadow-xs ${
                   selectedCompany?.guid === comp.guid 
-                    ? 'bg-primary text-white border-primary shadow-md font-bold' 
-                    : 'bg-white hover:bg-cyan-50/40 text-font-dark border-cyan-100/30 font-semibold'
+                    ? 'bg-primary text-white border-primary shadow-md font-black' 
+                    : 'bg-white hover:bg-indigo-50/50 text-font-dark border-indigo-100 font-bold'
                 }`}
               >
                 {comp.logo ? (
                   <img 
                     src={comp.logo} 
                     alt={comp.company_name} 
-                    className="w-5 h-5 rounded-md object-contain bg-white shrink-0 border border-slate-100" 
+                    className="w-6 h-6 rounded-md object-contain bg-white shrink-0 border border-slate-100" 
                     onError={(e) => {
                       (e.target as HTMLImageElement).style.display = 'none';
                     }}
                   />
                 ) : (
-                  <Store className={`w-4 h-4 shrink-0 ${selectedCompany?.guid === comp.guid ? 'text-white' : 'text-primary'}`} />
+                  <Store className={`w-5 h-5 shrink-0 ${selectedCompany?.guid === comp.guid ? 'text-white' : 'text-primary'}`} />
                 )}
-                <span className="text-xs truncate">{comp.company_name}</span>
+                <span className="text-sm truncate">{comp.company_name}</span>
               </button>
             ))}
 
@@ -278,7 +278,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({
       </div>
 
       {/* Product Display Panel (Right Column) */}
-      <div className="flex-1 p-6 overflow-y-auto relative flex flex-col justify-between">
+      <div className="flex-1 p-6 overflow-y-auto relative flex flex-col justify-between bg-gradient-to-br from-cyan-50 to-sky-100/30">
         
         {loadingProducts && products.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
@@ -289,9 +289,9 @@ export const Marketplace: React.FC<MarketplaceProps> = ({
             <div className="space-y-6">
               {/* Supplier Header */}
               {selectedCompany && (
-                <div className="flex items-center gap-3 border-b border-cyan-50 pb-4">
-                  <ShoppingBag className="w-5 h-5 text-primary" />
-                  <h3 className="text-base font-black text-font-dark">
+                <div className="flex items-center gap-3 border-b border-cyan-100 pb-4">
+                  <ShoppingBag className="w-6 h-6 text-primary animate-pulse" />
+                  <h3 className="text-lg font-black text-font-dark">
                     Products by <span className="text-primary">{selectedCompany.company_name}</span>
                   </h3>
                 </div>
@@ -302,30 +302,30 @@ export const Marketplace: React.FC<MarketplaceProps> = ({
                 {products.map((prod) => (
                   <div
                     key={prod.guid}
-                    className="bg-white border border-cyan-100/40 rounded-3xl p-5 shadow-xs hover:shadow-md transition-all flex gap-4 h-44 items-center overflow-hidden group"
+                    className="bg-white border border-cyan-200 rounded-3xl p-5 shadow-md hover:shadow-lg hover:border-primary/30 transition-all flex gap-4 h-44 items-center overflow-hidden group"
                   >
                     {/* Product Image Frame */}
-                    <div className="w-32 h-32 bg-gray-50 border border-gray-100 rounded-2xl overflow-hidden flex items-center justify-center shrink-0">
+                    <div className="w-32 h-32 bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden flex items-center justify-center shrink-0">
                       {renderProductImage(prod.image, prod.name)}
                     </div>
 
                     {/* Product Meta details */}
                     <div className="flex-1 flex flex-col justify-between h-full py-1">
                       <div className="space-y-1">
-                        <h4 className="font-extrabold text-sm text-font-dark group-hover:text-primary transition-colors line-clamp-2 leading-snug">
+                        <h4 className="font-black text-base text-font-dark group-hover:text-primary transition-colors line-clamp-2 leading-snug">
                           {prod.name}
                         </h4>
-                        <p className="text-[10px] text-font-light font-bold uppercase">{prod.company_name}</p>
+                        <p className="text-[10px] text-font-light font-black uppercase tracking-wider">{prod.company_name}</p>
                       </div>
 
                       <div className="flex items-center justify-between border-t border-cyan-50/50 pt-2">
-                        <span className="font-black text-primary text-sm">{formatPrice(prod.price)}</span>
+                        <span className="font-black text-primary text-base">{formatPrice(prod.price)}</span>
                         <button
                           onClick={() => handleProductDetails(prod.guid)}
-                          className="p-2 bg-cyan-50 hover:bg-primary hover:text-white text-primary rounded-xl transition-all cursor-pointer shadow-xs border border-cyan-100/50"
+                          className="p-2.5 bg-cyan-50 hover:bg-primary hover:text-white text-primary rounded-xl transition-all cursor-pointer shadow-xs border border-cyan-150"
                           title="View Details"
                         >
-                          <ZoomIn className="w-4 h-4" />
+                          <ZoomIn className="w-4.5 h-4.5" />
                         </button>
                       </div>
                     </div>
@@ -346,7 +346,7 @@ export const Marketplace: React.FC<MarketplaceProps> = ({
                 <button
                   onClick={handleLoadMore}
                   disabled={loadingProducts}
-                  className="px-6 py-2.5 bg-white border border-cyan-100 hover:bg-cyan-50/50 disabled:opacity-50 text-primary font-bold text-xs rounded-xl shadow-xs transition-colors cursor-pointer flex items-center gap-2"
+                  className="px-6 py-3 bg-white border border-cyan-200 hover:bg-cyan-50/50 disabled:opacity-50 text-primary font-black text-sm rounded-xl shadow-md transition-colors cursor-pointer flex items-center gap-2"
                 >
                   {loadingProducts ? <RefreshCw className="w-4 h-4 animate-spin" /> : null}
                   <span>Load More Products</span>
@@ -358,11 +358,11 @@ export const Marketplace: React.FC<MarketplaceProps> = ({
 
         {/* Product Details overlay (Modal style) */}
         {selectedProduct && (
-          <div className="absolute inset-0 bg-white/95 z-50 p-8 flex flex-col justify-between overflow-y-auto animate-in fade-in slide-in-from-bottom-6 duration-200">
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-cyan-50/30 to-white z-50 p-8 flex flex-col justify-between overflow-y-auto animate-in fade-in slide-in-from-bottom-6 duration-200">
             <div className="space-y-6">
               <button
                 onClick={() => setSelectedProduct(null)}
-                className="flex items-center gap-2 text-primary hover:bg-cyan-50/50 font-bold text-xs cursor-pointer border border-cyan-100 rounded-xl px-4 py-2 bg-white w-fit shadow-xs transition-all"
+                className="flex items-center gap-2 text-primary hover:bg-cyan-50/50 font-black text-xs cursor-pointer border border-cyan-200 rounded-xl px-5 py-2.5 bg-white w-fit shadow-md transition-all"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Back to Catalog</span>
@@ -370,23 +370,23 @@ export const Marketplace: React.FC<MarketplaceProps> = ({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-4">
                 {/* High-res Image Frame */}
-                <div className="w-full h-80 bg-gray-50 border border-gray-100 rounded-3xl overflow-hidden flex items-center justify-center shadow-xs">
+                <div className="w-full h-80 bg-white border border-cyan-200 rounded-3xl overflow-hidden flex items-center justify-center shadow-md">
                   {renderProductImage(selectedProduct.image, selectedProduct.name, "max-h-full max-w-full object-contain p-2")}
                 </div>
 
                 {/* Details Section */}
                 <div className="space-y-5">
                   <div>
-                    <span className="text-[10px] font-bold text-primary bg-cyan-50 border border-cyan-100 px-3 py-1 rounded-full uppercase tracking-wider">
+                    <span className="text-[10px] font-black text-primary bg-cyan-50 border border-cyan-200 px-3.5 py-1.5 rounded-full uppercase tracking-wider shadow-xs">
                       {selectedProduct.company_name}
                     </span>
-                    <h2 className="text-xl md:text-2xl font-black text-font-dark mt-3 leading-snug">{selectedProduct.name}</h2>
-                    <h3 className="text-xl font-black text-primary mt-2">{formatPrice(selectedProduct.price)}</h3>
+                    <h2 className="text-2xl md:text-3xl font-black text-font-dark mt-3 leading-snug">{selectedProduct.name}</h2>
+                    <h3 className="text-2xl font-black text-primary mt-2">{formatPrice(selectedProduct.price)}</h3>
                   </div>
 
-                  <div className="border-t border-cyan-50 pt-4 space-y-2">
-                    <span className="text-[10px] font-bold text-font-light uppercase tracking-wide">Product Specifications & Description</span>
-                    <p className="text-xs text-font-dark leading-relaxed font-semibold">
+                  <div className="border-t border-cyan-150 pt-4 space-y-2">
+                    <span className="text-[11px] font-black text-font-light uppercase tracking-wide">Product Specifications & Description</span>
+                    <p className="text-sm text-font-dark leading-relaxed font-bold bg-white p-4 rounded-2xl border border-cyan-100 shadow-xs">
                       {selectedProduct.description || 'No detailed specifications listed by supplier.'}
                     </p>
                   </div>
@@ -395,13 +395,13 @@ export const Marketplace: React.FC<MarketplaceProps> = ({
             </div>
 
             {/* Direct Order Actions */}
-            <div className="border-t border-cyan-50 pt-6 mt-6 flex justify-between items-center gap-4">
-              <span className="text-xs text-font-light font-bold">Contact supplier directly to secure stock.</span>
+            <div className="border-t border-cyan-200 pt-6 mt-6 flex justify-between items-center gap-4">
+              <span className="text-sm text-font-light font-black">Contact supplier directly to secure stock.</span>
               <button 
                 onClick={() => window.open('tel:+8801898938354')}
-                className="py-3 px-6 bg-primary hover:bg-primary-hover text-white font-bold text-xs rounded-2xl shadow-md transition-all cursor-pointer flex items-center gap-2"
+                className="py-4 px-8 bg-primary hover:bg-primary-hover text-white font-black text-sm rounded-2xl shadow-lg transition-all cursor-pointer flex items-center gap-2"
               >
-                <Phone className="w-4 h-4" />
+                <Phone className="w-5 h-5" />
                 <span>Order via Hotline</span>
               </button>
             </div>

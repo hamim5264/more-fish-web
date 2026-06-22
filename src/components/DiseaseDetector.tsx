@@ -201,7 +201,7 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
       {activeTab === 'scanner' && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* File Upload / Image Box */}
-          <div className="bg-white/80 border border-cyan-100/40 p-6 rounded-3xl shadow-sm flex flex-col justify-between min-h-[360px]">
+          <div className="bg-gradient-to-br from-rose-50 to-red-100/30 border border-rose-200 p-8 rounded-3xl shadow-md flex flex-col justify-between min-h-[360px] hover:shadow-lg transition-all">
             {!imagePreview ? (
               <div
                 onDragOver={handleDragOver}
@@ -306,7 +306,7 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
           </div>
 
           {/* AI Result Card */}
-          <div className="bg-white/80 border border-cyan-100/40 p-6 rounded-3xl shadow-sm min-h-[360px] flex flex-col justify-center">
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-100/30 border border-indigo-200 p-8 rounded-3xl shadow-md min-h-[360px] flex flex-col justify-center hover:shadow-lg transition-all">
             {scanning && (
               <div className="text-center py-12 space-y-4">
                 <Activity className="w-12 h-12 text-primary animate-bounce mx-auto" />
@@ -394,7 +394,7 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
           {/* List items */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {filteredGuide.map((item, idx) => (
-              <div key={idx} className="bg-white/80 border border-cyan-100/30 p-6 rounded-3xl shadow-sm space-y-4 hover:shadow-md transition-shadow">
+              <div key={idx} className="bg-gradient-to-br from-purple-50 to-indigo-50/40 border border-purple-200 p-6 rounded-3xl shadow-md space-y-4 hover:shadow-lg hover:scale-[1.01] transition-all">
                 <div className="border-b border-cyan-50 pb-3 flex justify-between items-start">
                   <div>
                     <h4 className="font-bold text-base text-font-dark">{item.name}</h4>

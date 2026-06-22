@@ -28,45 +28,47 @@ export const InfoPage: React.FC<InfoPageProps> = ({ type }) => {
   const Icon = type === 'faq' ? HelpCircle : type === 'about-app' ? BookOpen : Cpu;
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6 select-none max-w-3xl mx-auto w-full">
+    <div className="flex-1 overflow-y-auto p-6 space-y-6 select-none max-w-4xl mx-auto w-full">
       <div className="flex items-center gap-3 border-b border-cyan-50 pb-4">
-        <div className="p-2 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
-          <Icon className="w-5 h-5" />
+        <div className="p-2.5 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
+          <Icon className="w-6 h-6" />
         </div>
-        <h4 className="font-bold text-font-dark">{title}</h4>
+        <h4 className="font-black text-2xl text-font-dark">{title}</h4>
       </div>
 
       {type === 'faq' && (
         <div className="space-y-4">
           {faqItems.map((item) => (
-            <div key={item.q} className="bg-white/80 border border-cyan-100/30 p-5 rounded-2xl shadow-sm">
-              <h5 className="font-extrabold text-sm text-font-dark">{t(item.q)}</h5>
-              <p className="text-xs text-font-light font-semibold mt-2 leading-relaxed">{item.a}</p>
+            <div key={item.q} className="bg-gradient-to-br from-indigo-50 to-blue-100/40 border border-indigo-200 p-6 rounded-3xl shadow-md">
+              <h5 className="font-black text-lg text-font-dark">{t(item.q)}</h5>
+              <p className="text-sm text-font-light font-bold mt-2 leading-relaxed">{item.a}</p>
             </div>
           ))}
         </div>
       )}
 
       {type === 'about-app' && (
-        <div className="bg-white/80 border border-cyan-100/30 p-6 rounded-3xl shadow-sm space-y-4 text-sm font-semibold text-font-light leading-relaxed">
-          <p>{t('more_fish')}</p>
-          <p>{t('monitoring')}: Real-time sensor data for DO, pH, temperature, ammonia, and salinity.</p>
-          <p>{t('smart_alerts')}: Instant push notifications for critical threshold breaches.</p>
-          <p>{t('data_driven')}: Historical graphs and FCR tools for optimized feeding.</p>
+        <div className="bg-gradient-to-br from-cyan-50 to-sky-100/40 border border-cyan-200 p-6 rounded-3xl shadow-md space-y-4 text-base font-black text-font-light leading-relaxed">
+          <p className="text-font-dark text-lg font-black">{t('more_fish')}</p>
+          <p className="bg-white p-4 rounded-2xl border border-cyan-100 shadow-xs">{t('monitoring')}: Real-time sensor data for DO, pH, temperature, ammonia, and salinity.</p>
+          <p className="bg-white p-4 rounded-2xl border border-cyan-100 shadow-xs">{t('smart_alerts')}: Instant push notifications for critical threshold breaches.</p>
+          <p className="bg-white p-4 rounded-2xl border border-cyan-100 shadow-xs">{t('data_driven')}: Historical graphs and FCR tools for optimized feeding.</p>
         </div>
       )}
 
       {type === 'about-device' && (
-        <div className="bg-white/80 border border-cyan-100/30 p-6 rounded-3xl shadow-sm space-y-4 text-sm font-semibold text-font-light leading-relaxed">
-          <p>{t('sensor_device')}</p>
-          <ul className="space-y-2 list-disc pl-5">
-            <li>{t('dissolved_oxygen')} sensor</li>
-            <li>{t('ph_level')} sensor</li>
-            <li>{t('temperature')} sensor</li>
-            <li>{t('ammonia')} sensor</li>
-            <li>{t('salinity')} sensor</li>
-          </ul>
-          <p>{t('poultry_param_note')}</p>
+        <div className="bg-gradient-to-br from-purple-50 to-pink-100/40 border border-purple-200 p-6 rounded-3xl shadow-md space-y-4 text-base font-black text-font-light leading-relaxed">
+          <p className="text-font-dark text-lg font-black">{t('sensor_device')}</p>
+          <div className="bg-white p-5 rounded-2xl border border-purple-100 shadow-xs">
+            <ul className="space-y-2.5 list-disc pl-5 font-bold text-sm text-font-dark">
+              <li>{t('dissolved_oxygen')} sensor</li>
+              <li>{t('ph_level')} sensor</li>
+              <li>{t('temperature')} sensor</li>
+              <li>{t('ammonia')} sensor</li>
+              <li>{t('salinity')} sensor</li>
+            </ul>
+          </div>
+          <p className="bg-white p-4 rounded-2xl border border-purple-100 text-sm font-bold shadow-xs">{t('poultry_param_note')}</p>
         </div>
       )}
     </div>

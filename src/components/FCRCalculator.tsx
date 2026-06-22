@@ -10,8 +10,7 @@ import {
   RefreshCw,
   Fish,
   TrendingUp,
-  History,
-  BookOpen
+  History
 } from 'lucide-react';
 import {
   AreaChart,
@@ -295,7 +294,7 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
   return (
     <div className="flex-1 overflow-y-auto p-6 space-y-6 select-none max-w-7xl mx-auto w-full">
       {/* Top Pond Selection */}
-      <div className="flex items-center gap-3 rounded-3xl border border-cyan-100/40 bg-white/80 p-5 shadow-sm">
+      <div className="flex items-center gap-3 rounded-3xl border border-sky-100/60 bg-gradient-to-r from-sky-50 to-blue-50/50 p-6 shadow-md">
         <label className="shrink-0 text-sm font-bold text-font-dark">{t('select_device')}:</label>
         <select
           value={selectedPond?.id || ''}
@@ -327,7 +326,7 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
         {/* Left Side: Calculators (8 cols on lg, or stacked) */}
         <div className="lg:col-span-7 space-y-6">
           {/* FCR Calculation Form */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white/80 p-8 rounded-3xl border border-cyan-100/40 shadow-sm">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-gradient-to-br from-blue-50 to-indigo-100/30 p-8 rounded-3xl border border-blue-100 shadow-md">
             <form onSubmit={handleCalculate} className="space-y-5">
               <div className="flex items-center gap-2.5 border-b border-cyan-50 pb-4">
                 <div className="p-2 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
@@ -337,6 +336,12 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
                   <h4 className="font-bold text-font-dark">{t('fcr_calculator')}</h4>
                   <p className="text-[10px] font-bold text-font-light uppercase">{t('feed_conversion_ratio')}</p>
                 </div>
+              </div>
+
+              <div className="bg-white/80 border border-blue-100 p-4 rounded-2xl text-xs space-y-1.5 shadow-xs">
+                <h5 className="font-bold text-font-dark">FCR (Feed Conversion Ratio):</h5>
+                <p className="text-font-light leading-relaxed">FCR refers to the amount of feed required to increase 1 kg of fish body weight.</p>
+                <p className="font-bold text-emerald-600">Lower FCR = Better feed efficiency, better feed performance, and higher profitability.</p>
               </div>
 
               {error && (
@@ -447,7 +452,7 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
           </div>
 
           {/* Feed Requirement Calculator */}
-          <div className="bg-white/80 p-8 rounded-3xl border border-cyan-100/40 shadow-sm space-y-5">
+          <div className="bg-gradient-to-br from-emerald-50 to-teal-100/30 p-8 rounded-3xl border border-emerald-100 shadow-md space-y-6">
             <div className="flex items-center gap-2.5 border-b border-cyan-50 pb-4">
               <div className="p-2 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
                 <Fish className="w-5 h-5" />
@@ -456,6 +461,11 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
                 <h4 className="font-bold text-font-dark">{t('feed_requirement_calculator')}</h4>
                 <p className="text-[10px] font-bold text-font-light uppercase">{t('daily_feed_estimate')}</p>
               </div>
+            </div>
+
+            <div className="bg-white/80 border border-emerald-100 p-4 rounded-2xl text-xs space-y-1 shadow-xs">
+              <h5 className="font-bold text-font-dark">Feed Requirements Calculation:</h5>
+              <p className="text-font-light leading-relaxed">The process of calculating the amount of feed required per day based on the total fish biomass and the feeding rate.</p>
             </div>
 
             {feedReqError && (
@@ -529,7 +539,7 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
         {/* Right Side: Chart & History (5 cols on lg) */}
         <div className="lg:col-span-5 space-y-6">
           {/* Trend Visualization Chart */}
-          <div className="bg-white/80 p-6 rounded-3xl border border-cyan-100/40 shadow-sm space-y-4">
+          <div className="bg-gradient-to-br from-cyan-50 to-sky-100/30 p-6 rounded-3xl border border-cyan-100 shadow-md space-y-4">
             <div className="flex items-center gap-2.5 border-b border-cyan-50 pb-3">
               <div className="p-1.5 bg-cyan-50 text-primary rounded-lg border border-cyan-100">
                 <TrendingUp className="w-4 h-4" />
@@ -601,7 +611,7 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
           </div>
 
           {/* History List */}
-          <div className="bg-white/80 p-6 rounded-3xl border border-cyan-100/40 shadow-sm space-y-4">
+          <div className="bg-gradient-to-br from-slate-50 to-zinc-100/50 p-6 rounded-3xl border border-zinc-200 shadow-md space-y-4">
             <div className="flex items-center gap-2.5 border-b border-cyan-50 pb-3">
               <div className="p-1.5 bg-cyan-50 text-primary rounded-lg border border-cyan-100">
                 <History className="w-4 h-4" />

@@ -103,7 +103,7 @@ export const FarmManagement: React.FC<FarmManagementProps> = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {idealParams.map((item, idx) => (
-              <div key={idx} className="bg-white/80 border border-cyan-100/30 p-6 rounded-3xl shadow-sm flex flex-col justify-between group">
+              <div key={idx} className="bg-gradient-to-br from-teal-50 to-blue-50/50 border border-cyan-100 p-6 rounded-3xl shadow-md flex flex-col justify-between group hover:shadow-lg transition-all">
                 <div className="flex justify-between items-start border-b border-cyan-50 pb-3">
                   <h4 className="font-extrabold text-sm text-font-dark group-hover:text-primary transition-colors">{item.title}</h4>
                   <span className="font-black text-sm text-primary bg-cyan-50 border border-cyan-100/50 px-3 py-0.5 rounded-full">{item.value}</span>
@@ -126,7 +126,7 @@ export const FarmManagement: React.FC<FarmManagementProps> = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {pondContent.selection.items.map((item, idx) => (
-                <div key={idx} className="bg-white/80 border border-cyan-100/30 p-5 rounded-3xl shadow-sm space-y-2">
+                <div key={idx} className="bg-gradient-to-br from-sky-50 to-cyan-100/40 border border-sky-100 p-5 rounded-3xl shadow-md space-y-2">
                   <h5 className="font-extrabold text-sm text-font-dark text-primary">{item.title}</h5>
                   <p className="text-xs text-font-light leading-relaxed font-semibold">{item.desc}</p>
                 </div>
@@ -142,7 +142,7 @@ export const FarmManagement: React.FC<FarmManagementProps> = () => {
             </div>
             <div className="space-y-3">
               {pondContent.preparation.items.map((step, idx) => (
-                <div key={idx} className="bg-white/80 border border-cyan-100/30 p-5 rounded-3xl shadow-sm flex items-start gap-4">
+                <div key={idx} className="bg-gradient-to-br from-indigo-50 to-sky-100/30 border border-indigo-100 p-5 rounded-3xl shadow-md flex items-start gap-4">
                   <div className="w-8 h-8 rounded-full bg-cyan-50 text-primary border border-cyan-100 flex items-center justify-center font-black text-sm shrink-0">
                     {idx + 1}
                   </div>
@@ -159,7 +159,7 @@ export const FarmManagement: React.FC<FarmManagementProps> = () => {
 
       {/* STEPS GUIDE */}
       {activeTab === 'steps' && (
-        <div className="bg-white/80 border border-cyan-100/40 p-8 rounded-3xl shadow-sm space-y-6 animate-in fade-in duration-200">
+        <div className="bg-gradient-to-br from-purple-50 to-indigo-50/40 border border-purple-100 p-8 rounded-3xl shadow-md space-y-6 animate-in fade-in duration-200">
           <h4 className="font-bold text-font-dark border-b border-cyan-50 pb-4">{pondContent.cycle.title}</h4>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs font-semibold leading-relaxed text-font-light">
@@ -187,7 +187,7 @@ export const FarmManagement: React.FC<FarmManagementProps> = () => {
               <div
                 key={item.id}
                 onClick={() => setSelectedModule(item)}
-                className="bg-white/85 border border-cyan-100/35 p-5 rounded-3xl shadow-xs hover:shadow-md hover:border-primary/30 transition-all cursor-pointer flex flex-col justify-between h-48 select-none group"
+                className="bg-gradient-to-br from-emerald-50 to-teal-50/50 border border-emerald-100 p-5 rounded-3xl shadow-md hover:shadow-lg hover:border-primary/30 transition-all cursor-pointer flex flex-col justify-between h-48 select-none group"
               >
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">

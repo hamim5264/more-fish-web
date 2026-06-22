@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
-import { api } from '../services/api.ts';
+import { api, normalizeAeratorAutomation } from '../services/api.ts';
 import {
   Activity, Droplets, Thermometer, Wind, AlertTriangle, 
   RefreshCw, Power, LineChart as ChartIcon, Zap 
@@ -71,7 +71,9 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
   const sensorCacheRef = useRef<Map<string, any[]>>(new Map());
   const pondRequestsRef = useRef<Set<string>>(new Set());
   const pondAbortControllersRef = useRef<Map<string, AbortController>>(new Map());
-  const [controlLoading, setControlLoading] = useState<string | null>(null);
+  const [isAutomationEnabled, setIsAutomationEnabled] = useState(false);
+  const [aeratorStates, setAeratorStates] = useState<Record<string, boolean>>({});
+  const [busyAerators, setBusyAerators] = useState<Set<string>>(new Set());
 
   // Load Pond List
   const loadPonds = async () => {
@@ -223,6 +225,10 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
   };
 
   const getAeratorPower = (aerator: any) => {
+    const aeratorId = String(aerator?.aerator_id || aerator?.id || '');
+    if (aeratorId && aeratorStates[aeratorId] !== undefined) {
+      return aeratorStates[aeratorId];
+    }
     const value = aerator?.command ?? aerator?.is_running ?? aerator?.isRunning ?? aerator?.state ?? aerator?.status ?? aerator?.power ?? aerator?.on;
     return value === 1 || value === true || String(value).toLowerCase() === 'on';
   };
@@ -385,6 +391,18 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
       const responseData: any = res.data || res;
       const device = responseData?.device || (Array.isArray(responseData?.devices) ? responseData.devices[0] : null);
       setLiveData(responseData || null);
+      
+      const aerators = device?.aerators || device?.relays || device?.switches || [];
+      aerators.forEach((aerator: any) => {
+        const aeratorId = String(aerator.aerator_id || aerator.id || '');
+        if (!busyAerators.has(aeratorId)) {
+          const isRunning = aerator.command === 1 || aerator.is_running === true || aerator.isRunning === true || aerator.status === 1 || String(aerator.status).toLowerCase() === 'on' || aerator.on === true;
+          setAeratorStates(prev => ({
+            ...prev,
+            [aeratorId]: isRunning
+          }));
+        }
+      });
       setFarmName(
         responseData?.asset?.asset_name ||
         responseData?.asset_name ||
@@ -399,6 +417,15 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
       setLastFetchTime(getLastFetchFromSensors(device) ?? device?.last_reading_time ?? device?.last_synced ?? device?.last_seen ?? device?.lastUpdate ?? null);
 
       const deviceId = getDeviceId(device);
+      if (deviceId) {
+        try {
+          const autoRes = await api.getAeratorAutomation(deviceId, flow);
+          const settings = normalizeAeratorAutomation(autoRes);
+          setIsAutomationEnabled(settings.is_enabled);
+        } catch (autoErr) {
+          console.error('Failed to load aerator automation status:', autoErr);
+        }
+      }
       let sensorList = deviceId ? sensorCacheRef.current.get(String(deviceId)) || [] : [];
       if (deviceId) {
         if (sensorList.length === 0) {
@@ -472,10 +499,25 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
     loadPondData(selectedPond.id);
     const timer = setInterval(() => {
       loadPondData(selectedPond.id);
-    }, 10000);
+    }, 2000);
 
-    return () => clearInterval(timer);
-  }, [selectedPond?.id]);
+    const handleAutoChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail) {
+        const device = liveData?.device || (liveData?.devices && liveData.devices[0]);
+        const deviceId = getDeviceId(device);
+        if (deviceId && String(customEvent.detail.deviceId) === String(deviceId)) {
+          setIsAutomationEnabled(customEvent.detail.isEnabled);
+        }
+      }
+    };
+    window.addEventListener(`${flow}:automation-changed`, handleAutoChange);
+
+    return () => {
+      clearInterval(timer);
+      window.removeEventListener(`${flow}:automation-changed`, handleAutoChange);
+    };
+  }, [selectedPond?.id, flow, liveData]);
 
   // Fetch Graph Data
   const loadGraphFor = async (assetId: string, sensorId: number | string, type: 'daily' | 'weekly' | 'monthly' | 'yearly') => {
@@ -580,27 +622,80 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
   }, [graphType, selectedMetric, selectedPond?.id, selectedSensor?.id]);
 
   // Toggle Aerator command
-  const handleToggleAerator = async (aeratorId: string, currentCommand: number, aeratorOnline: boolean) => {
+  const handleToggleAerator = async (aerator: any, aeratorOnline: boolean) => {
+    const aeratorId = String(aerator.aerator_id || aerator.id || '');
+    console.log('[handleToggleAerator] Clicked aerator:', aeratorId, 'online:', aeratorOnline);
+    console.log('[handleToggleAerator] isAutomationEnabled:', isAutomationEnabled, 'busyAerators:', Array.from(busyAerators));
+
+    // 1. Check Guard
+    if (isAutomationEnabled) {
+      console.warn('[handleToggleAerator] Blocked: Automation is enabled');
+      showToast(t('manual_control_disabled') || 'Manual control is disabled while Automation is ON.');
+      return;
+    }
     if (!aeratorOnline) {
+      console.warn('[handleToggleAerator] Blocked: Aerator is offline');
       showToast('This aerator is offline');
       return;
     }
-    if (!isOnline) {
-      showToast('Device is offline');
+    if (busyAerators.has(aeratorId)) {
+      console.warn('[handleToggleAerator] Blocked: Aerator is busy (debouncing)');
       return;
     }
 
-    setControlLoading(aeratorId);
-    const newCommand = currentCommand === 1 ? 0 : 1;
+    const currentStatus = getAeratorPower(aerator);
+    const nextStatus = !currentStatus;
+
+    // 1. Enter Busy Mode (prevents double clicks)
+    setBusyAerators(prev => {
+      const next = new Set(prev);
+      next.add(aeratorId);
+      return next;
+    });
+
+    // 2. Optimistic UI Update (Update UI instantly)
+    setAeratorStates(prev => ({
+      ...prev,
+      [aeratorId]: nextStatus
+    }));
+
+    // Network Request
+    const requestPayload = {
+      aerator_id: aeratorId,
+      command: nextStatus ? 1 : 0
+    };
+    console.log('--- SENDING COMMAND TO API ---');
+    console.log('Endpoint: POST /devices/aerators/command/');
+    console.log('Payload:', JSON.stringify(requestPayload, null, 2));
+
     try {
-      await api.controlAerator(aeratorId, newCommand, flow);
+      const res = await api.controlAerator(aeratorId, nextStatus ? 1 : 0, flow);
+      console.log('--- API RESPONSE RECEIVED (SUCCESS) ---');
+      console.log('Response:', JSON.stringify(res, null, 2));
+
+      // Success: Keep the optimistic state, but wait for next poll to unlock
       if (selectedPond) {
         await loadPondData(selectedPond.id);
       }
-    } catch (err) {
-      alert('Failed to send aerator command.');
+    } catch (err: any) {
+      console.error('--- API RESPONSE RECEIVED (ERROR) ---');
+      console.error('Error Details:', err);
+      // 3. Rollback on Failure
+      setAeratorStates(prev => ({
+        ...prev,
+        [aeratorId]: currentStatus
+      }));
+      showToast('Failed to send command');
     } finally {
-      setControlLoading(null);
+      // 4. Unlock after a short delay (Crucial!)
+      // We wait 5 seconds to give hardware time to update before polling resumes for this ID
+      setTimeout(() => {
+        setBusyAerators(prev => {
+          const next = new Set(prev);
+          next.delete(aeratorId);
+          return next;
+        });
+      }, 5000);
     }
   };
 
@@ -622,7 +717,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
         </div>
       )}
       {/* Top Pond Select & Status */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white/80 p-5 rounded-3xl border border-cyan-100/40 shadow-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gradient-to-r from-teal-50 to-emerald-50/50 p-6 rounded-3xl border border-teal-100 shadow-md">
         <div className="flex items-center gap-3">
           <label className="text-sm font-bold text-font-dark shrink-0">{t('select_device')}:</label>
           {loading ? (
@@ -684,7 +779,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
 
       {/* Sensor Metric Cards */}
       {selectedPond && (
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
           {metrics.map((metric) => {
             const Icon = metric.icon;
             const value = getMetricValue(metric.key);
@@ -693,31 +788,50 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
             const isPerfect = dangerStatus === 'perfect';
             const isInvalid = dangerStatus === 'invalid';
             const warning = isInvalid ? null : getSensorWarning(metric.key, value);
-            return (
+
+            // Colorful card styling mapping
+            const colorMap: Record<string, { bg: string, border: string, text: string, icon: string }> = {
+              temperature: { bg: 'from-amber-100 to-orange-200/70', border: 'border-orange-300', text: 'text-orange-700', icon: 'text-orange-500/30' },
+              do_level: { bg: 'from-cyan-100 to-sky-200/70', border: 'border-cyan-300', text: 'text-sky-700', icon: 'text-sky-500/30' },
+              ph_level: { bg: 'from-teal-100 to-emerald-200/70', border: 'border-teal-300', text: 'text-emerald-700', icon: 'text-emerald-500/30' },
+              ammonia: { bg: 'from-emerald-100 to-green-200/70', border: 'border-emerald-300', text: 'text-green-700', icon: 'text-green-500/30' },
+              tds: { bg: 'from-blue-100 to-indigo-200/70', border: 'border-blue-300', text: 'text-indigo-700', icon: 'text-indigo-500/30' },
+              salinity: { bg: 'from-purple-100 to-violet-200/70', border: 'border-purple-300', text: 'text-purple-700', icon: 'text-purple-500/30' },
+            };
+            const design = colorMap[metric.key] || colorMap.temperature;
+
+             return (
               <button
                 key={metric.key}
                 type="button"
                 onClick={() => handleMetricCardClick(metric.key)}
-                className={`p-5 rounded-3xl border flex flex-col justify-between min-h-36 relative overflow-hidden group text-left transition-all ${
-                  isPerfect ? 'bg-white/80' : 'bg-red-50/70'
-                } ${
-                  active ? 'border-primary shadow-lg' : isPerfect ? 'border-cyan-100/30 hover:border-cyan-200' : 'border-red-200 hover:border-red-300'
+                className={`p-6 rounded-3xl border-2 flex flex-col justify-between items-center min-h-56 relative overflow-hidden group text-center transition-all hover:scale-[1.03] cursor-pointer ${
+                  active 
+                    ? 'border-primary bg-sky-100/60 shadow-[0_15px_30px_rgba(2,132,199,0.25)] scale-[1.03] ring-4 ring-primary/10' 
+                    : isPerfect 
+                      ? `bg-gradient-to-br ${design.bg} ${design.border} shadow-[0_15px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_50px_-5px_rgba(0,0,0,0.22)]` 
+                      : 'bg-gradient-to-br from-red-50 to-orange-100/50 border-red-300 shadow-[0_15px_30px_rgba(239,68,68,0.15)] hover:shadow-[0_25px_50px_-5px_rgba(239,68,68,0.25)]'
                 }`}
               >
-                <Icon className={`absolute right-4 top-4 w-12 h-12 ${metric.key === 'temperature' ? 'text-teal-500/25' : metric.key === 'do_level' ? 'text-cyan-500/25' : metric.key === 'ph_level' ? 'text-blue-500/25' : metric.key === 'ammonia' ? 'text-emerald-500/25' : 'text-indigo-500/25'} group-hover:scale-110 transition-transform`} />
-                <span className="text-xs font-bold text-font-light">{metric.label}</span>
-                <div className="mt-2">
-                  <span
-                    className="text-3xl font-black"
-                    style={{ color: isPerfect ? '#00cc00' : '#e74c3c' }}
+                <div className="w-full flex flex-col items-center">
+                  <div className="mx-auto w-14 h-14 bg-white/70 backdrop-blur-xs rounded-2xl flex items-center justify-center p-2.5 shadow-sm border border-white/80 group-hover:scale-110 transition-transform">
+                    <Icon className={`w-8 h-8 ${isPerfect ? design.text : 'text-red-500'}`} />
+                  </div>
+                  <div className="text-sm md:text-base font-black uppercase tracking-wider text-font-dark/95 leading-tight block text-center mt-3">{metric.label}</div>
+                </div>
+                <div className="mt-4 text-center">
+                  <div
+                    className={`text-5xl md:text-6xl font-black block tracking-tight ${
+                      isPerfect ? design.text : 'text-red-600'
+                    }`}
                   >
                     {isInvalid ? 'No Data' : value !== null && value !== undefined ? value : '--'}
                     {!isInvalid && value !== null && value !== undefined && (
-                      <span className="text-xl">{getMetricUnit(metric.key)}</span>
+                      <span className="text-2xl md:text-3xl font-black ml-1 text-inherit">{getMetricUnit(metric.key)}</span>
                     )}
-                  </span>
+                  </div>
                   {warning && (
-                    <p className="mt-2 text-xs font-bold leading-5 text-[#e74c3c]">{warning}</p>
+                    <p className="mt-2.5 text-xs font-black leading-relaxed text-red-600 bg-white/60 p-2 rounded-xl border border-red-200">{warning}</p>
                   )}
                 </div>
               </button>
@@ -734,11 +848,11 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
             {aeratorsList.map((aerator: any) => {
               const isOn = getAeratorPower(aerator);
               const online = getAeratorOnline(aerator);
-              const isPending = controlLoading === aerator.id;
+              const isPending = busyAerators.has(String(aerator.aerator_id || aerator.id || ''));
               return (
                 <div
                   key={aerator.id}
-                  className="bg-white/80 p-5 rounded-3xl border border-cyan-100/30 shadow-sm flex items-center justify-between"
+                  className="bg-gradient-to-br from-indigo-50 to-sky-50/50 p-6 rounded-3xl border border-indigo-100 shadow-md flex items-center justify-between"
                 >
                   <div className="flex items-center gap-3">
                     <div className={`p-2.5 rounded-xl border ${isOn ? 'bg-cyan-50 text-primary border-cyan-100' : 'bg-gray-50 text-gray-400 border-gray-100'}`}>
@@ -756,13 +870,13 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
 
                   <button
                     disabled={isPending}
-                    aria-disabled={!online || !isOnline}
-                    onClick={() => handleToggleAerator(aerator.id, aerator.command, online)}
+                    aria-disabled={!online}
+                    onClick={() => handleToggleAerator(aerator, online)}
                     className={`p-3 rounded-2xl cursor-pointer transition-all ${
                       isOn
-                        ? 'bg-primary hover:bg-primary-hover text-white shadow-md shadow-cyan-100'
-                        : 'bg-red-50 hover:bg-red-100 text-red-500 border border-red-100'
-                    } ${(!online || !isOnline) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        ? 'bg-[#2fbf71] hover:bg-[#259b5c] text-white shadow-md shadow-emerald-100 border border-[#2fbf71]'
+                        : 'bg-[#e74c3c] hover:bg-[#c0392b] text-white shadow-md shadow-red-100 border border-[#e74c3c]'
+                    } ${!online ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isPending ? (
                       <RefreshCw className="w-5 h-5 animate-spin" />
@@ -779,7 +893,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
 
       {/* Historical Graph Viewer */}
       {selectedPond && selectedMetric && (
-        <div className="bg-white/80 border border-cyan-100/40 p-6 rounded-3xl shadow-sm space-y-6">
+        <div className="bg-gradient-to-br from-blue-50 to-cyan-50/50 border border-blue-100 p-6 rounded-3xl shadow-md space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <ChartIcon className="w-5 h-5 text-primary" />

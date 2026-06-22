@@ -88,41 +88,41 @@ export const SmartKhamari: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between border-b border-cyan-50 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className="p-2 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
-            <Grid className="w-5 h-5" />
+          <div className="p-2.5 bg-cyan-50 text-primary rounded-xl border border-cyan-100">
+            <Grid className="w-6 h-6" />
           </div>
           <div>
-            <h4 className="font-bold text-font-dark">{t('smart_khamari')}</h4>
-            <p className="text-[10px] font-bold text-font-light uppercase">Premium Farmers Network & Cooperative</p>
+            <h4 className="font-black text-2xl text-font-dark">{t('smart_khamari')}</h4>
+            <p className="text-[11px] font-black text-font-light uppercase">Premium Farmers Network & Cooperative</p>
           </div>
         </div>
       </div>
 
       {/* Hero Banner */}
-      <div className="bg-linear-to-tr from-cyan-900 to-blue-950 rounded-3xl p-8 text-white relative overflow-hidden shadow-md">
+      <div className="bg-gradient-to-tr from-cyan-900 to-blue-950 rounded-3xl p-8 text-white relative overflow-hidden shadow-lg">
         <div className="absolute right-0 bottom-0 top-0 opacity-15 pointer-events-none flex items-center justify-center pr-10">
-          <Sparkles className="w-64 h-64 text-white" />
+          <Sparkles className="w-64 h-64 text-white animate-pulse" />
         </div>
 
-        <div className="max-w-2xl space-y-4 relative z-10">
-          <span className="text-[10px] font-black tracking-widest bg-cyan-500/30 text-cyan-200 px-3 py-1 rounded-full uppercase border border-cyan-500/20">
+        <div className="max-w-3xl space-y-4 relative z-10">
+          <span className="text-[10px] font-black tracking-widest bg-cyan-500/30 text-cyan-200 px-3.5 py-1.5 rounded-full uppercase border border-cyan-500/20 shadow-sm">
             {lang === 'bn' ? 'প্রিমিয়াম কোঅপারেটিভ' : 'Premium Cooperative'}
           </span>
-          <h2 className="text-xl md:text-2xl font-black leading-tight">
+          <h2 className="text-2xl md:text-3xl font-black leading-tight">
             {t('smart_khamari_club')}
           </h2>
-          <p className="text-xs text-white/80 leading-relaxed font-semibold">
+          <p className="text-sm text-white/90 leading-relaxed font-bold">
             {lang === 'bn' 
               ? 'এটি একটি আধুনিক ডিজিটাল সমবায় নেটওয়ার্ক যেখানে পেশাদার মৎস্য চাষীরা একজোট হয়ে নতুন প্রযুক্তি ব্যবহার করছেন, খামারের তথ্য আদান-প্রদান করছেন এবং সম্মিলিতভাবে নিজেদের উৎপাদিত মাছ বাজারজাত করছেন।'
               : 'A revolutionary digital cooperative network where professional fish farmers collaborate using modern IoT technologies, share parameter telemetry logs, and link directly to national trade outlets.'}
           </p>
 
           <div className="flex flex-wrap items-center gap-6 pt-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-cyan-300">
+            <div className="flex items-center gap-2 text-xs font-black text-cyan-300 uppercase tracking-wide">
               <Users className="w-5 h-5 text-cyan-400" />
               <span>{lang === 'bn' ? '৫-১০ জন চাষী প্রতি ক্লাস্টার' : '5-10 Farmers per Cluster'}</span>
             </div>
-            <div className="flex items-center gap-2 text-xs font-bold text-cyan-300">
+            <div className="flex items-center gap-2 text-xs font-black text-cyan-300 uppercase tracking-wide">
               <ShieldCheck className="w-5 h-5 text-cyan-400" />
               <span>{lang === 'bn' ? 'ডেডিকেটেড ডিএমএ অফিসার' : 'Dedicated DMA Tech Officer'}</span>
             </div>
@@ -131,37 +131,37 @@ export const SmartKhamari: React.FC = () => {
       </div>
 
       {/* Premium Perks Grid */}
-      <div className="bg-white border border-cyan-100/40 rounded-3xl p-6 shadow-sm space-y-6">
-        <h4 className="font-extrabold text-sm text-font-dark border-b border-cyan-50 pb-3">
+      <div className="bg-gradient-to-br from-indigo-50 to-purple-100/40 border border-indigo-200 rounded-3xl p-6 shadow-md space-y-6">
+        <h4 className="font-black text-base text-font-dark border-b border-indigo-100 pb-3">
           {lang === 'bn' ? 'ক্লাব মেম্বারশিপের প্রধান সুবিধাসমূহ' : 'Exclusive Club Member Privileges'}
         </h4>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="p-4 bg-cyan-50/10 border border-cyan-100/30 rounded-2xl space-y-2">
-            <Award className="w-7 h-7 text-primary" />
-            <h5 className="font-extrabold text-xs text-font-dark">Technical Certification</h5>
-            <p className="text-[10px] text-font-light font-semibold leading-relaxed">
+          <div className="p-4 bg-white border border-indigo-150 rounded-2xl space-y-2 shadow-xs">
+            <Award className="w-8 h-8 text-primary" />
+            <h5 className="font-black text-sm text-font-dark">Technical Certification</h5>
+            <p className="text-xs text-font-light font-bold leading-relaxed">
               Hands-on training on digital sensor monitoring, aeration chemistry, and optimized feed conversion ratio (FCR) formulas.
             </p>
           </div>
-          <div className="p-4 bg-cyan-50/10 border border-cyan-100/30 rounded-2xl space-y-2">
-            <TrendingUp className="w-7 h-7 text-primary" />
-            <h5 className="font-extrabold text-xs text-font-dark">Dashboard Access</h5>
-            <p className="text-[10px] text-font-light font-semibold leading-relaxed">
+          <div className="p-4 bg-white border border-indigo-150 rounded-2xl space-y-2 shadow-xs">
+            <TrendingUp className="w-8 h-8 text-primary" />
+            <h5 className="font-black text-sm text-font-dark">Dashboard Access</h5>
+            <p className="text-xs text-font-light font-bold leading-relaxed">
               Unlock historical logs, chart overlays, multi-pond parameters comparisons, and advanced yield estimation tools.
             </p>
           </div>
-          <div className="p-4 bg-cyan-50/10 border border-cyan-100/30 rounded-2xl space-y-2">
-            <Gift className="w-7 h-7 text-primary" />
-            <h5 className="font-extrabold text-xs text-font-dark">Partner Discounts</h5>
-            <p className="text-[10px] text-font-light font-semibold leading-relaxed">
+          <div className="p-4 bg-white border border-indigo-150 rounded-2xl space-y-2 shadow-xs">
+            <Gift className="w-8 h-8 text-primary" />
+            <h5 className="font-black text-sm text-font-dark">Partner Discounts</h5>
+            <p className="text-xs text-font-light font-bold leading-relaxed">
               Exclusive corporate discounts on certified fish medicine, high-protein feeds, and IoT controller devices.
             </p>
           </div>
-          <div className="p-4 bg-cyan-50/10 border border-cyan-100/30 rounded-2xl space-y-2">
-            <CheckCircle className="w-7 h-7 text-primary" />
-            <h5 className="font-extrabold text-xs text-font-dark">Market Linkage</h5>
-            <p className="text-[10px] text-font-light font-semibold leading-relaxed">
+          <div className="p-4 bg-white border border-indigo-150 rounded-2xl space-y-2 shadow-xs">
+            <CheckCircle className="w-8 h-8 text-primary" />
+            <h5 className="font-black text-sm text-font-dark">Market Linkage</h5>
+            <p className="text-xs text-font-light font-bold leading-relaxed">
               Bypass middlemen and sell your grown fish harvests directly under the trusted "MoreFish" premium brand.
             </p>
           </div>
@@ -170,7 +170,7 @@ export const SmartKhamari: React.FC = () => {
 
       {/* Membership Tiers Cards */}
       <div className="space-y-4">
-        <h4 className="font-extrabold text-sm text-font-dark text-center">
+        <h4 className="font-black text-lg text-font-dark text-center">
           {t('membership_tiers')}
         </h4>
 
@@ -180,8 +180,8 @@ export const SmartKhamari: React.FC = () => {
             return (
               <div
                 key={tier.name}
-                className={`bg-white border rounded-3xl overflow-hidden shadow-sm flex flex-col justify-between transition-transform duration-200 hover:scale-[1.01] ${
-                  isGold ? 'border-amber-400 ring-2 ring-amber-400/20' : 'border-cyan-100/40'
+                className={`bg-white border rounded-3xl overflow-hidden shadow-md flex flex-col justify-between transition-transform duration-200 hover:scale-[1.01] ${
+                  isGold ? 'border-amber-400 ring-2 ring-amber-400/20 shadow-lg' : 'border-cyan-200'
                 }`}
               >
                 <div className={`p-6 text-white bg-gradient-to-br ${tier.color} relative`}>
@@ -190,8 +190,8 @@ export const SmartKhamari: React.FC = () => {
                       Popular
                     </span>
                   )}
-                  <h4 className="font-black text-sm">{lang === 'bn' ? tier.nameBn : tier.name}</h4>
-                  <p className="font-black text-2xl mt-2">{lang === 'bn' ? tier.priceBn : tier.price}</p>
+                  <h4 className="font-black text-base">{lang === 'bn' ? tier.nameBn : tier.name}</h4>
+                  <p className="font-black text-3xl mt-2">{lang === 'bn' ? tier.priceBn : tier.price}</p>
                 </div>
 
                 <div className="p-6 flex-1 flex flex-col justify-between space-y-6 bg-cyan-50/5">
