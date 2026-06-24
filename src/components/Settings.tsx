@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
 import { api } from '../services/api.ts';
-import { Settings as SettingsIcon, Languages, Lock, ShieldCheck, RefreshCw, Info, UserCheck } from 'lucide-react';
+import { Settings as SettingsIcon, Languages, Lock, ShieldCheck, RefreshCw, Info } from 'lucide-react';
 import type { Ecosystem } from '../types/navigation';
 import { ecosystemToAuthFlow } from '../types/navigation';
 
@@ -172,22 +172,6 @@ export const Settings: React.FC<SettingsProps> = ({ activeEcosystem }) => {
               <h5 className="font-black text-xs text-font-dark uppercase tracking-wider">Development Team</h5>
               
               <div className="space-y-3 font-bold">
-                <div className="flex items-start gap-2.5 bg-white p-3 rounded-xl border border-cyan-100 shadow-xs">
-                  <UserCheck className="w-5 h-5 text-cyan-600 shrink-0 mt-0.5" />
-                  <div className="text-xs">
-                    <p className="text-font-dark font-black leading-tight">Md. Abdul Hamim Leon</p>
-                    <p className="text-font-light mt-0.5">Flutter & AI Developer | Automation Systems</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-2.5 bg-white p-3 rounded-xl border border-cyan-100 shadow-xs">
-                  <UserCheck className="w-5 h-5 text-cyan-600 shrink-0 mt-0.5" />
-                  <div className="text-xs">
-                    <p className="text-font-dark font-black leading-tight">Izaz Ahmed (ahizaz)</p>
-                    <p className="text-font-light mt-0.5">Flutter Developer</p>
-                  </div>
-                </div>
-
                 <div className="flex items-start gap-2.5 bg-white p-3 rounded-xl border border-cyan-100 shadow-xs">
                   <ShieldCheck className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                   <div className="text-xs">

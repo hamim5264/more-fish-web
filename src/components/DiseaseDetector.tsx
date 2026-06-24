@@ -13,10 +13,13 @@ import {
 interface DiseaseDetectorProps {
   defaultTab?: 'scanner' | 'guide';
   flow?: AquacultureFlow;
+  token?: string;
+  userId?: string;
 }
 
 export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
   const flow = props.flow ?? 'fish';
+  const token = props.token;
   const { tokens } = useAuth();
   const { t } = useLang();
   
@@ -83,7 +86,8 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
       setError('Please select an image first.');
       return;
     }
-    if (!tokens[flow] && !localStorage.getItem(flow === 'pharma' ? STORAGE_KEYS.PHARMA_TOKEN : STORAGE_KEYS.MORE_FISH_TOKEN)) {
+    const activeToken = token || tokens[flow] || localStorage.getItem(flow === 'pharma' ? STORAGE_KEYS.PHARMA_TOKEN : STORAGE_KEYS.MORE_FISH_TOKEN);
+    if (!activeToken) {
       setError('You are not logged in.');
       return;
     }
@@ -92,7 +96,7 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
     setError(null);
     setScanResult(null);
     try {
-      const res = await api.detectFishDisease(selectedImage, flow);
+      const res = await api.detectFishDisease(selectedImage, flow, token);
       const payload = res?.data ?? res ?? {};
 
       const diseaseName = payload?.data?.disease || payload?.disease || payload?.data?.disease_name || payload?.disease_name || payload?.result?.disease || null;
@@ -209,9 +213,9 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
                 onClick={() => fileInputRef.current?.click()}
                 className="flex-1 border-2 border-dashed border-cyan-200 hover:border-primary rounded-2xl flex flex-col items-center justify-center p-8 text-center cursor-pointer bg-cyan-50/20 hover:bg-cyan-50/40 transition-all"
               >
-                <Upload className="w-12 h-12 text-primary/40 mb-3" />
-                <span className="text-sm font-bold text-font-dark">Drag & Drop fish image here</span>
-                <span className="text-xs text-font-light font-medium mt-1">Supports PNG, JPG, JPEG (Max 5MB)</span>
+                <Upload className="w-14 h-14 text-primary/40 mb-3" />
+                <span className="text-lg font-black text-font-dark">Drag & Drop fish image here</span>
+                <span className="text-sm text-font-light font-bold mt-1">Supports PNG, JPG, JPEG (Max 5MB)</span>
                 <input
                   type="file"
                   ref={fileInputRef}
@@ -227,7 +231,7 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
                   capture="environment"
                   className="hidden"
                 />
-                <div className="mt-4 flex items-center justify-center gap-3">
+                <div className="mt-6 flex items-center justify-center gap-4">
                   <button
                     type="button"
                     onClick={(e) => {
@@ -235,9 +239,10 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
                       cameraInputRef.current?.click();
                     }}
                     disabled={scanning}
-                    className="px-4 py-2 rounded-2xl bg-white border border-cyan-100 text-sm font-bold text-primary hover:bg-cyan-50 disabled:opacity-50"
+                    className="px-6 py-3 rounded-2xl bg-white border-2 border-primary/20 hover:border-primary/50 text-base font-black text-primary hover:bg-cyan-50 disabled:opacity-50 transition-all shadow-xs flex items-center gap-2 cursor-pointer"
                   >
-                    <Camera className="w-4 h-4 inline-block mr-2" />{t('camera')}
+                    <Camera className="w-5 h-5" />
+                    <span>{t('camera')}</span>
                   </button>
                   <button
                     type="button"
@@ -246,9 +251,10 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
                       fileInputRef.current?.click();
                     }}
                     disabled={scanning}
-                    className="px-4 py-2 rounded-2xl bg-white border border-cyan-100 text-sm font-bold text-primary hover:bg-cyan-50 disabled:opacity-50"
+                    className="px-6 py-3 rounded-2xl bg-white border-2 border-primary/20 hover:border-primary/50 text-base font-black text-primary hover:bg-cyan-50 disabled:opacity-50 transition-all shadow-xs flex items-center gap-2 cursor-pointer"
                   >
-                    <Upload className="w-4 h-4 inline-block mr-2" />{t('gallery')}
+                    <Upload className="w-5 h-5" />
+                    <span>{t('gallery')}</span>
                   </button>
                 </div>
               </div>
@@ -309,17 +315,17 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
           <div className="bg-gradient-to-br from-blue-50 to-indigo-100/30 border border-indigo-200 p-8 rounded-3xl shadow-md min-h-[360px] flex flex-col justify-center hover:shadow-lg transition-all">
             {scanning && (
               <div className="text-center py-12 space-y-4">
-                <Activity className="w-12 h-12 text-primary animate-bounce mx-auto" />
-                <h4 className="font-bold text-font-dark animate-pulse">Running AI Image Inference</h4>
-                <p className="text-xs text-font-light max-w-xs mx-auto">Analyzing skin texture, scales discoloration, and fin shapes for infections...</p>
+                <Activity className="w-16 h-16 text-primary animate-bounce mx-auto" />
+                <h4 className="text-xl font-black text-font-dark animate-pulse">Running AI Image Inference</h4>
+                <p className="text-sm text-font-light font-bold max-w-sm mx-auto">Analyzing skin texture, scales discoloration, and fin shapes for infections...</p>
               </div>
             )}
 
             {!scanning && !scanResult && (
-              <div className="text-center py-12 space-y-3">
-                <ShieldAlert className="w-12 h-12 text-cyan-200 mx-auto" />
-                <h4 className="font-bold text-font-dark">No Active Diagnosis</h4>
-                <p className="text-xs text-font-light max-w-xs mx-auto font-medium">Upload a clear photo of the diseased fish and click scan to query the diagnostic node.</p>
+              <div className="text-center py-12 space-y-4">
+                <ShieldAlert className="w-16 h-16 text-cyan-200 mx-auto" />
+                <h4 className="text-xl font-black text-font-dark">No Active Diagnosis</h4>
+                <p className="text-sm text-font-light max-w-sm mx-auto font-bold leading-relaxed">Upload a clear photo of the diseased fish and click scan to query the diagnostic node.</p>
               </div>
             )}
 
@@ -327,22 +333,22 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
               <div className="space-y-6 animate-in fade-in slide-in-from-right-4 duration-200">
                 <div className="flex items-center justify-between border-b border-cyan-50 pb-4">
                   <div>
-                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100">AI MATCH DETECTED</span>
-                    <h3 className="text-lg font-black text-font-dark mt-1">{scanResult.disease}</h3>
+                    <span className="text-xs font-black text-emerald-600 bg-emerald-50 px-3 py-1 rounded border border-emerald-100">AI MATCH DETECTED</span>
+                    <h3 className="text-2xl font-black text-font-dark mt-2">{scanResult.disease}</h3>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs text-font-light font-bold">CONFIDENCE</span>
-                    <h3 className="text-lg font-black text-primary">{scanResult.confidence !== null && scanResult.confidence !== undefined ? `${Number(scanResult.confidence).toFixed(1)}%` : '—'}</h3>
+                    <span className="text-xs text-font-light font-black">CONFIDENCE</span>
+                    <h3 className="text-2xl font-black text-primary mt-1">{scanResult.confidence !== null && scanResult.confidence !== undefined ? `${Number(scanResult.confidence).toFixed(1)}%` : '—'}</h3>
                   </div>
                 </div>
 
                 {scanResult.symptoms && (
-                  <div className="space-y-2">
-                    <span className="text-xs font-bold text-font-dark uppercase tracking-wide">Key Symptoms Analyzed</span>
-                    <ul className="space-y-1">
+                  <div className="space-y-2.5">
+                    <span className="text-sm font-black text-font-dark uppercase tracking-wide">Key Symptoms Analyzed</span>
+                    <ul className="space-y-1.5">
                       {scanResult.symptoms.map((sym: string, i: number) => (
-                        <li key={i} className="text-xs text-font-light font-semibold flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 bg-red-400 rounded-full"></span>
+                        <li key={i} className="text-sm text-font-light font-bold flex items-center gap-2.5">
+                          <span className="w-2 h-2 bg-red-400 rounded-full shrink-0"></span>
                           {sym}
                         </li>
                       ))}
@@ -350,9 +356,9 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
                   </div>
                 )}
 
-                <div className="space-y-2">
-                  <span className="text-xs font-bold text-font-dark uppercase tracking-wide">Recommended Treatment & Medicine</span>
-                  <div className="p-4 bg-emerald-50/50 border border-emerald-100/50 rounded-2xl text-xs text-emerald-800 leading-normal font-medium">
+                <div className="space-y-2.5">
+                  <span className="text-sm font-black text-font-dark uppercase tracking-wide">Recommended Treatment & Medicine</span>
+                  <div className="p-5 bg-emerald-50/50 border border-emerald-100/50 rounded-2xl text-sm text-emerald-800 leading-relaxed font-bold">
                     {scanResult.treatment}
                   </div>
                 </div>
@@ -364,9 +370,9 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
                       setSearchQuery(scanResult.disease === 'Unknown Pathogen' ? '' : scanResult.disease);
                       setActiveTab('guide');
                     }}
-                    className="w-full py-3 bg-cyan-50 hover:bg-cyan-100 text-primary font-bold text-xs rounded-2xl border border-cyan-100 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-4 bg-cyan-50 hover:bg-cyan-100 text-primary font-black text-sm rounded-2xl border border-cyan-100 transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
                   >
-                    <BookOpen className="w-4 h-4" />
+                    <BookOpen className="w-5 h-5" />
                     <span>View Treatment Guide Details</span>
                   </button>
                 </div>
@@ -386,9 +392,9 @@ export const DiseaseDetector: React.FC<DiseaseDetectorProps> = (props) => {
               placeholder="Search diseases, symptoms, or remedies..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-11 pr-4 py-3 bg-white/80 border border-cyan-100/80 rounded-2xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm"
+              className="w-full pr-4 py-3 bg-white border border-cyan-200 rounded-2xl text-sm font-bold text-font-dark focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm placeholder:text-font-light/60 search-input-polished"
             />
-            <Search className="absolute left-4 top-3.5 w-4 h-4 text-cyan-500" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-primary" />
           </div>
 
           {/* List items */}

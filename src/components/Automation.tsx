@@ -19,9 +19,11 @@ import type { AquacultureFlow } from '../types/aquaculture';
 
 interface AutomationProps {
   flow?: AquacultureFlow;
+  token?: string;
+  userId?: string;
 }
 
-export const Automation: React.FC<AutomationProps> = ({ flow = 'fish' }) => {
+export const Automation: React.FC<AutomationProps> = ({ flow = 'fish', token }) => {
   const { tokens } = useAuth();
   const { t } = useLang();
   const [ponds, setPonds] = useState<any[]>([]);
@@ -53,15 +55,16 @@ export const Automation: React.FC<AutomationProps> = ({ flow = 'fish' }) => {
   );
 
   useEffect(() => {
-    if (!tokens[flow]) return;
-    api.getPondList(flow)
+    const activeToken = token || tokens[flow];
+    if (!activeToken) return;
+    api.getPondList(flow, token)
       .then((response) => {
         const list = response.data || [];
         setPonds(list);
         setSelectedPond((current: any) => current || list[0] || null);
       })
       .catch((error) => console.error('[MoreFish automation] Pond list failed.', error));
-  }, [tokens[flow], flow]);
+  }, [token, tokens[flow], flow]);
 
   const loadPondAutomation = async (pond: any) => {
     if (!pond?.id) return;
@@ -69,14 +72,14 @@ export const Automation: React.FC<AutomationProps> = ({ flow = 'fish' }) => {
     setMessage(null);
     setInitialSettings(null);
     try {
-      const pondResponse = await api.getPondData(pond.id, undefined, flow);
+      const pondResponse = await api.getPondData(pond.id, undefined, flow, token);
       const resolvedDeviceId = pondResponse?.data?.device?.id || pondResponse?.raw?.data?.devices?.[0]?.device_id;
       if (!resolvedDeviceId) throw new Error('No device is connected to this pond.');
       const id = String(resolvedDeviceId);
       setDeviceId(id);
 
       const [automationResponse, cleanerResponse] = await Promise.all([
-        api.getAeratorAutomation(id, flow),
+        api.getAeratorAutomation(id, flow, token),
         api.getCleanerStatus(String(pond.id), flow),
       ]);
       const settings = normalizeAeratorAutomation(automationResponse);
@@ -111,7 +114,7 @@ export const Automation: React.FC<AutomationProps> = ({ flow = 'fish' }) => {
     setSaving(true);
     setMessage(null);
     try {
-      await api.saveAeratorAutomation(deviceId, autoEnabled, doMin, doMax, flow);
+      await api.saveAeratorAutomation(deviceId, autoEnabled, doMin, doMax, flow, token);
       const baseline = { isEnabled: autoEnabled, doMin, doMax };
       setInitialSettings(baseline);
       sessionStorage.setItem(`${flow}:automation:${deviceId}`, JSON.stringify(baseline));
@@ -125,7 +128,7 @@ export const Automation: React.FC<AutomationProps> = ({ flow = 'fish' }) => {
     }
   };
 
-  if (!tokens[flow]) {
+  if (!(token || tokens[flow])) {
     return (
       <div className="flex flex-1 flex-col items-center justify-center bg-linear-to-tr from-bg-light to-cyan-50 p-8 text-center">
         <Wind className="mb-4 h-16 w-16 animate-pulse text-cyan-400" />

@@ -196,7 +196,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm icon-input-polished"
                 />
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
@@ -220,7 +220,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_password')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm icon-input-polished"
                 />
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
@@ -260,7 +260,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                     placeholder={t('enter_first_name')}
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
+                    className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
                   />
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
                 </div>
@@ -274,7 +274,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                     placeholder={t('enter_last_name')}
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
+                    className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
                   />
                   <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
                 </div>
@@ -290,7 +290,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
                 />
                 <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
@@ -305,7 +305,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="01712345678"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
                 />
                 <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
@@ -320,7 +320,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_address')}
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
                 />
                 <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
@@ -335,7 +335,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_password')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
                 />
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
@@ -350,7 +350,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('confirm_password_error')}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
+                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
                 />
                 <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
@@ -390,7 +390,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm icon-input-polished"
                 />
                 <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
@@ -405,7 +405,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="017XXXXXXXX"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm icon-input-polished"
                 />
                 <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
@@ -475,7 +475,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="Enter new password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
                 />
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>
@@ -490,7 +490,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="Confirm new password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
+                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
                 />
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
               </div>

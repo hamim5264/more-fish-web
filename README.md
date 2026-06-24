@@ -198,6 +198,34 @@ Pharma Care uses the **same API and components** as More Fish with `flow="pharma
 
 ---
 
+## Netlify Deployment
+
+This project is fully configured for deployment on **Netlify**.
+
+### Deployment Settings
+- **Build Command**: `npm run build`
+- **Publish Directory**: `dist`
+
+### SPA Routing Redirects
+We have pre-configured SPA routing support for Netlify. The `public/_redirects` file is copied to the build destination automatically, ensuring that refreshes and direct URL access redirect cleanly to `index.html` with a `200` status:
+```text
+/* /index.html 200
+```
+
+---
+
+## Completed Features Summary
+
+1. **Backend Integration**: Real-time sensor API data integration (Oxygen, pH, Temp, Ammonia, Salinity) with Recharts telemetry visualizations.
+2. **Flexible View Modes**: 
+   - **Default View**: Displaying individual active profile data.
+   - **Multiple View**: Interactive loop display grouping connected accounts dynamically (perfect for multi-farm telemetry monitoring).
+3. **Weather Syncing**: Header weather forecast synced either globally to active profiles (Default view) or manually switchable per-profile (Multiple view).
+4. **Splash Screen**: Interactive, premium startup screen featuring a big animated DMA Logo, slogan, and simulated loading progress.
+5. **Modern Theme Color**: Standardized elements and custom gradients to use the vibrant `#00A8D5` brand theme.
+
+---
+
 ## Useful Commands
 
 ```bash

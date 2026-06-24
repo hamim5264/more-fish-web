@@ -27,6 +27,7 @@ export type Page =
   | 'about-app'
   | 'about-device'
   | 'settings'
+  | 'view-settings'
   | 'farm'; // legacy alias → pond
 
 export type Ecosystem = 'fish' | 'cattle' | 'poultry' | 'pharma' | 'beverage' | 'tex' | 'air' | 'crop';

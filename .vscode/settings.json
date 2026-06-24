@@ -8,5 +8,6 @@
     "PowerShell": {
       "source": "PowerShell"
     }
-  }
+  },
+  "css.lint.unknownAtRules": "ignore"
 }

@@ -26,6 +26,8 @@ import type { AquacultureFlow } from '../types/aquaculture';
 
 interface FCRCalculatorProps {
   flow?: AquacultureFlow;
+  token?: string;
+  userId?: string;
 }
 
 interface FcrRecord {
@@ -46,7 +48,7 @@ const FEED_STAGE_RATES: Record<FeedStage, number> = {
   market: 2.5,
 };
 
-export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) => {
+export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish', token }) => {
   const { tokens, logout } = useAuth();
   const { t } = useLang();
 
@@ -72,10 +74,11 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
   const [feedReqError, setFeedReqError] = useState<string | null>(null);
 
   const fetchHistory = async (assetId: number | string) => {
-    if (!tokens[flow]) return;
+    const activeToken = token || tokens[flow];
+    if (!activeToken) return;
     setHistoryLoading(true);
     try {
-      const response = await api.getFcrHistory(assetId, flow);
+      const response = await api.getFcrHistory(assetId, flow, token);
       const data = response?.data || [];
       setHistory(data);
     } catch (err: any) {
@@ -90,9 +93,10 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
   };
 
   useEffect(() => {
-    if (!tokens[flow]) return;
+    const activeToken = token || tokens[flow];
+    if (!activeToken) return;
     setPondsLoading(true);
-    api.getPondList(flow)
+    api.getPondList(flow, token)
       .then((response) => {
         const list = response.data || [];
         setPonds(list);
@@ -107,7 +111,7 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
         setError(t('no_assets_found'));
       })
       .finally(() => setPondsLoading(false));
-  }, [tokens[flow], flow, t]);
+  }, [token, tokens[flow], flow, t]);
 
   const handleNumericInput = (value: string, setter: (val: string) => void) => {
     if (value === '' || /^\d*\.?\d*$/.test(value)) {
@@ -143,7 +147,8 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
       return;
     }
 
-    if (!tokens[flow]) {
+    const activeToken = token || tokens[flow];
+    if (!activeToken) {
       setError(t('missing_auth_token'));
       return;
     }
@@ -155,7 +160,8 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
         feed,
         weight,
         notes.trim() || 'FCR Calculation',
-        flow
+        flow,
+        token
       );
 
       const payload = response?.data ?? response ?? {};
@@ -282,7 +288,7 @@ export const FCRCalculator: React.FC<FCRCalculatorProps> = ({ flow = 'fish' }) =
     rawDate: formatDate(record.calculated_at)
   }));
 
-  if (!tokens[flow]) {
+  if (!(token || tokens[flow])) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-linear-to-tr from-bg-light to-cyan-50">
         <Calculator className="w-16 h-16 text-cyan-400 mb-4 animate-pulse" />

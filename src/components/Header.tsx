@@ -152,16 +152,18 @@ const getOpenWeather = (response: any, location: string): HeaderWeather => ({
 });
 
 export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) => {
-  const { tokens, profiles } = useAuth();
+  const { tokens, profiles, allProfiles, viewMode } = useAuth();
   const { lang, setLang, t } = useLang();
   const { unreadCount } = useNotifications();
   const [time, setTime] = useState(new Date());
   const [weather, setWeather] = useState<HeaderWeather | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
+  const [selectedWeatherProfileIndex, setSelectedWeatherProfileIndex] = useState<number | null>(null);
 
   const isPharma = activeEcosystem === 'pharma';
   const headerLogo = isPharma ? pharmaLogo : moreFishLogo;
   const aquacultureFlow = activeEcosystem === 'pharma' ? 'pharma' : activeEcosystem === 'fish' ? 'fish' : null;
+  const sessions = aquacultureFlow ? (allProfiles[aquacultureFlow] || []) : [];
 
   useEffect(() => {
     const timer = window.setInterval(() => setTime(new Date()), 1000);
@@ -176,13 +178,18 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
       let location = 'Dhaka';
       try {
         if (aquacultureFlow && tokens[aquacultureFlow]) {
-          const pondResponse = await api.getPondList(aquacultureFlow);
+          const sessionsList = allProfiles[aquacultureFlow] || [];
+          const targetProfile = (viewMode === 'multiple' && selectedWeatherProfileIndex !== null && sessionsList[selectedWeatherProfileIndex])
+            ? sessionsList[selectedWeatherProfileIndex]
+            : profiles[aquacultureFlow];
+
+          const pondResponse = await api.getPondList(aquacultureFlow, targetProfile?.token);
           const firstPond = pondResponse.data?.[0];
           if (firstPond?.id) {
-            location = getDistrict(firstPond, null, profiles[aquacultureFlow]);
+            location = getDistrict(firstPond, null, targetProfile);
             try {
-              const dashboardResponse = await api.getPondData(firstPond.id, undefined, aquacultureFlow);
-              location = getDistrict(firstPond, dashboardResponse?.raw?.data, profiles[aquacultureFlow]);
+              const dashboardResponse = await api.getPondData(firstPond.id, undefined, aquacultureFlow, targetProfile?.token);
+              location = getDistrict(firstPond, dashboardResponse?.raw?.data, targetProfile);
               const dashboardWeather = getDashboardWeather(dashboardResponse, location);
               if (dashboardWeather) {
                 if (dashboardWeather.temperature == null || dashboardWeather.humidity == null) {
@@ -221,7 +228,7 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
       cancelled = true;
       window.clearInterval(refreshTimer);
     };
-  }, [tokens.fish, tokens.pharma, profiles.fish, profiles.pharma, activeEcosystem]);
+  }, [tokens.fish, tokens.pharma, profiles.fish, profiles.pharma, activeEcosystem, selectedWeatherProfileIndex, viewMode]);
 
   const locale = lang === 'bn' ? 'bn-BD' : 'en-US';
   const dateParts = new Intl.DateTimeFormat(locale, {
@@ -327,8 +334,31 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-3 border-b border-gray-100 pb-1.5 mb-1.5">
-                  <p className="truncate text-xs font-black capitalize text-font-light">{translateDescription(weather.description)}</p>
-                  <div className="flex items-center justify-end gap-1 text-[15px] font-black text-font-dark">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <p className="truncate text-xs font-black capitalize text-font-light">{translateDescription(weather.description)}</p>
+                    {viewMode === 'multiple' && sessions.length > 0 && (
+                      <select
+                        value={selectedWeatherProfileIndex ?? ''}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setSelectedWeatherProfileIndex(val === '' ? null : Number(val));
+                        }}
+                        className="small-select-weather bg-cyan-50/50 hover:bg-cyan-100/50 border border-cyan-100 rounded-lg text-[9.5px] font-black text-primary focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer px-1.5 py-0.5 transition-colors"
+                      >
+                        {sessions.map((session, index) => {
+                          const displayName = session.first_name 
+                            ? `${session.first_name} ${session.last_name || ''}`.trim()
+                            : session.email || `Account ${index + 1}`;
+                          return (
+                            <option key={index} value={index} className="text-xs text-font-dark">
+                              {displayName.split('@')[0].slice(0, 10)}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    )}
+                  </div>
+                  <div className="flex items-center justify-end gap-1 text-[15px] font-black text-font-dark shrink-0">
                     <span className="relative flex h-6 w-6 items-center justify-center">
                       <span className="weather-location-pulse absolute h-5 w-5 rounded-full bg-emerald-400/40" />
                       <MapPin className="relative h-5 w-5 shrink-0 text-[#00a651]" />
