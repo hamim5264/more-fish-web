@@ -75,7 +75,7 @@ export const LiveConsultancy: React.FC = () => {
       {/* Main Support Actions */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Phone Call Card */}
-        <div className="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-3xl p-6 text-white shadow-md flex flex-col justify-between h-56 transition-transform hover:scale-[1.01]">
+        <div className="bg-gradient-to-br from-cyan-500 to-blue-600 rounded-3xl p-6 text-white shadow-md flex flex-col justify-between min-h-[14rem] h-full transition-transform hover:scale-[1.01]">
           <div className="space-y-2">
             <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center border border-white/10 shadow-xs">
               <Phone className="w-7 h-7 text-white" />
@@ -98,7 +98,7 @@ export const LiveConsultancy: React.FC = () => {
         </div>
 
         {/* WhatsApp Chat Card */}
-        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-6 text-white shadow-md flex flex-col justify-between h-56 transition-transform hover:scale-[1.01]">
+        <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl p-6 text-white shadow-md flex flex-col justify-between min-h-[14rem] h-full transition-transform hover:scale-[1.01]">
           <div className="space-y-2">
             <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center border border-white/10 shadow-xs">
               <MessageSquare className="w-7 h-7 text-white" />

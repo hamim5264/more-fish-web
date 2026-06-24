@@ -6,6 +6,8 @@ import type { AquacultureFlow } from '../types/aquaculture';
 
 interface AutoFeederProps {
   flow?: AquacultureFlow;
+  token?: string;
+  userId?: string;
 }
 
 interface FeedSchedule {
@@ -15,7 +17,7 @@ interface FeedSchedule {
   isEnabled: boolean;
 }
 
-export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
+export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish', token }) => {
   const { t } = useLang();
   
   // State
@@ -46,7 +48,7 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
     const fetchPonds = async () => {
       setErrorMsg(null);
       try {
-        const res = await api.getPondList(flow);
+        const res = await api.getPondList(flow, token);
         const list = res.data || [];
         setPonds(list);
         if (list.length > 0) {
@@ -58,7 +60,7 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
       }
     };
     fetchPonds();
-  }, [flow]);
+  }, [flow, token]);
 
   // Load device details
   useEffect(() => {
@@ -68,7 +70,7 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
       setLoadingData(true);
       setErrorMsg(null);
       try {
-        const res = await api.getPondData(selectedPondId, undefined, flow);
+        const res = await api.getPondData(selectedPondId, undefined, flow, token);
         const device = res.data?.device || null;
         setDeviceData(device);
       } catch (err) {
@@ -80,7 +82,7 @@ export const AutoFeeder: React.FC<AutoFeederProps> = ({ flow = 'fish' }) => {
     };
 
     fetchPondDetails();
-  }, [selectedPondId, flow]);
+  }, [selectedPondId, flow, token]);
 
   // Trigger feeding cycle
   const handleTriggerFeed = (feederId: string) => {

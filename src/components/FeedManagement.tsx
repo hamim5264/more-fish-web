@@ -7,6 +7,8 @@ import type { AquacultureFlow } from '../types/aquaculture';
 
 interface FeedManagementProps {
   flow?: AquacultureFlow;
+  token?: string;
+  userId?: string;
 }
 
 export const FeedManagement: React.FC<FeedManagementProps> = () => {

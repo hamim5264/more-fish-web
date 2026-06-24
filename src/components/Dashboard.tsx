@@ -23,6 +23,8 @@ import dmaMoreFishImg from '../assets/dma_more_fish.png';
 interface DashboardProps {
   onNavigate: (page: Page) => void;
   flow?: AquacultureFlow;
+  token?: string;
+  userId?: string;
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, flow = 'fish' }) => {
@@ -38,7 +40,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, flow = 'fish' 
       desc: lang === 'bn'
         ? '(ডিভাইস মূল্য জানার জন্য কল করুন: +৮৮০ ১৮৯৮-৯৩৮৩৫৪)'
         : '(Call to inquire about device pricing: +880 1898-938354)',
-      bg: 'from-[#0369a1] via-[#0284c7] to-[#0ea5e9]',
+      bg: 'from-[#008cb2] via-[#00A8D5] to-[#3cc4ea]',
       showImage: true
     },
     {
@@ -159,20 +161,20 @@ export const Dashboard: React.FC<DashboardProps> = ({ onNavigate, flow = 'fish' 
       {/* Emergency & Support widgets */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pb-6">
         {/* Smart Khamari Banner */}
-        <div className="p-8 bg-gradient-to-tr from-[#b45309] via-[#d97706] to-[#f59e0b] rounded-[32px] text-white shadow-lg flex flex-col justify-between space-y-6 hover:shadow-2xl transition-shadow duration-300 relative overflow-hidden group">
+        <div className="p-8 bg-gradient-to-tr from-[#00A8D5] via-[#24bfe7] to-[#0090b8] rounded-[32px] text-white shadow-lg flex flex-col justify-between space-y-6 hover:shadow-2xl transition-shadow duration-300 relative overflow-hidden group">
           <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500" />
           <div className="space-y-3 relative z-10">
-            <span className="inline-flex items-center gap-1.5 text-xs font-black bg-white/20 text-[#fef3c7] px-3.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" />
+            <span className="inline-flex items-center gap-1.5 text-xs font-black bg-white/20 text-cyan-50 px-3.5 py-1 rounded-full uppercase tracking-wider shadow-sm">
+              <Sparkles className="w-3.5 h-3.5 text-cyan-200 animate-spin" />
               Premium Member Club
             </span>
             <h4 className="text-2xl font-black tracking-wide text-white">{t('smart_khamari')}</h4>
-            <p className="text-sm opacity-95 max-w-md font-bold leading-relaxed text-[#fef3c7]">{t('cluster_farming_club')}</p>
+            <p className="text-sm opacity-95 max-w-md font-bold leading-relaxed text-sky-50">{t('cluster_farming_club')}</p>
           </div>
           <div className="flex justify-end relative z-10">
             <button 
               onClick={() => onNavigate('training')}
-              className="px-6 py-3.5 bg-white text-amber-800 hover:text-amber-900 font-black text-sm rounded-2xl shadow-lg hover:bg-amber-50 hover:scale-[1.02] transition-all cursor-pointer border border-amber-100"
+              className="px-6 py-3.5 bg-white text-blue-800 hover:text-blue-900 font-black text-sm rounded-2xl shadow-lg hover:bg-sky-50 hover:scale-[1.02] transition-all cursor-pointer border border-sky-100"
             >
               Learn More
             </button>

@@ -9,6 +9,8 @@ import type { AquacultureFlow } from '../types/aquaculture';
 
 interface FarmManagementProps {
   flow?: AquacultureFlow;
+  token?: string;
+  userId?: string;
 }
 
 // ModuleIcon component defined outside to comply with Rules of Hooks

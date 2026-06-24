@@ -31,6 +31,8 @@ import {
   Cpu,
   Zap,
   Radio,
+  Lock,
+  Eye,
 } from 'lucide-react';
 import dmaLogo from '../assets/DMA Logo.png';
 import pharmaLogo from '../assets/dma_pharmaceutical.png';
@@ -59,9 +61,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const ecosystems = [
     { id: 'fish', name: 'More Fish', icon: Layers, color: 'text-teal-500' },
-    { id: 'cattle', name: 'Cattle Care', icon: Thermometer, color: 'text-amber-500' },
-    { id: 'poultry', name: 'Poultry Care', icon: Wind, color: 'text-orange-500' },
     { id: 'pharma', name: 'Pharma Care', icon: Activity, color: 'text-emerald-500' },
+    { id: 'cattle', name: 'Cattle Care', icon: Thermometer, color: 'text-amber-500', disabled: true },
+    { id: 'poultry', name: 'Poultry Care', icon: Wind, color: 'text-orange-500', disabled: true },
     { id: 'beverage', name: 'Food & Beverage', icon: Grid, color: 'text-blue-500', disabled: true },
     { id: 'tex', name: 'Tex Care', icon: Grid, color: 'text-purple-500', disabled: true },
     { id: 'air', name: 'Air Care', icon: Wind, color: 'text-sky-500', disabled: true },
@@ -101,7 +103,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       { id: 'faq', label: t('faq_menu'), icon: HelpCircle },
       { id: 'about-app', label: t('about_app_menu'), icon: BookOpen },
       { id: 'about-device', label: t('about_device_menu'), icon: Cpu },
-      { id: 'settings', label: t('change_password'), icon: Settings },
+      { id: 'settings', label: t('change_password'), icon: Lock },
+      { id: 'view-settings', label: 'View Settings', icon: Eye },
     ];
   };
 
@@ -112,7 +115,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     const commonItems: MenuItem[] = [
       { id: 'profile', label: t('profile'), icon: User },
       { id: 'notifications', label: t('notifications'), icon: Bell },
-      { id: 'settings', label: t('change_password'), icon: Settings },
+      { id: 'settings', label: t('change_password'), icon: Lock },
+      { id: 'view-settings', label: 'View Settings', icon: Eye },
     ];
 
     if (activeEcosystem === 'cattle' || activeEcosystem === 'poultry') {
@@ -205,7 +209,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 onClick={() => setActivePage(item.id)}
                 className={`w-full flex items-center gap-3.5 px-4.5 py-3.5 rounded-2xl text-left transition-all duration-200 cursor-pointer hover:scale-[1.01] ${
                   isActive
-                    ? 'bg-linear-to-r from-sky-500 to-blue-600 text-white shadow-lg shadow-sky-500/20 font-black'
+                    ? 'bg-[#00A8D5] text-white shadow-lg shadow-[#00A8D5]/20 font-black'
                     : 'text-font-dark hover:bg-cyan-50/70 font-bold'
                 }`}
               >
@@ -243,7 +247,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <p className="text-xs text-font-light font-bold mb-3">{t('please_login')}</p>
             <button
               onClick={() => setActivePage('profile')}
-              className="w-full flex items-center justify-center gap-2.5 py-3 px-5 bg-linear-to-r from-sky-500 to-blue-600 text-white font-extrabold text-sm rounded-2xl hover:opacity-90 shadow-md transition-all duration-200 cursor-pointer"
+              className="w-full flex items-center justify-center gap-2.5 py-3 px-5 bg-[#00A8D5] text-white font-extrabold text-sm rounded-2xl hover:opacity-90 shadow-md transition-all duration-200 cursor-pointer"
             >
               <User className="w-5 h-5" />
               <span>{t('login')}</span>

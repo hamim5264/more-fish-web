@@ -107,7 +107,7 @@ export const Training: React.FC = () => {
                       placeholder="Enter full name"
                       value={userName}
                       onChange={(e) => setUserName(e.target.value)}
-                      className="w-full pl-10 pr-3 py-3 bg-white border border-cyan-200 rounded-2xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full icon-input-polished pr-3 py-3 bg-white border border-cyan-200 rounded-2xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                     <User className="absolute left-3.5 top-3.5 w-4.5 h-4.5 text-cyan-500" />
                   </div>
@@ -122,7 +122,7 @@ export const Training: React.FC = () => {
                       placeholder="01XXXXXXXXX"
                       value={userPhone}
                       onChange={(e) => setUserPhone(e.target.value)}
-                      className="w-full pl-10 pr-3 py-3 bg-white border border-cyan-200 rounded-2xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
+                      className="w-full icon-input-polished pr-3 py-3 bg-white border border-cyan-200 rounded-2xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-primary"
                     />
                     <Phone className="absolute left-3.5 top-3.5 w-4.5 h-4.5 text-cyan-500" />
                   </div>

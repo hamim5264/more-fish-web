@@ -9,7 +9,12 @@ import {
   Trash2, Plus, RefreshCw, Power, Settings, Clock, AlertTriangle, CheckCircle2 
 } from 'lucide-react';
 
-export const CattleCare: React.FC = () => {
+interface CattleCareProps {
+  token?: string;
+  userId?: string;
+}
+
+export const CattleCare: React.FC<CattleCareProps> = ({ token }) => {
   const { tokens, loadProfile } = useAuth();
   const { t } = useLang();
 
@@ -34,10 +39,11 @@ export const CattleCare: React.FC = () => {
   const [controlLoading, setControlLoading] = useState<string | null>(null);
 
   const loadFarms = async () => {
-    if (!tokens.cattle) return;
+    const activeToken = token || tokens.cattle;
+    if (!activeToken) return;
     setLoading(true);
     try {
-      const res = await api.getCattleFarms();
+      const res = await api.getCattleFarms(token);
       const list = res.data || [];
       setFarms(list);
       if (list.length > 0) {
@@ -52,12 +58,12 @@ export const CattleCare: React.FC = () => {
 
   useEffect(() => {
     loadFarms();
-  }, [tokens.cattle]);
+  }, [token, tokens.cattle]);
 
   // Load Dashboard Data & Automation Settings
   const loadFarmDashboard = async (farmId: string) => {
     try {
-      const res = await api.getCattleDashboard(farmId);
+      const res = await api.getCattleDashboard(farmId, token);
       setDashboard(res.data || null);
       
       const autoEnabledState = res.data?.automation_enabled || false;
@@ -157,7 +163,7 @@ export const CattleCare: React.FC = () => {
     }
   };
 
-  if (!tokens.cattle) {
+  if (!(token || tokens.cattle)) {
     return <Auth flow="cattle" onSuccess={() => loadProfile('cattle')} />;
   }
 

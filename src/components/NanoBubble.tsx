@@ -5,9 +5,11 @@ import type { AquacultureFlow } from '../types/aquaculture';
 
 interface NanoBubbleProps {
   flow?: AquacultureFlow;
+  token?: string;
+  userId?: string;
 }
 
-export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
+export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish', token }) => {
   // State
   const [ponds, setPonds] = useState<any[]>([]);
   const [selectedPondId, setSelectedPondId] = useState<string>('');
@@ -23,7 +25,7 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
     const fetchPonds = async () => {
       setErrorMsg(null);
       try {
-        const res = await api.getPondList(flow);
+        const res = await api.getPondList(flow, token);
         const list = res.data || [];
         setPonds(list);
         if (list.length > 0) {
@@ -35,7 +37,7 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
       }
     };
     fetchPonds();
-  }, [flow]);
+  }, [flow, token]);
 
   // Load device details when selectedPondId changes
   useEffect(() => {
@@ -45,7 +47,7 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
       setLoadingData(true);
       setErrorMsg(null);
       try {
-        const res = await api.getPondData(selectedPondId, undefined, flow);
+        const res = await api.getPondData(selectedPondId, undefined, flow, token);
         setDeviceData(res.data?.device || null);
       } catch (err) {
         console.error('Failed to load pond telemetry:', err);
@@ -60,16 +62,16 @@ export const NanoBubble: React.FC<NanoBubbleProps> = ({ flow = 'fish' }) => {
     // Auto refresh every 10 seconds
     const interval = setInterval(fetchPondDetails, 10000);
     return () => clearInterval(interval);
-  }, [selectedPondId, flow]);
+  }, [selectedPondId, flow, token]);
 
   // Handle Aerator Control Trigger
   const handleToggleAerator = async (aeratorId: string, currentStatus: number) => {
     setActionLoading(aeratorId);
     const targetCommand = currentStatus === 1 ? 0 : 1;
     try {
-      await api.controlAerator(aeratorId, targetCommand, flow);
+      await api.controlAerator(aeratorId, targetCommand, flow, token);
       // Refresh data immediately
-      const res = await api.getPondData(selectedPondId, undefined, flow);
+      const res = await api.getPondData(selectedPondId, undefined, flow, token);
       setDeviceData(res.data?.device || null);
     } catch (err) {
       console.error('Failed to control aerator:', err);

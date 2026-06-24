@@ -98,7 +98,7 @@ export const FiltrationSystem: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Mechanical Filter */}
-          <div className="bg-white border border-cyan-150 rounded-2xl p-5 flex flex-col justify-between h-44 space-y-4 shadow-xs">
+          <div className="bg-white border border-cyan-150 rounded-2xl p-5 flex flex-col justify-between min-h-[11rem] h-full space-y-4 shadow-xs">
             <div className="flex justify-between items-start">
               <div>
                 <h5 className="font-black text-lg text-font-dark">{t('mechanical_filter')}</h5>
@@ -139,7 +139,7 @@ export const FiltrationSystem: React.FC = () => {
           </div>
 
           {/* Biological Filter */}
-          <div className="bg-white border border-cyan-150 rounded-2xl p-5 flex flex-col justify-between h-44 space-y-4 shadow-xs">
+          <div className="bg-white border border-cyan-150 rounded-2xl p-5 flex flex-col justify-between min-h-[11rem] h-full space-y-4 shadow-xs">
             <div className="flex justify-between items-start">
               <div>
                 <h5 className="font-black text-lg text-font-dark">{t('biological_filter')}</h5>

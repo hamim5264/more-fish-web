@@ -7,6 +7,8 @@ interface MarketplaceProps {
   flow?: AquacultureFlow;
   categoryGuid?: string;
   categoryName?: string;
+  token?: string;
+  userId?: string;
 }
 
 // SafeImage component defined outside to follow rules of hooks

@@ -140,9 +140,7 @@ export const WeatherForecast: React.FC = () => {
                     key={district}
                     type="button"
                     onClick={() => handleSelectDistrict(district)}
-                    className={`w-full text-left px-4 py-2 hover:bg-cyan-50/50 transition-colors text-xs font-black cursor-pointer ${
-                      selectedDistrict === district ? 'bg-cyan-50/70 text-primary' : 'text-font-dark'
-                    }`}
+                    className="w-full text-left px-4 py-2 hover:bg-cyan-50/50 transition-colors text-xs font-black cursor-pointer text-font-dark"
                   >
                     {district}
                   </button>

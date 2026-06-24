@@ -9,7 +9,12 @@ import {
   RefreshCw, Power, Settings, AlertTriangle, CheckCircle2 
 } from 'lucide-react';
 
-export const PoultryCare: React.FC = () => {
+interface PoultryCareProps {
+  token?: string;
+  userId?: string;
+}
+
+export const PoultryCare: React.FC<PoultryCareProps> = ({ token }) => {
   const { tokens, loadProfile } = useAuth();
   const { t } = useLang();
 
@@ -28,10 +33,11 @@ export const PoultryCare: React.FC = () => {
   const [controlLoading, setControlLoading] = useState<string | null>(null);
 
   const loadFarms = async () => {
-    if (!tokens.poultry) return;
+    const activeToken = token || tokens.poultry;
+    if (!activeToken) return;
     setLoading(true);
     try {
-      const res = await api.getPoultryFarms();
+      const res = await api.getPoultryFarms(token);
       const list = res.data || [];
       setFarms(list);
       if (list.length > 0) {
@@ -46,12 +52,12 @@ export const PoultryCare: React.FC = () => {
 
   useEffect(() => {
     loadFarms();
-  }, [tokens.poultry]);
+  }, [token, tokens.poultry]);
 
   // Load Dashboard Data & Automation Settings
   const loadFarmDashboard = async (farmId: string) => {
     try {
-      const res = await api.getPoultryDashboard(farmId);
+      const res = await api.getPoultryDashboard(farmId, token);
       const data = res.data || res;
       setDashboard(data);
       
@@ -121,7 +127,7 @@ export const PoultryCare: React.FC = () => {
     }
   };
 
-  if (!tokens.poultry) {
+  if (!(token || tokens.poultry)) {
     return <Auth flow="poultry" onSuccess={() => loadProfile('poultry')} />;
   }
 

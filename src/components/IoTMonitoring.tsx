@@ -36,12 +36,20 @@ const writeSessionCache = (key: string, value: unknown, flow: AquacultureFlow = 
 
 interface IoTMonitoringProps {
   flow?: AquacultureFlow;
+  token?: string;
+  userId?: string;
 }
 
-export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) => {
-  const { tokens, profiles } = useAuth();
+export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', token }) => {
+  const { tokens, profiles, allProfiles } = useAuth();
   const { t } = useLang();
-  const currentProfile = profiles[flow] || profiles.fish || profiles.poultry || profiles.cattle || null;
+  
+  const flowProfiles = allProfiles[flow] || [];
+  const matchedProfile = token 
+    ? (flowProfiles.find(p => p.token === token) || null)
+    : null;
+
+  const currentProfile = matchedProfile || profiles[flow] || profiles.fish || profiles.poultry || profiles.cattle || null;
   const userName =
     currentProfile?.full_name ||
     currentProfile?.fullName ||
@@ -77,7 +85,8 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
 
   // Load Pond List
   const loadPonds = async () => {
-    if (!tokens[flow]) return;
+    const activeToken = token || tokens[flow];
+    if (!activeToken) return;
     const cached = readSessionCache<any[]>('pond-list', 10 * 60 * 1000, flow);
     if (cached?.length) {
       setPonds(cached);
@@ -86,7 +95,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
     setLoading(!cached?.length);
     setError(null);
     try {
-      const res = await api.getPondList(flow);
+      const res = await api.getPondList(flow, token);
       console.debug('api.getPondList ->', res);
       const list = res.data || [];
       setPonds(list);
@@ -103,7 +112,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
 
   useEffect(() => {
     loadPonds();
-  }, [tokens[flow], flow]);
+  }, [token, tokens[flow], flow]);
 
   const getDeviceId = (device: any) => {
     return device?.id || device?.device_id || device?.deviceId || null;
@@ -386,7 +395,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
     pondAbortControllersRef.current.set(requestKey, controller);
 
     try {
-      const res = await api.getPondData(pondId, controller.signal, flow);
+      const res = await api.getPondData(pondId, controller.signal, flow, token);
       console.debug('api.getPondData ->', res);
       const responseData: any = res.data || res;
       const device = responseData?.device || (Array.isArray(responseData?.devices) ? responseData.devices[0] : null);
@@ -419,7 +428,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
       const deviceId = getDeviceId(device);
       if (deviceId) {
         try {
-          const autoRes = await api.getAeratorAutomation(deviceId, flow);
+          const autoRes = await api.getAeratorAutomation(deviceId, flow, token);
           const settings = normalizeAeratorAutomation(autoRes);
           setIsAutomationEnabled(settings.is_enabled);
         } catch (autoErr) {
@@ -429,7 +438,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
       let sensorList = deviceId ? sensorCacheRef.current.get(String(deviceId)) || [] : [];
       if (deviceId) {
         if (sensorList.length === 0) {
-          const sensorRes = await api.getSensorList(deviceId, flow);
+          const sensorRes = await api.getSensorList(deviceId, flow, token);
           console.debug('api.getSensorList ->', sensorRes);
           sensorList = sensorRes.data || [];
         }
@@ -552,7 +561,8 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
         sensorId,
         apiType,
         request.controller.signal,
-        flow
+        flow,
+        token
       );
       if (graphRequestRef.current !== request) return;
       console.debug('api.getGraphData ->', res);
@@ -669,7 +679,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
     console.log('Payload:', JSON.stringify(requestPayload, null, 2));
 
     try {
-      const res = await api.controlAerator(aeratorId, nextStatus ? 1 : 0, flow);
+      const res = await api.controlAerator(aeratorId, nextStatus ? 1 : 0, flow, token);
       console.log('--- API RESPONSE RECEIVED (SUCCESS) ---');
       console.log('Response:', JSON.stringify(res, null, 2));
 
@@ -699,7 +709,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish' }) =
     }
   };
 
-  if (!tokens[flow]) {
+  if (!(token || tokens[flow])) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center bg-linear-to-tr from-bg-light to-cyan-50">
         <Activity className="w-16 h-16 text-cyan-400 mb-4 animate-pulse" />

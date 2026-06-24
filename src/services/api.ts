@@ -191,12 +191,14 @@ import type { AquacultureFlow } from '../types/aquaculture';
 
 type ApiFlow = AquacultureFlow | 'cattle' | 'poultry';
 
-const getAquacultureToken = (flow: AquacultureFlow = 'fish') => {
+const getAquacultureToken = (flow: AquacultureFlow = 'fish', tokenOverride?: string) => {
+  if (tokenOverride) return tokenOverride;
   if (flow === 'pharma') return localStorage.getItem(STORAGE_KEYS.PHARMA_TOKEN) || '';
   return localStorage.getItem(STORAGE_KEYS.MORE_FISH_TOKEN) || '';
 };
 
-const getTokenForFlow = (flow: ApiFlow) => {
+const getTokenForFlow = (flow: ApiFlow, tokenOverride?: string) => {
+  if (tokenOverride) return tokenOverride;
   if (flow === 'fish') return localStorage.getItem(STORAGE_KEYS.MORE_FISH_TOKEN) || '';
   if (flow === 'pharma') return localStorage.getItem(STORAGE_KEYS.PHARMA_TOKEN) || '';
   if (flow === 'cattle') return localStorage.getItem(STORAGE_KEYS.CATTLE_TOKEN) || '';
@@ -390,8 +392,8 @@ export const api = {
   },
 
   // --- AQUACULTURE (MORE FISH) ---
-  async getPondList(flow: AquacultureFlow = 'fish') {
-    const token = getAquacultureToken(flow);
+  async getPondList(flow: AquacultureFlow = 'fish', tokenOverride?: string) {
+    const token = getAquacultureToken(flow, tokenOverride);
     const res = await fetch(`${BASE_URL}/devices/data/pond/list`, {
       method: 'GET',
       headers: getHeaders(token),
@@ -418,8 +420,8 @@ export const api = {
     return { data: list, raw: payload };
   },
 
-  async getPondData(assetId: string, signal?: AbortSignal, flow: AquacultureFlow = 'fish') {
-    const token = getAquacultureToken(flow);
+  async getPondData(assetId: string, signal?: AbortSignal, flow: AquacultureFlow = 'fish', tokenOverride?: string) {
+    const token = getAquacultureToken(flow, tokenOverride);
     const res = await fetch(`${BASE_URL}/devices/data/pond/data?asset_id=${assetId}`, {
       method: 'GET',
       headers: getHeaders(token),
@@ -477,8 +479,8 @@ export const api = {
     return { data: { device: normalizedDevice, devices, asset: payload?.data || null }, raw: payload };
   },
 
-  async getSensorList(deviceId: string, flow: AquacultureFlow = 'fish') {
-    const token = getAquacultureToken(flow);
+  async getSensorList(deviceId: string, flow: AquacultureFlow = 'fish', tokenOverride?: string) {
+    const token = getAquacultureToken(flow, tokenOverride);
     const res = await fetch(`${BASE_URL}/devices/sensor/list?device_id=${deviceId}`, {
       method: 'GET',
       headers: getHeaders(token),
@@ -512,9 +514,10 @@ export const api = {
     sensorId: string | number,
     type: 'daily' | 'weekly' | 'monthly',
     signal?: AbortSignal,
-    flow: AquacultureFlow = 'fish'
+    flow: AquacultureFlow = 'fish',
+    tokenOverride?: string
   ) {
-    const token = getAquacultureToken(flow);
+    const token = getAquacultureToken(flow, tokenOverride);
     const params = new URLSearchParams({
       assst_id: String(assetId),
       sensor_id: String(sensorId),
@@ -550,8 +553,8 @@ export const api = {
     }
   },
 
-  async controlAerator(aeratorId: string, command: 1 | 0, flow: AquacultureFlow = 'fish') {
-    const token = getAquacultureToken(flow);
+  async controlAerator(aeratorId: string, command: 1 | 0, flow: AquacultureFlow = 'fish', tokenOverride?: string) {
+    const token = getAquacultureToken(flow, tokenOverride);
     const res = await fetch(`${BASE_URL}/devices/aerators/command/`, {
       method: 'POST',
       headers: getHeaders(token),
@@ -560,8 +563,8 @@ export const api = {
     return parseResponse(res);
   },
 
-  async getAeratorAutomation(deviceId: string, flow: AquacultureFlow = 'fish') {
-    const token = getAquacultureToken(flow);
+  async getAeratorAutomation(deviceId: string, flow: AquacultureFlow = 'fish', tokenOverride?: string) {
+    const token = getAquacultureToken(flow, tokenOverride);
     const res = await fetch(`${BASE_URL}/devices/aerator-automation/?device_id=${deviceId}`, {
       method: 'GET',
       headers: getHeaders(token),
@@ -569,8 +572,8 @@ export const api = {
     return parseResponse(res);
   },
 
-  async saveAeratorAutomation(deviceId: string, isEnabled: boolean, doMin: number, doMax: number, flow: AquacultureFlow = 'fish') {
-    const token = getAquacultureToken(flow);
+  async saveAeratorAutomation(deviceId: string, isEnabled: boolean, doMin: number, doMax: number, flow: AquacultureFlow = 'fish', tokenOverride?: string) {
+    const token = getAquacultureToken(flow, tokenOverride);
     const res = await fetch(`${BASE_URL}/devices/aerator-automation/?device_id=${encodeURIComponent(deviceId)}`, {
       method: 'POST',
       headers: getHeaders(token),
@@ -598,9 +601,10 @@ export const api = {
     feedWeightKg: number,
     weightGainedKg: number,
     notes?: string,
-    flow: AquacultureFlow = 'fish'
+    flow: AquacultureFlow = 'fish',
+    tokenOverride?: string
   ) {
-    const token = getAquacultureToken(flow);
+    const token = getAquacultureToken(flow, tokenOverride);
     const res = await fetch(`${BASE_URL}/devices/fcr/calculate/`, {
       method: 'POST',
       headers: getHeaders(token),
@@ -614,8 +618,8 @@ export const api = {
     return parseResponse(res);
   },
 
-  async getFcrHistory(assetId: number | string, flow: AquacultureFlow = 'fish') {
-    const token = getAquacultureToken(flow);
+  async getFcrHistory(assetId: number | string, flow: AquacultureFlow = 'fish', tokenOverride?: string) {
+    const token = getAquacultureToken(flow, tokenOverride);
     const res = await fetch(`${BASE_URL}/devices/fcr/history/?asset_id=${Number(assetId)}`, {
       method: 'GET',
       headers: getHeaders(token),
@@ -623,8 +627,8 @@ export const api = {
     return parseResponse(res);
   },
 
-  async detectFishDisease(imageFile: File, flow: AquacultureFlow = 'fish') {
-    const token = getAquacultureToken(flow);
+  async detectFishDisease(imageFile: File, flow: AquacultureFlow = 'fish', tokenOverride?: string) {
+    const token = getAquacultureToken(flow, tokenOverride);
     const formData = new FormData();
     formData.append('file', imageFile);
 
@@ -642,8 +646,8 @@ export const api = {
   },
 
   // --- CATTLE CARE ---
-  async getCattleFarms() {
-    const token = localStorage.getItem(STORAGE_KEYS.CATTLE_TOKEN);
+  async getCattleFarms(tokenOverride?: string) {
+    const token = tokenOverride || localStorage.getItem(STORAGE_KEYS.CATTLE_TOKEN);
     const res = await fetch(`${BASE_URL}/cattle_care/farms/list/`, {
       method: 'GET',
       headers: getHeaders(token),
@@ -651,8 +655,8 @@ export const api = {
     return parseResponse(res);
   },
 
-  async getCattleDashboard(farmId: string) {
-    const token = localStorage.getItem(STORAGE_KEYS.CATTLE_TOKEN);
+  async getCattleDashboard(farmId: string, tokenOverride?: string) {
+    const token = tokenOverride || localStorage.getItem(STORAGE_KEYS.CATTLE_TOKEN);
     const res = await fetch(`${BASE_URL}/cattle_care/farms/dashboard/?farm_id=${farmId}`, {
       method: 'GET',
       headers: getHeaders(token),
@@ -718,8 +722,8 @@ export const api = {
   },
 
   // --- POULTRY CARE ---
-  async getPoultryFarms() {
-    const token = localStorage.getItem(STORAGE_KEYS.POULTRY_TOKEN);
+  async getPoultryFarms(tokenOverride?: string) {
+    const token = tokenOverride || localStorage.getItem(STORAGE_KEYS.POULTRY_TOKEN);
     const res = await fetch(`${BASE_URL}/poultry_care/farms/list/`, {
       method: 'GET',
       headers: getHeaders(token),
@@ -727,8 +731,8 @@ export const api = {
     return parseResponse(res);
   },
 
-  async getPoultryDashboard(farmId: string) {
-    const token = localStorage.getItem(STORAGE_KEYS.POULTRY_TOKEN);
+  async getPoultryDashboard(farmId: string, tokenOverride?: string) {
+    const token = tokenOverride || localStorage.getItem(STORAGE_KEYS.POULTRY_TOKEN);
     const res = await fetch(`${BASE_URL}/poultry_care/farms/dashboard/?farm_id=${farmId}`, {
       method: 'GET',
       headers: getHeaders(token),

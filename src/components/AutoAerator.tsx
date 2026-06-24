@@ -5,9 +5,11 @@ import type { AquacultureFlow } from '../types/aquaculture';
 
 interface AutoAeratorProps {
   flow?: AquacultureFlow;
+  token?: string;
+  userId?: string;
 }
 
-export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish' }) => {
+export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish', token }) => {
   // State
   const [ponds, setPonds] = useState<any[]>([]);
   const [selectedPondId, setSelectedPondId] = useState<string>('');
@@ -24,7 +26,7 @@ export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish' }) => {
     const fetchPonds = async () => {
       setErrorMsg(null);
       try {
-        const res = await api.getPondList(flow);
+        const res = await api.getPondList(flow, token);
         const list = res.data || [];
         setPonds(list);
         if (list.length > 0) {
@@ -36,7 +38,7 @@ export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish' }) => {
       }
     };
     fetchPonds();
-  }, [flow]);
+  }, [flow, token]);
 
   // Load device details and automation state
   useEffect(() => {
@@ -47,13 +49,13 @@ export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish' }) => {
       setErrorMsg(null);
       try {
         // 1. Fetch live telemetry
-        const res = await api.getPondData(selectedPondId, undefined, flow);
+        const res = await api.getPondData(selectedPondId, undefined, flow, token);
         const device = res.data?.device || null;
         setDeviceData(device);
 
         // 2. Fetch automation settings if device exists
         if (device?.id) {
-          const autoRes = await api.getAeratorAutomation(device.id, flow);
+          const autoRes = await api.getAeratorAutomation(device.id, flow, token);
           const normalizedAuto = normalizeAeratorAutomation(autoRes);
           setAutomationSettings(normalizedAuto);
         } else {
@@ -68,7 +70,7 @@ export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish' }) => {
     };
 
     fetchPondDetails();
-  }, [selectedPondId, flow]);
+  }, [selectedPondId, flow, token]);
 
   // Handle Control toggling
   const handleToggleControl = async (aeratorId: string, currentStatus: number) => {
@@ -80,9 +82,9 @@ export const AutoAerator: React.FC<AutoAeratorProps> = ({ flow = 'fish' }) => {
     setActionLoading(aeratorId);
     const targetCommand = currentStatus === 1 ? 0 : 1;
     try {
-      await api.controlAerator(aeratorId, targetCommand, flow);
+      await api.controlAerator(aeratorId, targetCommand, flow, token);
       // Refresh pond status
-      const res = await api.getPondData(selectedPondId, undefined, flow);
+      const res = await api.getPondData(selectedPondId, undefined, flow, token);
       setDeviceData(res.data?.device || null);
     } catch (err) {
       console.error('Failed to dispatch aerator signal:', err);
