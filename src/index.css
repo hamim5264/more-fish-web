@@ -372,3 +372,156 @@ select.small-select-weather {
   box-shadow: none !important;
 }
 
+/* Sidebar collapsed full-width side screen override */
+.sidebar-collapsed .max-w-7xl {
+  max-width: 100% !important;
+}
+
+/* Grid View Scaling & Shrinking Overrides */
+.view-mode-grid button.min-h-44,
+.view-mode-grid button.min-h-56 {
+  min-height: 125px !important;
+  padding: 10px !important;
+  border-radius: 16px !important;
+}
+
+.view-mode-grid button.min-h-44 .w-10.h-10,
+.view-mode-grid button.min-h-44 .w-14.h-14,
+.view-mode-grid button.min-h-56 .w-10.h-10,
+.view-mode-grid button.min-h-56 .w-14.h-14 {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 8px !important;
+  padding: 4px !important;
+}
+
+.view-mode-grid button.min-h-44 svg,
+.view-mode-grid button.min-h-56 svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.view-mode-grid button.min-h-44 .text-xs,
+.view-mode-grid button.min-h-44 .text-sm,
+.view-mode-grid button.min-h-44 .text-base,
+.view-mode-grid button.min-h-56 .text-xs,
+.view-mode-grid button.min-h-56 .text-sm,
+.view-mode-grid button.min-h-56 .text-base {
+  font-size: 10px !important;
+  margin-top: 3px !important;
+}
+
+.view-mode-grid button.min-h-44 .text-3xl,
+.view-mode-grid button.min-h-44 .text-4xl,
+.view-mode-grid button.min-h-44 .text-5xl,
+.view-mode-grid button.min-h-44 .text-6xl,
+.view-mode-grid button.min-h-56 .text-3xl,
+.view-mode-grid button.min-h-56 .text-4xl,
+.view-mode-grid button.min-h-56 .text-5xl,
+.view-mode-grid button.min-h-56 .text-6xl {
+  font-size: 22px !important;
+  line-height: 1 !important;
+}
+
+.view-mode-grid button.min-h-44 .text-lg,
+.view-mode-grid button.min-h-44 .text-2xl,
+.view-mode-grid button.min-h-56 .text-lg,
+.view-mode-grid button.min-h-56 .text-2xl {
+  font-size: 11px !important;
+}
+
+.view-mode-grid button.min-h-44 .mt-3,
+.view-mode-grid button.min-h-44 .mt-4,
+.view-mode-grid button.min-h-56 .mt-3,
+.view-mode-grid button.min-h-56 .mt-4 {
+  margin-top: 4px !important;
+}
+
+.view-mode-grid .grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 8px !important;
+}
+
+/* Force Switch Controls to be single column in Grid View */
+.view-mode-grid .grid-cols-1.md\:grid-cols-3 {
+  grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  gap: 12px !important;
+}
+
+/* Top Pond Select & Status Container overrides */
+.view-mode-grid .bg-gradient-to-r {
+  flex-direction: column !important;
+  align-items: stretch !important;
+  padding: 10px 14px !important;
+  gap: 10px !important;
+  border-radius: 16px !important;
+}
+
+.view-mode-grid .bg-gradient-to-r.p-4,
+.view-mode-grid .bg-gradient-to-r.p-6,
+.view-mode-grid .bg-gradient-to-r.lg\:p-6 {
+  padding: 10px 14px !important;
+  border-radius: 16px !important;
+  gap: 10px !important;
+}
+
+.view-mode-grid .bg-gradient-to-r .flex-row,
+.view-mode-grid .bg-gradient-to-r .sm\:flex-row {
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  gap: 6px !important;
+}
+
+.view-mode-grid .bg-gradient-to-r select {
+  padding: 4px 8px !important;
+  font-size: 10px !important;
+  border-radius: 8px !important;
+}
+
+.view-mode-grid .bg-gradient-to-r label,
+.view-mode-grid .bg-gradient-to-r span,
+.view-mode-grid .bg-gradient-to-r div {
+  font-size: 10px !important;
+}
+
+.view-mode-grid .gap-4.sm\:gap-5.lg\:gap-6 {
+  gap: 8px !important;
+}
+
+.view-mode-grid .p-3.sm\:p-5.lg\:p-6 {
+  padding: 8px !important;
+}
+
+.view-mode-grid .space-y-4.sm\:space-y-5.lg\:space-y-6 {
+  margin-top: 6px !important;
+}
+
+/* Switch card overrides */
+.view-mode-grid .bg-gradient-to-br.p-6 {
+  padding: 8px 12px !important;
+  border-radius: 16px !important;
+}
+
+.view-mode-grid .bg-gradient-to-br.p-6 h5 {
+  font-size: 11px !important;
+}
+
+.view-mode-grid .bg-gradient-to-br.p-6 .text-\[10px\] {
+  font-size: 8.5px !important;
+}
+
+.view-mode-grid .bg-gradient-to-br.p-6 .w-5.h-5 {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+.view-mode-grid .bg-gradient-to-br.p-6 button {
+  padding: 6px 8px !important;
+  border-radius: 10px !important;
+}
+
+.view-mode-grid .bg-gradient-to-br.p-6 button svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+

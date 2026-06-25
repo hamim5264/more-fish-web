@@ -788,67 +788,83 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', tok
       )}
 
       {/* Sensor Metric Cards */}
-      {selectedPond && (
-        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
-          {metrics.map((metric) => {
-            const Icon = metric.icon;
-            const value = getMetricValue(metric.key);
-            const active = selectedMetric === metric.key;
-            const dangerStatus = getMetricDangerStatus(metric.key);
-            const isPerfect = dangerStatus === 'perfect';
-            const isInvalid = dangerStatus === 'invalid';
-            const warning = isInvalid ? null : getSensorWarning(metric.key, value);
+      {selectedPond && (() => {
+        const visibleMetrics = metrics.filter((m) => {
+          const val = getMetricValue(m.key);
+          return val !== null && val !== undefined;
+        });
 
-            // Colorful card styling mapping
-            const colorMap: Record<string, { bg: string, border: string, text: string, icon: string }> = {
-              temperature: { bg: 'from-amber-100 to-orange-200/70', border: 'border-orange-300', text: 'text-orange-700', icon: 'text-orange-500/30' },
-              do_level: { bg: 'from-cyan-100 to-sky-200/70', border: 'border-cyan-300', text: 'text-sky-700', icon: 'text-sky-500/30' },
-              ph_level: { bg: 'from-teal-100 to-emerald-200/70', border: 'border-teal-300', text: 'text-emerald-700', icon: 'text-emerald-500/30' },
-              ammonia: { bg: 'from-emerald-100 to-green-200/70', border: 'border-emerald-300', text: 'text-green-700', icon: 'text-green-500/30' },
-              tds: { bg: 'from-blue-100 to-indigo-200/70', border: 'border-blue-300', text: 'text-indigo-700', icon: 'text-indigo-500/30' },
-              salinity: { bg: 'from-purple-100 to-violet-200/70', border: 'border-purple-300', text: 'text-purple-700', icon: 'text-purple-500/30' },
-            };
-            const design = colorMap[metric.key] || colorMap.temperature;
+        if (visibleMetrics.length === 0) {
+          return (
+            <div className="p-8 text-center bg-cyan-50/20 border border-cyan-100 rounded-3xl">
+              <Activity className="w-12 h-12 text-cyan-400 mx-auto mb-2 animate-pulse" />
+              <p className="text-sm font-bold text-font-light">{t('waiting_for_live_data') || 'Waiting for live data...'}</p>
+            </div>
+          );
+        }
 
-             return (
-              <button
-                key={metric.key}
-                type="button"
-                onClick={() => handleMetricCardClick(metric.key)}
-                className={`p-4 lg:p-6 rounded-2xl lg:rounded-3xl border-2 flex flex-col justify-between items-center min-h-44 lg:min-h-56 relative overflow-hidden group text-center transition-all hover:scale-[1.03] cursor-pointer ${
-                  active 
-                    ? 'border-primary bg-sky-100/60 shadow-[0_15px_30px_rgba(2,132,199,0.25)] scale-[1.03] ring-4 ring-primary/10' 
-                    : isPerfect 
-                      ? `bg-gradient-to-br ${design.bg} ${design.border} shadow-[0_15px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_50px_-5px_rgba(0,0,0,0.22)]` 
-                      : 'bg-gradient-to-br from-red-50 to-orange-100/50 border-red-300 shadow-[0_15px_30px_rgba(239,68,68,0.15)] hover:shadow-[0_25px_50px_-5px_rgba(239,68,68,0.25)]'
-                }`}
-              >
-                <div className="w-full flex flex-col items-center">
-                  <div className="mx-auto w-10 h-10 lg:w-14 lg:h-14 bg-white/70 backdrop-blur-xs rounded-xl lg:rounded-2xl flex items-center justify-center p-2 lg:p-2.5 shadow-sm border border-white/80 group-hover:scale-110 transition-transform">
-                    <Icon className={`w-5 h-5 lg:w-8 lg:h-8 ${isPerfect ? design.text : 'text-red-500'}`} />
+        return (
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
+            {visibleMetrics.map((metric) => {
+              const Icon = metric.icon;
+              const value = getMetricValue(metric.key);
+              const active = selectedMetric === metric.key;
+              const dangerStatus = getMetricDangerStatus(metric.key);
+              const isPerfect = dangerStatus === 'perfect';
+              const isInvalid = dangerStatus === 'invalid';
+              const warning = isInvalid ? null : getSensorWarning(metric.key, value);
+
+              // Colorful card styling mapping
+              const colorMap: Record<string, { bg: string, border: string, text: string, icon: string }> = {
+                temperature: { bg: 'from-amber-100 to-orange-200/70', border: 'border-orange-300', text: 'text-orange-700', icon: 'text-orange-500/30' },
+                do_level: { bg: 'from-cyan-100 to-sky-200/70', border: 'border-cyan-300', text: 'text-sky-700', icon: 'text-sky-500/30' },
+                ph_level: { bg: 'from-teal-100 to-emerald-200/70', border: 'border-teal-300', text: 'text-emerald-700', icon: 'text-emerald-500/30' },
+                ammonia: { bg: 'from-emerald-100 to-green-200/70', border: 'border-emerald-300', text: 'text-green-700', icon: 'text-green-500/30' },
+                tds: { bg: 'from-blue-100 to-indigo-200/70', border: 'border-blue-300', text: 'text-indigo-700', icon: 'text-indigo-500/30' },
+                salinity: { bg: 'from-purple-100 to-violet-200/70', border: 'border-purple-300', text: 'text-purple-700', icon: 'text-purple-500/30' },
+              };
+              const design = colorMap[metric.key] || colorMap.temperature;
+
+               return (
+                <button
+                  key={metric.key}
+                  type="button"
+                  onClick={() => handleMetricCardClick(metric.key)}
+                  className={`p-4 lg:p-6 rounded-2xl lg:rounded-3xl border-2 flex flex-col justify-between items-center min-h-44 lg:min-h-56 relative overflow-hidden group text-center transition-all hover:scale-[1.03] cursor-pointer ${
+                    active 
+                      ? 'border-primary bg-sky-100/60 shadow-[0_15px_30px_rgba(2,132,199,0.25)] scale-[1.03] ring-4 ring-primary/10' 
+                      : isPerfect 
+                        ? `bg-gradient-to-br ${design.bg} ${design.border} shadow-[0_15px_30px_rgba(0,0,0,0.12)] hover:shadow-[0_25px_50px_-5px_rgba(0,0,0,0.22)]` 
+                        : 'bg-gradient-to-br from-red-50 to-orange-100/50 border-red-300 shadow-[0_15px_30px_rgba(239,68,68,0.15)] hover:shadow-[0_25px_50px_-5px_rgba(239,68,68,0.25)]'
+                  }`}
+                >
+                  <div className="w-full flex flex-col items-center">
+                    <div className="mx-auto w-10 h-10 lg:w-14 lg:h-14 bg-white/70 backdrop-blur-xs rounded-xl lg:rounded-2xl flex items-center justify-center p-2 lg:p-2.5 shadow-sm border border-white/80 group-hover:scale-110 transition-transform">
+                      <Icon className={`w-5 h-5 lg:w-8 lg:h-8 ${isPerfect ? design.text : 'text-red-500'}`} />
+                    </div>
+                    <div className="text-xs lg:text-sm xl:text-base font-black uppercase tracking-wider text-font-dark/95 leading-tight block text-center mt-2 lg:mt-3">{metric.label}</div>
                   </div>
-                  <div className="text-xs lg:text-sm xl:text-base font-black uppercase tracking-wider text-font-dark/95 leading-tight block text-center mt-2 lg:mt-3">{metric.label}</div>
-                </div>
-                <div className="mt-3 lg:mt-4 text-center">
-                  <div
-                    className={`text-3xl lg:text-5xl xl:text-6xl font-black block tracking-tight ${
-                      isPerfect ? design.text : 'text-red-600'
-                    }`}
-                  >
-                    {isInvalid ? 'No Data' : value !== null && value !== undefined ? value : '--'}
-                    {!isInvalid && value !== null && value !== undefined && (
-                      <span className="text-lg lg:text-2xl xl:text-3xl font-black ml-1 text-inherit">{getMetricUnit(metric.key)}</span>
+                  <div className="mt-3 lg:mt-4 text-center">
+                    <div
+                      className={`text-3xl lg:text-5xl xl:text-6xl font-black block tracking-tight ${
+                        isPerfect ? design.text : 'text-red-600'
+                      }`}
+                    >
+                      {isInvalid ? 'No Data' : value !== null && value !== undefined ? value : '--'}
+                      {!isInvalid && value !== null && value !== undefined && (
+                        <span className="text-lg lg:text-2xl xl:text-3xl font-black ml-1 text-inherit">{getMetricUnit(metric.key)}</span>
+                      )}
+                    </div>
+                    {warning && (
+                      <p className="mt-2 text-[10px] lg:text-xs font-black leading-relaxed text-red-600 bg-white/60 p-1.5 lg:p-2 rounded-lg lg:rounded-xl border border-red-200">{warning}</p>
                     )}
                   </div>
-                  {warning && (
-                    <p className="mt-2 text-[10px] lg:text-xs font-black leading-relaxed text-red-600 bg-white/60 p-1.5 lg:p-2 rounded-lg lg:rounded-xl border border-red-200">{warning}</p>
-                  )}
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      )}
+                </button>
+              );
+            })}
+          </div>
+        );
+      })()}
 
       {/* Aerator Switch Panels */}
       {selectedPond && aeratorsList.length > 0 && (

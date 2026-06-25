@@ -24,8 +24,8 @@ interface AuthContextType {
   profiles: Record<AuthFlow, any | null>;
   allProfiles: Record<AuthFlow, ProfileSession[]>;
   activeProfileIndex: Record<AuthFlow, number>;
-  viewMode: 'default' | 'multiple';
-  setViewMode: (mode: 'default' | 'multiple') => void;
+  viewMode: 'default' | 'multiple' | 'grid';
+  setViewMode: (mode: 'default' | 'multiple' | 'grid') => void;
   login: (email: string, password: string, flow: AuthFlow) => Promise<any>;
   logout: (flow: AuthFlow) => void;
   logoutProfile: (flow: AuthFlow, index: number) => void;
@@ -92,11 +92,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     poultry: loadActiveIndexFromStorage('poultry'),
   });
 
-  const [viewMode, setViewModeState] = useState<'default' | 'multiple'>(
-    (localStorage.getItem('dma_view_mode') as 'default' | 'multiple') || 'default'
+  const [viewMode, setViewModeState] = useState<'default' | 'multiple' | 'grid'>(
+    (localStorage.getItem('dma_view_mode') as 'default' | 'multiple' | 'grid') || 'default'
   );
 
-  const setViewMode = (mode: 'default' | 'multiple') => {
+  const setViewMode = (mode: 'default' | 'multiple' | 'grid') => {
     setViewModeState(mode);
     localStorage.setItem('dma_view_mode', mode);
   };

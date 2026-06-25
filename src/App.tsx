@@ -44,6 +44,7 @@ function AppInner() {
   const [isAddingProfile, setIsAddingProfile] = useState(false);
   const [showSplash, setShowSplash] = useState(true);
   const [fadeSplash, setFadeSplash] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { tokens, profiles, logout, allProfiles, switchProfile, logoutProfile, viewMode } = useAuth();
 
   useEffect(() => {
@@ -365,27 +366,42 @@ function AppInner() {
     const currentAuthFlow = authFlow || (activeEcosystem === 'cattle' ? 'cattle' : activeEcosystem === 'poultry' ? 'poultry' : null);
     const sessions = currentAuthFlow ? (allProfiles[currentAuthFlow] || []) : [];
 
-    if (viewMode === 'multiple' && MULTIPLE_VIEW_PAGES.includes(activePage) && sessions.length > 0) {
+    if ((viewMode === 'multiple' || viewMode === 'grid') && MULTIPLE_VIEW_PAGES.includes(activePage) && sessions.length > 0) {
+      const isGrid = viewMode === 'grid';
       return (
-        <div className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 space-y-4 lg:space-y-8 bg-linear-to-tr from-bg-light/10 to-cyan-50/10">
+        <div className={`flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 bg-linear-to-tr from-bg-light/10 to-cyan-50/10 ${
+          isGrid ? 'grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6 space-y-0 view-mode-grid' : 'space-y-4 lg:space-y-8'
+        }`}>
           {sessions.map((session, index) => {
             const displayName = session.first_name 
               ? `${session.first_name} ${session.last_name || ''}`.trim()
               : session.email || `Session ${index + 1}`;
             return (
               <Fragment key={session.token + index}>
-                <div className="rounded-3xl lg:rounded-4xl p-3 sm:p-4 lg:p-6 bg-white/70 relative space-y-4 lg:space-y-6 shadow-sm border border-cyan-100/60">
-                  <div className="flex items-center justify-between bg-gradient-to-r from-cyan-50 to-blue-50/50 px-4 py-3 lg:px-6 lg:py-4 rounded-2xl lg:rounded-3xl border border-cyan-100 shadow-xs">
+                <div className={`bg-white/70 relative border border-cyan-100/60 shadow-sm transition-all ${
+                  isGrid 
+                    ? 'rounded-2xl p-2.5 sm:p-3 lg:p-4 space-y-3' 
+                    : 'rounded-3xl lg:rounded-4xl p-3 sm:p-4 lg:p-6 space-y-4 lg:space-y-6'
+                }`}>
+                  <div className={`flex items-center justify-between bg-gradient-to-r from-cyan-50 to-blue-50/50 border border-cyan-100 shadow-xs ${
+                    isGrid 
+                      ? 'px-3 py-2 rounded-xl' 
+                      : 'px-4 py-3 lg:px-6 lg:py-4 rounded-2xl lg:rounded-3xl'
+                  }`}>
                     <div className="flex items-center gap-2 lg:gap-3">
-                      <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-primary flex items-center justify-center text-white font-extrabold text-xs lg:text-sm uppercase shadow-sm">
+                      <div className={`rounded-full bg-primary flex items-center justify-center text-white font-extrabold shadow-sm ${
+                        isGrid ? 'w-7 h-7 text-[10px]' : 'w-8 h-8 lg:w-10 lg:h-10 text-xs lg:text-sm'
+                      }`}>
                         {displayName.slice(0, 2)}
                       </div>
                       <div>
-                        <h4 className="font-black text-xs lg:text-sm text-font-dark leading-tight">{displayName}</h4>
-                        <p className="text-[9px] lg:text-[10px] font-bold text-font-light uppercase">Account Profile #{index + 1} ({session.email})</p>
+                        <h4 className={`font-black text-font-dark leading-tight ${isGrid ? 'text-xs' : 'text-xs lg:text-sm'}`}>{displayName}</h4>
+                        <p className={`font-bold text-font-light uppercase ${isGrid ? 'text-[8.5px]' : 'text-[9px] lg:text-[10px]'}`}>Account Profile #{index + 1} ({session.email})</p>
                       </div>
                     </div>
-                    <span className="text-[9px] lg:text-[10px] font-black uppercase px-2 py-0.5 lg:px-3 lg:py-1 rounded-full bg-cyan-100 text-primary border border-cyan-200">
+                    <span className={`font-black uppercase rounded-full bg-cyan-100 text-primary border border-cyan-200 ${
+                      isGrid ? 'text-[8px] px-1.5 py-0.2' : 'text-[9px] lg:text-[10px] px-2 py-0.5 lg:px-3 lg:py-1'
+                    }`}>
                       {session.user_type || 'Farmer'}
                     </span>
                   </div>
@@ -393,7 +409,7 @@ function AppInner() {
                     {renderEcosystemPage(session.token, session.userId)}
                   </div>
                 </div>
-                {index < sessions.length - 1 && (
+                {!isGrid && index < sessions.length - 1 && (
                   <hr className="border-t-2 border-cyan-100/70 my-4 lg:my-8" />
                 )}
               </Fragment>
@@ -407,7 +423,7 @@ function AppInner() {
   };
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-transparent relative">
+    <div className={`flex h-screen w-screen overflow-hidden bg-transparent relative ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
       {showSplash && (
         <div 
           className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-gradient-to-br from-[#0f172a] via-[#008cb2] to-[#00A8D5] transition-opacity duration-500 ease-in-out select-none ${
@@ -424,7 +440,7 @@ function AppInner() {
             </div>
             <div className="space-y-2">
               <h1 className="text-3xl font-black text-white tracking-widest uppercase">DMA Technologies</h1>
-              <p className="text-sm font-bold uppercase tracking-[0.25em] text-cyan-200/80">Harmonising Nature</p>
+              <p className="text-sm font-bold uppercase tracking-[0.15em] text-cyan-200/80">Harmonising Nature With Technology</p>
             </div>
             <div className="w-48 h-1.5 bg-white/10 rounded-full overflow-hidden relative">
               <div className="absolute top-0 bottom-0 left-0 bg-white rounded-full w-1/3 animate-[shimmer_1.5s_infinite_linear]" style={{
@@ -449,6 +465,8 @@ function AppInner() {
         setActiveEcosystem={setActiveEcosystem}
         activePage={activePage}
         setActivePage={setActivePage}
+        isCollapsed={isSidebarCollapsed}
+        setIsCollapsed={setIsSidebarCollapsed}
       />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <Header activeEcosystem={activeEcosystem} onNavigate={setActivePage} />

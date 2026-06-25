@@ -33,6 +33,8 @@ import {
   Radio,
   Lock,
   Eye,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import dmaLogo from '../assets/DMA Logo.png';
 import pharmaLogo from '../assets/dma_pharmaceutical.png';
@@ -44,6 +46,8 @@ interface SidebarProps {
   setActiveEcosystem: (eco: Ecosystem) => void;
   activePage: Page;
   setActivePage: (page: Page) => void;
+  isCollapsed?: boolean;
+  setIsCollapsed?: (collapsed: boolean) => void;
 }
 
 type MenuItem = { id: Page; label: string; icon: React.ComponentType<{ className?: string }> };
@@ -53,6 +57,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   setActiveEcosystem,
   activePage,
   setActivePage,
+  isCollapsed = false,
+  setIsCollapsed,
 }) => {
   const { t } = useLang();
   const { profiles, logout } = useAuth();
@@ -142,36 +148,51 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const activeProfile = authFlow ? profiles[authFlow] : null;
 
   return (
-    <div className="w-76 h-full bg-gradient-to-b from-[#f0fdfa] via-sky-50/60 to-blue-50/70 border-r border-sky-100/90 flex flex-col justify-between shrink-0 shadow-xl select-none text-font-dark">
+    <div className={`h-full bg-gradient-to-b from-[#f0fdfa] via-sky-50/60 to-blue-50/70 border-r border-sky-100/90 flex flex-col justify-between shrink-0 shadow-xl select-none text-font-dark transition-all duration-300 relative ${isCollapsed ? 'w-20' : 'w-76'}`}>
+      {setIsCollapsed && (
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="absolute -right-4 top-8 z-[60] w-8 h-8 bg-white border border-sky-100 rounded-full flex items-center justify-center text-primary shadow-md hover:bg-sky-50 transition-all cursor-pointer hover:scale-105"
+          title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+        >
+          {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+        </button>
+      )}
+
       <div className="flex flex-col min-h-0 flex-1">
-        <div className="p-6 flex items-center gap-3 border-b border-sky-100/60 bg-white/60 shrink-0">
-          <div className="w-14 h-12 rounded-2xl bg-white flex items-center justify-center p-2 shadow-md border border-cyan-100/95 shrink-0">
+        <div className={`flex items-center border-b border-sky-100/60 bg-white/60 shrink-0 transition-all duration-300 ${isCollapsed ? 'p-3.5 justify-center' : 'p-6 gap-3'}`}>
+          <div className={`rounded-2xl bg-white flex items-center justify-center shadow-md border border-cyan-100/95 shrink-0 transition-all duration-300 ${isCollapsed ? 'w-10 h-10 p-1.5' : 'w-14 h-12 p-2'}`}>
             <img src={brandLogo} alt="DMA Technologies" className="h-full w-full object-contain" />
           </div>
-          <div className="min-w-0">
-            <div className="font-black text-[14.5px] text-primary leading-tight tracking-wide break-words">
-              DMA <br /> Technologies
+          {!isCollapsed && (
+            <div className="min-w-0">
+              <div className="font-black text-[14.5px] text-primary leading-tight tracking-wide break-words">
+                DMA <br /> Technologies
+              </div>
+              <p className="text-[9.5px] text-font-light font-bold tracking-wider uppercase mt-0.5">Harmonising Nature With Technology</p>
             </div>
-            <p className="text-[9.5px] text-font-light font-bold tracking-wider uppercase mt-0.5">Harmonising Nature</p>
-          </div>
+          )}
         </div>
 
-        <div className="p-4 relative shrink-0">
+        <div className={`transition-all duration-300 relative shrink-0 ${isCollapsed ? 'p-3.5 flex justify-center' : 'p-4'}`}>
           <button
             onClick={() => setEcoDropdownOpen(!ecoDropdownOpen)}
-            className="w-full flex items-center justify-between p-4 bg-white/90 hover:bg-white rounded-2xl border border-sky-100/80 shadow-sm transition-all duration-200 cursor-pointer text-font-dark"
+            className={`flex items-center bg-white/90 hover:bg-white rounded-2xl border border-sky-100/80 shadow-sm transition-all duration-200 cursor-pointer text-font-dark ${isCollapsed ? 'p-2.5 justify-center w-10 h-10' : 'w-full p-4 justify-between'}`}
+            title={isCollapsed ? currentEco.name : undefined}
           >
-            <div className="flex items-center gap-3">
-              <currentEco.icon className={`w-6 h-6 ${currentEco.color}`} />
-              <span className="font-extrabold text-base text-font-dark">{currentEco.name}</span>
+            <div className={`flex items-center ${isCollapsed ? 'justify-center' : 'gap-3'}`}>
+              <currentEco.icon className={`w-6 h-6 shrink-0 ${currentEco.color}`} />
+              {!isCollapsed && <span className="font-extrabold text-base text-font-dark">{currentEco.name}</span>}
             </div>
-            <ChevronDown
-              className={`w-5 h-5 text-font-light transition-transform duration-200 ${ecoDropdownOpen ? 'rotate-180' : ''}`}
-            />
+            {!isCollapsed && (
+              <ChevronDown
+                className={`w-5 h-5 text-font-light transition-transform duration-200 ${ecoDropdownOpen ? 'rotate-180' : ''}`}
+              />
+            )}
           </button>
 
           {ecoDropdownOpen && (
-            <div className="absolute top-full left-4 right-4 mt-2 bg-white/95 backdrop-blur-md border border-cyan-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className={`absolute bg-white/95 backdrop-blur-md border border-cyan-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150 ${isCollapsed ? 'left-16 top-0 w-48' : 'left-4 right-4 top-full mt-2'}`}>
               <div className="py-1.5">
                 {ecosystems.map((eco) => (
                   <button
@@ -186,7 +207,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       <eco.icon className={`w-5 h-5 ${eco.color}`} />
                       <span className="text-base text-font-dark font-semibold">{eco.name}</span>
                     </div>
-                    {eco.disabled && (
+                    {eco.disabled && !isCollapsed && (
                       <span className="text-[11px] bg-gray-100 text-gray-400 font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                         Soon
                       </span>
@@ -207,18 +228,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 key={item.id}
                 onClick={() => setActivePage(item.id)}
-                className={`w-full flex items-center gap-3.5 px-4.5 py-3.5 rounded-2xl text-left transition-all duration-200 cursor-pointer hover:scale-[1.01] ${
+                title={isCollapsed ? item.label : undefined}
+                className={`flex items-center rounded-2xl text-left transition-all duration-200 cursor-pointer hover:scale-[1.01] relative ${isCollapsed ? 'w-10 h-10 p-0 justify-center mx-auto' : 'w-full gap-3.5 px-4.5 py-3.5'} ${
                   isActive
                     ? 'bg-[#00A8D5] text-white shadow-lg shadow-[#00A8D5]/20 font-black'
                     : 'text-font-dark hover:bg-cyan-50/70 font-bold'
                 }`}
               >
                 <Icon className={`w-6 h-6 shrink-0 ${isActive ? 'text-white' : 'text-primary'}`} />
-                <span className="text-[15px] flex-1 truncate">{item.label}</span>
+                {!isCollapsed && <span className="text-[15px] flex-1 truncate">{item.label}</span>}
                 {showBadge && (
-                  <span className="text-xs font-black bg-red-500 text-white px-2.5 py-1 rounded-full min-w-[24px] text-center shadow-sm">
-                    {unreadCount > 99 ? '99+' : unreadCount}
-                  </span>
+                  isCollapsed ? (
+                    <span className="absolute top-1 right-1 flex h-2.5 w-2.5 rounded-full bg-red-500 border border-white shadow-sm" />
+                  ) : (
+                    <span className="text-xs font-black bg-red-500 text-white px-2.5 py-1 rounded-full min-w-[24px] text-center shadow-sm">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )
                 )}
               </button>
             );
@@ -226,14 +252,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
       </div>
 
-      <div className="p-5 border-t border-sky-100/80 bg-white/60 shrink-0">
+      <div className={`border-t border-sky-100/80 bg-white/60 shrink-0 transition-all duration-300 ${isCollapsed ? 'p-3.5 flex justify-center' : 'p-5'}`}>
         {activeProfile ? (
-          <div className="flex items-center justify-between gap-3">
-            <div className="min-w-0 flex-1">
-              <p className="text-sm text-font-dark truncate font-bold">
-                {activeProfile.email || activeProfile.phone || 'Authenticated'}
-              </p>
-            </div>
+          isCollapsed ? (
             <button
               onClick={handleLogout}
               className="p-2.5 hover:bg-red-50 text-red-500 rounded-xl transition-colors cursor-pointer shrink-0 shadow-sm border border-red-100"
@@ -241,18 +262,43 @@ export const Sidebar: React.FC<SidebarProps> = ({
             >
               <LogOut className="w-5 h-5" />
             </button>
-          </div>
+          ) : (
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <p className="text-sm text-font-dark truncate font-bold">
+                  {activeProfile.email || activeProfile.phone || 'Authenticated'}
+                </p>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="p-2.5 hover:bg-red-50 text-red-500 rounded-xl transition-colors cursor-pointer shrink-0 shadow-sm border border-red-100"
+                title={t('logout')}
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
+            </div>
+          )
         ) : (
-          <div className="text-center py-2">
-            <p className="text-xs text-font-light font-bold mb-3">{t('please_login')}</p>
+          isCollapsed ? (
             <button
               onClick={() => setActivePage('profile')}
-              className="w-full flex items-center justify-center gap-2.5 py-3 px-5 bg-[#00A8D5] text-white font-extrabold text-sm rounded-2xl hover:opacity-90 shadow-md transition-all duration-200 cursor-pointer"
+              className="w-10 h-10 flex items-center justify-center bg-[#00A8D5] text-white rounded-xl hover:opacity-90 shadow-md transition-all duration-200 cursor-pointer"
+              title={t('login')}
             >
               <User className="w-5 h-5" />
-              <span>{t('login')}</span>
             </button>
-          </div>
+          ) : (
+            <div className="text-center py-2">
+              <p className="text-xs text-font-light font-bold mb-3">{t('please_login')}</p>
+              <button
+                onClick={() => setActivePage('profile')}
+                className="w-full flex items-center justify-center gap-2.5 py-3 px-5 bg-[#00A8D5] text-white font-extrabold text-sm rounded-2xl hover:opacity-90 shadow-md transition-all duration-200 cursor-pointer"
+              >
+                <User className="w-5 h-5" />
+                <span>{t('login')}</span>
+              </button>
+            </div>
+          )
         )}
       </div>
     </div>
