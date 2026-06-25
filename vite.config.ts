@@ -54,6 +54,10 @@ export default defineConfig({
         target: 'http://66.29.151.40:8004',
         changeOrigin: true,
       },
+      '/media': {
+        target: 'http://66.29.151.40:8004',
+        changeOrigin: true,
+      },
     }
   }
 })

@@ -104,7 +104,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       { id: 'about-app', label: t('about_app_menu'), icon: BookOpen },
       { id: 'about-device', label: t('about_device_menu'), icon: Cpu },
       { id: 'settings', label: t('change_password'), icon: Lock },
-      { id: 'view-settings', label: 'View Settings', icon: Eye },
+      { id: 'view-settings', label: t('view_settings'), icon: Eye },
     ];
   };
 
@@ -116,7 +116,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       { id: 'profile', label: t('profile'), icon: User },
       { id: 'notifications', label: t('notifications'), icon: Bell },
       { id: 'settings', label: t('change_password'), icon: Lock },
-      { id: 'view-settings', label: 'View Settings', icon: Eye },
+      { id: 'view-settings', label: t('view_settings'), icon: Eye },
     ];
 
     if (activeEcosystem === 'cattle' || activeEcosystem === 'poultry') {
