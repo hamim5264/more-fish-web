@@ -367,34 +367,34 @@ function AppInner() {
 
     if (viewMode === 'multiple' && MULTIPLE_VIEW_PAGES.includes(activePage) && sessions.length > 0) {
       return (
-        <div className="flex-1 overflow-y-auto p-6 space-y-8 bg-linear-to-tr from-bg-light/10 to-cyan-50/10">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-6 space-y-4 lg:space-y-8 bg-linear-to-tr from-bg-light/10 to-cyan-50/10">
           {sessions.map((session, index) => {
             const displayName = session.first_name 
               ? `${session.first_name} ${session.last_name || ''}`.trim()
               : session.email || `Session ${index + 1}`;
             return (
               <Fragment key={session.token + index}>
-                <div className="rounded-4xl p-6 bg-white/70 relative space-y-6 shadow-sm border border-cyan-100/60">
-                  <div className="flex items-center justify-between bg-gradient-to-r from-cyan-50 to-blue-50/50 px-6 py-4 rounded-3xl border border-cyan-100 shadow-xs">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-extrabold text-sm uppercase shadow-sm">
+                <div className="rounded-3xl lg:rounded-4xl p-3 sm:p-4 lg:p-6 bg-white/70 relative space-y-4 lg:space-y-6 shadow-sm border border-cyan-100/60">
+                  <div className="flex items-center justify-between bg-gradient-to-r from-cyan-50 to-blue-50/50 px-4 py-3 lg:px-6 lg:py-4 rounded-2xl lg:rounded-3xl border border-cyan-100 shadow-xs">
+                    <div className="flex items-center gap-2 lg:gap-3">
+                      <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-primary flex items-center justify-center text-white font-extrabold text-xs lg:text-sm uppercase shadow-sm">
                         {displayName.slice(0, 2)}
                       </div>
                       <div>
-                        <h4 className="font-black text-sm text-font-dark leading-tight">{displayName}</h4>
-                        <p className="text-[10px] font-bold text-font-light uppercase">Account Profile #{index + 1} ({session.email})</p>
+                        <h4 className="font-black text-xs lg:text-sm text-font-dark leading-tight">{displayName}</h4>
+                        <p className="text-[9px] lg:text-[10px] font-bold text-font-light uppercase">Account Profile #{index + 1} ({session.email})</p>
                       </div>
                     </div>
-                    <span className="text-[10px] font-black uppercase px-3 py-1 rounded-full bg-cyan-100 text-primary border border-cyan-200">
+                    <span className="text-[9px] lg:text-[10px] font-black uppercase px-2 py-0.5 lg:px-3 lg:py-1 rounded-full bg-cyan-100 text-primary border border-cyan-200">
                       {session.user_type || 'Farmer'}
                     </span>
                   </div>
-                  <div className="p-1 rounded-3xl bg-transparent">
+                  <div className="p-0.5 lg:p-1 rounded-3xl bg-transparent">
                     {renderEcosystemPage(session.token, session.userId)}
                   </div>
                 </div>
                 {index < sessions.length - 1 && (
-                  <hr className="border-t-2 border-cyan-100/70 my-8" />
+                  <hr className="border-t-2 border-cyan-100/70 my-4 lg:my-8" />
                 )}
               </Fragment>
             );

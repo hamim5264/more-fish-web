@@ -720,16 +720,16 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', tok
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6 select-none max-w-7xl mx-auto w-full">
+    <div className="flex-1 overflow-y-auto p-3 sm:p-5 lg:p-6 space-y-4 sm:space-y-5 lg:space-y-6 select-none max-w-7xl mx-auto w-full">
       {toastMessage && (
         <div className="fixed right-6 top-6 z-50 rounded-2xl bg-font-dark px-5 py-3 text-sm font-bold text-white shadow-lg">
           {toastMessage}
         </div>
       )}
       {/* Top Pond Select & Status */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-gradient-to-r from-teal-50 to-emerald-50/50 p-6 rounded-3xl border border-teal-100 shadow-md">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 lg:gap-4 bg-gradient-to-r from-teal-50 to-emerald-50/50 p-4 lg:p-6 rounded-2xl lg:rounded-3xl border border-teal-100 shadow-md">
         <div className="flex items-center gap-3">
-          <label className="text-sm font-bold text-font-dark shrink-0">{t('select_device')}:</label>
+          <label className="text-xs lg:text-sm font-bold text-font-dark shrink-0">{t('select_device')}:</label>
           {loading ? (
             <RefreshCw className="w-5 h-5 text-primary animate-spin" />
           ) : (
@@ -743,7 +743,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', tok
                 setGraphData([]);
                 setGraphError(null);
               }}
-              className="bg-white border border-cyan-100 rounded-xl px-4 py-2 font-bold text-sm text-primary focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
+              className="bg-white border border-cyan-100 rounded-xl px-3 py-1.5 lg:px-4 lg:py-2 font-bold text-xs lg:text-sm text-primary focus:outline-none focus:ring-2 focus:ring-primary cursor-pointer"
             >
               {ponds.map((p) => (
                 <option key={p.id} value={p.id}>{p.asset_name || `Pond ${p.id}`}</option>
@@ -753,20 +753,20 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', tok
         </div>
 
         {selectedPond && (
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-bold text-font-dark">{userName}</span>
-                <span className={`inline-flex items-center gap-2 text-xs font-bold px-3 py-1 rounded-full ${
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 lg:gap-4">
+            <div className="flex flex-col gap-1 lg:gap-2">
+              <div className="flex items-center gap-2 lg:gap-3">
+                <span className="text-xs lg:text-sm font-bold text-font-dark">{userName}</span>
+                <span className={`inline-flex items-center gap-1.5 lg:gap-2 text-[10px] lg:text-xs font-bold px-2.5 py-0.5 lg:px-3 lg:py-1 rounded-full ${
                   isOnline ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-red-50 text-red-500 border border-red-100'
                 }`}>
-                  <span className={`w-2.5 h-2.5 rounded-full ${isOnline ? 'bg-[#00cc00]' : 'bg-red-500'}`}></span>
+                  <span className={`w-2 h-2 lg:w-2.5 lg:h-2.5 rounded-full ${isOnline ? 'bg-[#00cc00]' : 'bg-red-500'}`}></span>
                   {isOnline ? 'Online' : 'Offline'}
                 </span>
               </div>
-              <span className="text-xs text-font-light">Farm: {farmName || selectedPond.asset_name || selectedPond.name || selectedPond.asset || 'Farm'}</span>
+              <span className="text-[10px] lg:text-xs text-font-light">Farm: {farmName || selectedPond.asset_name || selectedPond.name || selectedPond.asset || 'Farm'}</span>
             </div>
-            <div className="flex flex-col text-xs font-semibold text-font-light">
+            <div className="flex flex-col text-[10px] lg:text-xs font-semibold text-font-light">
               <span>
                 Last updated: {formatDateTime(lastFetchTime ?? liveData?.device?.last_reading_time ?? liveData?.device?.last_synced ?? liveData?.device?.last_seen)}
               </span>
@@ -789,7 +789,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', tok
 
       {/* Sensor Metric Cards */}
       {selectedPond && (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6">
           {metrics.map((metric) => {
             const Icon = metric.icon;
             const value = getMetricValue(metric.key);
@@ -815,7 +815,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', tok
                 key={metric.key}
                 type="button"
                 onClick={() => handleMetricCardClick(metric.key)}
-                className={`p-6 rounded-3xl border-2 flex flex-col justify-between items-center min-h-56 relative overflow-hidden group text-center transition-all hover:scale-[1.03] cursor-pointer ${
+                className={`p-4 lg:p-6 rounded-2xl lg:rounded-3xl border-2 flex flex-col justify-between items-center min-h-44 lg:min-h-56 relative overflow-hidden group text-center transition-all hover:scale-[1.03] cursor-pointer ${
                   active 
                     ? 'border-primary bg-sky-100/60 shadow-[0_15px_30px_rgba(2,132,199,0.25)] scale-[1.03] ring-4 ring-primary/10' 
                     : isPerfect 
@@ -824,24 +824,24 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', tok
                 }`}
               >
                 <div className="w-full flex flex-col items-center">
-                  <div className="mx-auto w-14 h-14 bg-white/70 backdrop-blur-xs rounded-2xl flex items-center justify-center p-2.5 shadow-sm border border-white/80 group-hover:scale-110 transition-transform">
-                    <Icon className={`w-8 h-8 ${isPerfect ? design.text : 'text-red-500'}`} />
+                  <div className="mx-auto w-10 h-10 lg:w-14 lg:h-14 bg-white/70 backdrop-blur-xs rounded-xl lg:rounded-2xl flex items-center justify-center p-2 lg:p-2.5 shadow-sm border border-white/80 group-hover:scale-110 transition-transform">
+                    <Icon className={`w-5 h-5 lg:w-8 lg:h-8 ${isPerfect ? design.text : 'text-red-500'}`} />
                   </div>
-                  <div className="text-sm md:text-base font-black uppercase tracking-wider text-font-dark/95 leading-tight block text-center mt-3">{metric.label}</div>
+                  <div className="text-xs lg:text-sm xl:text-base font-black uppercase tracking-wider text-font-dark/95 leading-tight block text-center mt-2 lg:mt-3">{metric.label}</div>
                 </div>
-                <div className="mt-4 text-center">
+                <div className="mt-3 lg:mt-4 text-center">
                   <div
-                    className={`text-5xl md:text-6xl font-black block tracking-tight ${
+                    className={`text-3xl lg:text-5xl xl:text-6xl font-black block tracking-tight ${
                       isPerfect ? design.text : 'text-red-600'
                     }`}
                   >
                     {isInvalid ? 'No Data' : value !== null && value !== undefined ? value : '--'}
                     {!isInvalid && value !== null && value !== undefined && (
-                      <span className="text-2xl md:text-3xl font-black ml-1 text-inherit">{getMetricUnit(metric.key)}</span>
+                      <span className="text-lg lg:text-2xl xl:text-3xl font-black ml-1 text-inherit">{getMetricUnit(metric.key)}</span>
                     )}
                   </div>
                   {warning && (
-                    <p className="mt-2.5 text-xs font-black leading-relaxed text-red-600 bg-white/60 p-2 rounded-xl border border-red-200">{warning}</p>
+                    <p className="mt-2 text-[10px] lg:text-xs font-black leading-relaxed text-red-600 bg-white/60 p-1.5 lg:p-2 rounded-lg lg:rounded-xl border border-red-200">{warning}</p>
                   )}
                 </div>
               </button>
