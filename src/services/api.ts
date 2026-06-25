@@ -843,7 +843,7 @@ export const api = {
     const companies = items.map((item: any) => ({
       guid: item.guid || item.company_guid || item.id || item.company_id || String(item.id ?? item.company_id ?? item.guid ?? ''),
       company_name: item.company_name || item.name || item.title || item.brand_name || 'Supplier',
-      logo: item.logo ? `http://66.29.151.40:8004/${item.logo}` : '',
+      logo: item.logo ? (item.logo.startsWith('http') ? item.logo : `${BASE_URL}/${item.logo.replace(/^\/+/, '')}`) : '',
       raw: item,
     }));
     return { data: companies, raw: payload };
@@ -885,10 +885,10 @@ export const api = {
     const products = items.map((item: any) => {
       let imagePath = '';
       if (item.productimage_set && item.productimage_set.length > 0) {
-        imagePath = `http://66.29.151.40:8004/${item.productimage_set[0].image}`;
+        imagePath = item.productimage_set[0].image ? (item.productimage_set[0].image.startsWith('http') ? item.productimage_set[0].image : `${BASE_URL}/${item.productimage_set[0].image.replace(/^\/+/, '')}`) : '';
       } else {
         const rawImg = item.image || item.thumbnail || item.product_image || item.photo || '';
-        imagePath = rawImg ? (rawImg.startsWith('http') ? rawImg : `http://66.29.151.40:8004/${rawImg}`) : '';
+        imagePath = rawImg ? (rawImg.startsWith('http') ? rawImg : `${BASE_URL}/${rawImg.replace(/^\/+/, '')}`) : '';
       }
       return {
         guid: item.guid || item.product_guid || item.id || item.product_id || String(item.id ?? item.product_id ?? item.guid ?? ''),
@@ -919,10 +919,10 @@ export const api = {
     const item = raw.product || raw.data || raw || {};
     let imagePath = '';
     if (item.productimage_set && item.productimage_set.length > 0) {
-      imagePath = `http://66.29.151.40:8004/${item.productimage_set[0].image}`;
+      imagePath = item.productimage_set[0].image ? (item.productimage_set[0].image.startsWith('http') ? item.productimage_set[0].image : `${BASE_URL}/${item.productimage_set[0].image.replace(/^\/+/, '')}`) : '';
     } else {
       const rawImg = item.image || item.thumbnail || item.product_image || item.photo || '';
-      imagePath = rawImg ? (rawImg.startsWith('http') ? rawImg : `http://66.29.151.40:8004/${rawImg}`) : '';
+      imagePath = rawImg ? (rawImg.startsWith('http') ? rawImg : `${BASE_URL}/${rawImg.replace(/^\/+/, '')}`) : '';
     }
     return {
       data: {

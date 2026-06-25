@@ -16,7 +16,7 @@ interface FarmManagementProps {
 // ModuleIcon component defined outside to comply with Rules of Hooks
 const ModuleIcon: React.FC<{ iconName: string; name: string }> = ({ iconName, name }) => {
   const [imgError, setImgError] = useState(false);
-  const iconUrl = `http://66.29.151.40:8004/media/assets/icons/farm_management/${iconName}`;
+  const iconUrl = `${import.meta.env.VITE_API_URL || ''}/media/assets/icons/farm_management/${iconName}`;
 
   if (imgError || !iconName) {
     return (

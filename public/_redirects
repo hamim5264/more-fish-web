@@ -1,1 +1,8 @@
+/auth/* http://66.29.151.40:8004/auth/:splat 200
+/devices/* http://66.29.151.40:8004/devices/:splat 200
+/cattle_care/* http://66.29.151.40:8004/cattle_care/:splat 200
+/poultry_care/* http://66.29.151.40:8004/poultry_care/:splat 200
+/product/* http://66.29.151.40:8004/product/:splat 200
+/notification/* http://66.29.151.40:8004/notification/:splat 200
+/media/* http://66.29.151.40:8004/media/:splat 200
 /* /index.html 200
