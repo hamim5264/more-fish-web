@@ -42,7 +42,7 @@ interface IoTMonitoringProps {
 
 export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', token }) => {
   const { tokens, profiles, allProfiles } = useAuth();
-  const { t } = useLang();
+  const { t, lang } = useLang();
   
   const flowProfiles = allProfiles[flow] || [];
   const matchedProfile = token 
@@ -123,12 +123,12 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', tok
   const aeratorsList = activeDevice?.aerators || activeDevice?.relays || activeDevice?.switches || [];
 
   const metrics = [
-    { key: 'temperature', label: t('temperature'), query: 'temp', unit: '°C', icon: Thermometer },
-    { key: 'do_level', label: t('dissolved_oxygen'), query: 'do', unit: 'mg/L', icon: Wind },
-    { key: 'ph_level', label: t('ph_level'), query: 'ph', unit: '', icon: Droplets },
-    { key: 'ammonia', label: 'NH3', query: 'ammonia', unit: 'mg/L', icon: Activity },
-    { key: 'tds', label: 'TDS', query: 'tds', unit: 'mg/L', icon: Droplets },
-    { key: 'salinity', label: t('salinity'), query: 'salinity', unit: 'ppt', icon: Droplets },
+    { key: 'temperature', label: lang === 'bn' ? 'তাপমাত্রা' : 'Temperature', query: 'temp', unit: '°C', icon: Thermometer },
+    { key: 'do_level', label: lang === 'bn' ? 'ডিও' : 'DO', query: 'do', unit: 'mg/L', icon: Wind },
+    { key: 'ph_level', label: lang === 'bn' ? 'পিএইচ' : 'pH', query: 'ph', unit: '', icon: Droplets },
+    { key: 'ammonia', label: lang === 'bn' ? 'অ্যামোনিয়া' : 'NH3', query: 'ammonia', unit: 'mg/L', icon: Activity },
+    { key: 'tds', label: lang === 'bn' ? 'টিডিএস' : 'TDS', query: 'tds', unit: 'mg/L', icon: Droplets },
+    { key: 'salinity', label: lang === 'bn' ? 'লবণাক্ততা' : 'Salinity', query: 'salinity', unit: 'ppt', icon: Droplets },
   ];
 
   const findSensorByQuery = (sensorList: any[], query: string) => {
@@ -842,7 +842,7 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', tok
                     <div className="mx-auto w-10 h-10 lg:w-14 lg:h-14 bg-white/70 backdrop-blur-xs rounded-xl lg:rounded-2xl flex items-center justify-center p-2 lg:p-2.5 shadow-sm border border-white/80 group-hover:scale-110 transition-transform">
                       <Icon className={`w-5 h-5 lg:w-8 lg:h-8 ${isPerfect ? design.text : 'text-red-500'}`} />
                     </div>
-                    <div className="text-xs lg:text-sm xl:text-base font-black uppercase tracking-wider text-font-dark/95 leading-tight block text-center mt-2 lg:mt-3">{metric.label}</div>
+                    <div className="text-xs lg:text-sm xl:text-base font-black tracking-wider text-font-dark/95 leading-tight block text-center mt-2 lg:mt-3">{metric.label}</div>
                   </div>
                   <div className="mt-3 lg:mt-4 text-center">
                     <div

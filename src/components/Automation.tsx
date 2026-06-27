@@ -1,13 +1,17 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, CheckCircle2, Info, RefreshCw, ShieldCheck, ToggleLeft, ToggleRight, Wind } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, Info, RefreshCw, ShieldCheck, ToggleLeft, ToggleRight, Wind, Plus, Trash2, Clock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
 import { api, normalizeAeratorAutomation } from '../services/api.ts';
+import { ecosystemToAuthFlow } from '../types/navigation';
 
 interface AutomationSettings {
   isEnabled: boolean;
-  doMin: number;
-  doMax: number;
+  doMin?: number;
+  doMax?: number;
+  fanTempMin?: number;
+  fanTempMax?: number;
+  foggerHumidityMin?: number;
 }
 
 const getCleanerData = (response: any) => {
@@ -15,10 +19,10 @@ const getCleanerData = (response: any) => {
   return Array.isArray(raw) ? raw[0] || {} : raw;
 };
 
-import type { AquacultureFlow } from '../types/aquaculture';
+import type { Ecosystem } from '../types/navigation';
 
 interface AutomationProps {
-  flow?: AquacultureFlow;
+  flow?: Ecosystem;
   token?: string;
   userId?: string;
 }
@@ -26,61 +30,116 @@ interface AutomationProps {
 export const Automation: React.FC<AutomationProps> = ({ flow = 'fish', token }) => {
   const { tokens } = useAuth();
   const { t } = useLang();
+
+  // Aquaculture states
   const [ponds, setPonds] = useState<any[]>([]);
   const [selectedPond, setSelectedPond] = useState<any>(null);
   const [deviceId, setDeviceId] = useState<string | null>(null);
-  const [autoEnabled, setAutoEnabled] = useState(false);
   const [doMinInput, setDoMinInput] = useState('4.0');
   const [doMaxInput, setDoMaxInput] = useState('8.0');
+  const [cleanerStatus, setCleanerStatus] = useState<any>(null);
+
+  // Poultry states
+  const [farms, setFarms] = useState<any[]>([]);
+  const [selectedFarm, setSelectedFarm] = useState<any>(null);
+  const [fanTempMinInput, setFanTempMinInput] = useState('25.0');
+  const [fanTempMaxInput, setFanTempMaxInput] = useState('32.0');
+  const [foggerHumidMinInput, setFoggerHumidMinInput] = useState('60.0');
+  const [lightSchedules, setLightSchedules] = useState<any[]>([]);
+  const [newStart, setNewStart] = useState('18:00');
+  const [newEnd, setNewEnd] = useState('22:00');
+
+  // Shared states
+  const [autoEnabled, setAutoEnabled] = useState(false);
   const [initialSettings, setInitialSettings] = useState<AutomationSettings | null>(null);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [cleanerStatus, setCleanerStatus] = useState<any>(null);
 
+  const isPoultry = flow === 'poultry';
+
+  // Aquaculture validations
   const doMin = Number(doMinInput);
   const doMax = Number(doMaxInput);
   const validationError = useMemo(() => {
+    if (isPoultry) return null;
     if (!Number.isFinite(doMin) || !Number.isFinite(doMax)) return 'Enter numeric DO values.';
     if (doMin < 3 || doMin > 5) return 'Minimum DO must be between 3.0 and 5.0 mg/L.';
     if (doMax < 7 || doMax > 12) return 'Maximum DO must be between 7.0 and 12.0 mg/L.';
     if (doMin >= doMax) return 'Minimum DO must be lower than maximum DO.';
     return null;
-  }, [doMin, doMax]);
+  }, [doMin, doMax, isPoultry]);
 
-  const hasUnsavedChanges = initialSettings !== null && (
-    initialSettings.isEnabled !== autoEnabled ||
-    initialSettings.doMin !== doMin ||
-    initialSettings.doMax !== doMax
-  );
+  // Unsaved changes calculation
+  const hasUnsavedChanges = useMemo(() => {
+    if (initialSettings === null) return false;
+    if (isPoultry) {
+      const minT = parseFloat(fanTempMinInput);
+      const maxT = parseFloat(fanTempMaxInput);
+      const minH = parseFloat(foggerHumidMinInput);
+      return (
+        initialSettings.isEnabled !== autoEnabled ||
+        initialSettings.fanTempMin !== minT ||
+        initialSettings.fanTempMax !== maxT ||
+        initialSettings.foggerHumidityMin !== minH
+      );
+    } else {
+      return (
+        initialSettings.isEnabled !== autoEnabled ||
+        initialSettings.doMin !== doMin ||
+        initialSettings.doMax !== doMax
+      );
+    }
+  }, [initialSettings, autoEnabled, doMin, doMax, fanTempMinInput, fanTempMaxInput, foggerHumidMinInput, isPoultry]);
 
+  // Load selection list
   useEffect(() => {
-    const activeToken = token || tokens[flow];
+    const authFlow = ecosystemToAuthFlow(flow);
+    const activeToken = token || (authFlow ? tokens[authFlow] : null);
     if (!activeToken) return;
-    api.getPondList(flow, token)
-      .then((response) => {
-        const list = response.data || [];
-        setPonds(list);
-        setSelectedPond((current: any) => current || list[0] || null);
-      })
-      .catch((error) => console.error('[MoreFish automation] Pond list failed.', error));
-  }, [token, tokens[flow], flow]);
 
+    if (isPoultry) {
+      api.getPoultryFarms(activeToken)
+        .then((response) => {
+          const list = response.data || [];
+          setFarms(list);
+          const defaultFarm = list[0] || null;
+          setSelectedFarm((current: any) => {
+            const resolved = current || defaultFarm;
+            if (resolved) {
+              window.dispatchEvent(new CustomEvent('poultry:farm-changed', { detail: { farmId: resolved.id } }));
+            }
+            return resolved;
+          });
+        })
+        .catch((error) => console.error('[Poultry automation] Farm list failed.', error));
+    } else {
+      api.getPondList(flow as any, activeToken)
+        .then((response) => {
+          const list = response.data || [];
+          setPonds(list);
+          setSelectedPond((current: any) => current || list[0] || null);
+        })
+        .catch((error) => console.error('[MoreFish automation] Pond list failed.', error));
+    }
+  }, [token, tokens, flow, isPoultry]);
+
+  // Load settings details
   const loadPondAutomation = async (pond: any) => {
     if (!pond?.id) return;
     setLoading(true);
     setMessage(null);
     setInitialSettings(null);
     try {
-      const pondResponse = await api.getPondData(pond.id, undefined, flow, token);
+      const pondResponse = await api.getPondData(pond.id, undefined, flow as any, token);
       const resolvedDeviceId = pondResponse?.data?.device?.id || pondResponse?.raw?.data?.devices?.[0]?.device_id;
       if (!resolvedDeviceId) throw new Error('No device is connected to this pond.');
       const id = String(resolvedDeviceId);
       setDeviceId(id);
 
       const [automationResponse, cleanerResponse] = await Promise.all([
-        api.getAeratorAutomation(id, flow, token),
-        api.getCleanerStatus(String(pond.id), flow),
+        api.getAeratorAutomation(id, flow as any, token),
+        api.getCleanerStatus(String(pond.id), flow as any),
       ]);
       const settings = normalizeAeratorAutomation(automationResponse);
       const baseline = {
@@ -93,8 +152,6 @@ export const Automation: React.FC<AutomationProps> = ({ flow = 'fish', token }) 
       setDoMaxInput(baseline.doMax.toFixed(1));
       setInitialSettings(baseline);
       setCleanerStatus(getCleanerData(cleanerResponse));
-      sessionStorage.setItem(`${flow}:automation:${id}`, JSON.stringify(baseline));
-      window.dispatchEvent(new CustomEvent(`${flow}:automation-changed`, { detail: { deviceId: id, ...baseline } }));
     } catch (error) {
       const text = error instanceof Error ? error.message : 'Failed to load automation settings.';
       console.error('[MoreFish automation] Loading failed.', error);
@@ -105,42 +162,268 @@ export const Automation: React.FC<AutomationProps> = ({ flow = 'fish', token }) 
     }
   };
 
+  const loadPoultryAutomation = async (farm: any) => {
+    if (!farm?.id) return;
+    setLoading(true);
+    setMessage(null);
+    setInitialSettings(null);
+    try {
+      const res = await api.getPoultryAutomation(farm.id);
+      const settings = res.data || res || {};
+      setAutoEnabled(settings.is_enabled || false);
+      setFanTempMinInput(String(settings.fan_temp_min ?? '25.0'));
+      setFanTempMaxInput(String(settings.fan_temp_max ?? '32.0'));
+      setFoggerHumidMinInput(String(settings.fogger_humidity_min ?? '60.0'));
+      setLightSchedules(settings.light_schedules || []);
+      
+      const baseline = {
+        isEnabled: settings.is_enabled || false,
+        fanTempMin: Number(settings.fan_temp_min ?? 25.0),
+        fanTempMax: Number(settings.fan_temp_max ?? 32.0),
+        foggerHumidityMin: Number(settings.fogger_humidity_min ?? 60.0),
+      };
+      setInitialSettings(baseline);
+    } catch (error) {
+      console.error('[Poultry automation] Loading failed.', error);
+      setMessage('Failed to load poultry automation settings.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    if (selectedPond) loadPondAutomation(selectedPond);
-  }, [selectedPond?.id]);
+    if (isPoultry) {
+      if (selectedFarm) loadPoultryAutomation(selectedFarm);
+    } else {
+      if (selectedPond) loadPondAutomation(selectedPond);
+    }
+  }, [selectedFarm?.id, selectedPond?.id, flow, isPoultry]);
 
   const handleSaveAutomation = async () => {
-    if (!deviceId || validationError || !hasUnsavedChanges) return;
-    setSaving(true);
-    setMessage(null);
+    if (isPoultry) {
+      if (!selectedFarm?.id || saving) return;
+      const minT = parseFloat(fanTempMinInput);
+      const maxT = parseFloat(fanTempMaxInput);
+      const minH = parseFloat(foggerHumidMinInput);
+
+      if (isNaN(minT) || isNaN(maxT) || isNaN(minH)) {
+        setMessage('Please enter valid numeric thresholds.');
+        return;
+      }
+      if (maxT <= minT) {
+        setMessage('Max Temperature must be greater than Min Temperature.');
+        return;
+      }
+
+      setSaving(true);
+      setMessage(null);
+      try {
+        await api.savePoultryAutomation(selectedFarm.id, autoEnabled, minT, maxT, minH);
+        setInitialSettings({
+          isEnabled: autoEnabled,
+          fanTempMin: minT,
+          fanTempMax: maxT,
+          foggerHumidityMin: minH,
+        });
+        setMessage('Automation settings saved successfully.');
+      } catch (error) {
+        console.error('[Poultry automation] Save failed.', error);
+        setMessage('Failed to save automation settings.');
+      } finally {
+        setSaving(false);
+      }
+    } else {
+      if (!deviceId || validationError || !hasUnsavedChanges) return;
+      setSaving(true);
+      setMessage(null);
+      try {
+        await api.saveAeratorAutomation(deviceId, autoEnabled, doMin, doMax, flow as any, token);
+        const baseline = { isEnabled: autoEnabled, doMin, doMax };
+        setInitialSettings(baseline);
+        setMessage('Automation settings saved successfully.');
+      } catch (error) {
+        console.error('[MoreFish automation] Save failed.', error);
+        setMessage('Failed to save automation settings.');
+      } finally {
+        setSaving(false);
+      }
+    }
+  };
+
+  const handleAddLightSchedule = async () => {
+    if (!selectedFarm?.id) return;
     try {
-      await api.saveAeratorAutomation(deviceId, autoEnabled, doMin, doMax, flow, token);
-      const baseline = { isEnabled: autoEnabled, doMin, doMax };
-      setInitialSettings(baseline);
-      sessionStorage.setItem(`${flow}:automation:${deviceId}`, JSON.stringify(baseline));
-      window.dispatchEvent(new CustomEvent(`${flow}:automation-changed`, { detail: { deviceId, ...baseline } }));
-      setMessage('Automation settings saved successfully.');
+      setSaving(true);
+      await api.addPoultryLightSchedule(selectedFarm.id, newStart, newEnd);
+      await loadPoultryAutomation(selectedFarm);
+      setMessage('Light schedule added successfully.');
     } catch (error) {
-      console.error('[MoreFish automation] Save failed.', error);
-      setMessage('Failed to save automation settings.');
+      setMessage('Failed to add light schedule.');
     } finally {
       setSaving(false);
     }
   };
 
-  if (!(token || tokens[flow])) {
+  const handleDeleteLightSchedule = async (scheduleId: number) => {
+    if (!selectedFarm?.id) return;
+    try {
+      setSaving(true);
+      await api.deletePoultryLightSchedule(scheduleId);
+      await loadPoultryAutomation(selectedFarm);
+      setMessage('Light schedule deleted successfully.');
+    } catch (error) {
+      setMessage('Failed to delete light schedule.');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const authFlowForAuthCheck = ecosystemToAuthFlow(flow);
+  if (!(token || (authFlowForAuthCheck ? tokens[authFlowForAuthCheck] : null))) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center bg-linear-to-tr from-bg-light to-cyan-50 p-8 text-center">
+      <div className={`flex flex-1 flex-col items-center justify-center p-8 text-center ${isPoultry ? 'bg-[#ebffff]' : 'bg-linear-to-tr from-bg-light to-cyan-50'}`}>
         <Wind className="mb-4 h-16 w-16 animate-pulse text-cyan-400" />
         <h3 className="text-xl font-bold text-font-dark">{t('please_login')}</h3>
       </div>
     );
   }
 
+  // --- Poultry UI Screen ---
+  if (isPoultry) {
+    return (
+      <div className="mx-auto w-full max-w-7xl flex-1 space-y-6 overflow-y-auto p-6 select-none bg-[#ebffff] rounded-3xl min-h-screen">
+        <div className="flex items-center gap-4 rounded-3xl border border-[#c4b55c]/40 bg-[#dbcc68]/20 p-6 shadow-md">
+          <label className="shrink-0 text-base font-black text-font-dark">Select Farm:</label>
+          <select
+            value={selectedFarm?.id || ''}
+            onChange={(event) => {
+              const found = farms.find((f) => String(f.id) === event.target.value) || null;
+              setSelectedFarm(found);
+              if (found) {
+                window.dispatchEvent(new CustomEvent('poultry:farm-changed', { detail: { farmId: found.id } }));
+              }
+            }}
+            className="cursor-pointer rounded-xl border border-[#c4b55c]/40 bg-white px-4 py-2 text-sm font-black text-[#1f6f3c] focus:ring-2 focus:ring-[#1f6f3c] focus:outline-none shadow-xs"
+          >
+            {farms.map((f) => <option key={f.id} value={f.id}>{f.name || `Farm ${f.id}`}</option>)}
+          </select>
+          {loading && <RefreshCw className="h-6 w-6 animate-spin text-[#1f6f3c]" />}
+
+          <div className="ml-auto">
+            {message && (
+              <div className={`inline-flex items-center max-w-[360px] whitespace-nowrap overflow-hidden text-ellipsis rounded-full px-5 py-2.5 text-sm font-black text-white shadow-lg ${message.includes('successfully') || message.includes('added') || message.includes('deleted') ? 'bg-[#1f6f3c]' : 'bg-red-500'}`}>
+                {message}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          {/* Settings Section */}
+          <section className="flex flex-col justify-between space-y-6 rounded-3xl border border-[#c4b55c]/30 bg-white p-6 shadow-md">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-xl border border-[#c4b55c]/20 bg-[#eaf7ee] p-2.5 text-[#1f6f3c] shadow-xs"><ShieldCheck className="h-6 w-6" /></div>
+                  <div>
+                    <h4 className="font-black text-xl text-font-dark">Poultry Automation</h4>
+                    <p className="text-[11px] font-black uppercase text-font-light">Manage climate thresholds</p>
+                  </div>
+                </div>
+                <button type="button" onClick={() => setAutoEnabled((enabled) => !enabled)} aria-label="Toggle poultry automation" className="cursor-pointer">
+                  {autoEnabled ? <ToggleRight className="h-14 w-14 text-[#1f6f3c]" /> : <ToggleLeft className="h-14 w-14 text-gray-300" />}
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <label className="rounded-2xl border border-gray-100 bg-gray-50/50 p-4 shadow-xs block">
+                  <span className="text-sm font-black text-font-dark">Min Temp: Fan OFF</span>
+                  <div className="mt-2 flex items-center gap-2">
+                    <input type="number" step="0.1" value={fanTempMinInput} onChange={(event) => setFanTempMinInput(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-black text-[#1f6f3c] text-base outline-none focus:ring-2 focus:ring-[#1f6f3c]" />
+                    <span className="text-sm font-black text-font-light">°C</span>
+                  </div>
+                </label>
+                <label className="rounded-2xl border border-gray-100 bg-gray-50/50 p-4 shadow-xs block">
+                  <span className="text-sm font-black text-font-dark">Max Temp: Fan ON</span>
+                  <div className="mt-2 flex items-center gap-2">
+                    <input type="number" step="0.1" value={fanTempMaxInput} onChange={(event) => setFanTempMaxInput(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-black text-[#1f6f3c] text-base outline-none focus:ring-2 focus:ring-[#1f6f3c]" />
+                    <span className="text-sm font-black text-font-light">°C</span>
+                  </div>
+                </label>
+                <label className="rounded-2xl border border-gray-100 bg-gray-50/50 p-4 shadow-xs block sm:col-span-2">
+                  <span className="text-sm font-black text-font-dark">Min Humidity: Fogger ON</span>
+                  <div className="mt-2 flex items-center gap-2">
+                    <input type="number" step="0.1" value={foggerHumidMinInput} onChange={(event) => setFoggerHumidMinInput(event.target.value)} className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 font-black text-[#1f6f3c] text-base outline-none focus:ring-2 focus:ring-[#1f6f3c]" />
+                    <span className="text-sm font-black text-font-light">%</span>
+                  </div>
+                </label>
+              </div>
+
+              {autoEnabled && <div className="flex gap-2 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs font-black text-amber-700 shadow-xs"><AlertTriangle className="h-5 w-5 shrink-0" />Manual switches will be locked on the dashboard.</div>}
+            </div>
+
+            {hasUnsavedChanges && (
+              <button onClick={handleSaveAutomation} disabled={saving} className="flex w-full items-center justify-center gap-2 rounded-2xl bg-[#1f6f3c] py-4 font-black text-sm text-white shadow-md hover:bg-[#154d29] transition-all disabled:opacity-50">
+                {saving ? <RefreshCw className="h-5 w-5 animate-spin" /> : <><CheckCircle2 className="h-5 w-5" />Save Settings</>}
+              </button>
+            )}
+          </section>
+
+          {/* Light Schedules Section */}
+          <section className="flex flex-col justify-between space-y-6 rounded-3xl border border-[#c4b55c]/30 bg-white p-6 shadow-md">
+            <div className="space-y-5">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="rounded-xl border border-[#c4b55c]/20 bg-[#eaf7ee] p-2.5 text-[#1f6f3c] shadow-xs"><Clock className="h-6 w-6" /></div>
+                  <div>
+                    <h4 className="font-black text-xl text-font-dark">Light Schedules</h4>
+                    <p className="text-[11px] font-black uppercase text-font-light">Manage light periods</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Add schedule form */}
+              <div className="bg-gray-50/50 p-4 rounded-2xl border border-gray-100 space-y-3">
+                <span className="text-xs font-black text-font-dark uppercase">Add Period</span>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <label className="block text-[10px] font-bold uppercase text-font-light mb-1">Start Time</label>
+                    <input type="time" value={newStart} onChange={(e) => setNewStart(e.target.value)} className="w-full px-3 py-2 border border-gray-200 bg-white rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#1f6f3c]" />
+                  </div>
+                  <div className="flex-1">
+                    <label className="block text-[10px] font-bold uppercase text-font-light mb-1">End Time</label>
+                    <input type="time" value={newEnd} onChange={(e) => setNewEnd(e.target.value)} className="w-full px-3 py-2 border border-gray-200 bg-white rounded-xl text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#1f6f3c]" />
+                  </div>
+                  <button onClick={handleAddLightSchedule} disabled={saving} className="self-end p-3 bg-[#1f6f3c] hover:bg-[#154d29] text-white rounded-xl transition-all shadow-xs cursor-pointer"><Plus className="w-5 h-5" /></button>
+                </div>
+              </div>
+
+              {/* Schedules List */}
+              <div className="space-y-3 max-h-48 overflow-y-auto pr-1">
+                {lightSchedules.length === 0 ? (
+                  <p className="text-xs text-font-light text-center py-6">No light schedules set. Add one above.</p>
+                ) : (
+                  lightSchedules.map((sch) => (
+                    <div key={sch.id} className="flex items-center justify-between p-3.5 bg-gray-50 rounded-xl border border-gray-100 shadow-2xs">
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-[#1f6f3c]" />
+                        <span className="text-xs font-black text-font-dark">{sch.start_time} - {sch.end_time}</span>
+                      </div>
+                      <button onClick={() => handleDeleteLightSchedule(sch.id)} disabled={saving} className="p-2 hover:bg-red-50 text-red-500 rounded-lg transition-colors cursor-pointer"><Trash2 className="w-4 h-4" /></button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    );
+  }
+
+  // --- Aquaculture UI Screen ---
   return (
     <div className="mx-auto w-full max-w-7xl flex-1 space-y-6 overflow-y-auto p-6 select-none">
-      {/* notification pill moved into the header area for better alignment */}
-
       <div className="flex items-center gap-4 rounded-3xl border border-cyan-200 bg-gradient-to-br from-cyan-50 to-sky-100/40 p-6 shadow-md">
         <label className="shrink-0 text-base font-black text-font-dark">{t('select_device')}:</label>
         <select

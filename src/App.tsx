@@ -1,6 +1,6 @@
 // H:\DMA Hamim\DMA-Web-App\src\App.tsx
 import { useState, useEffect, Fragment } from 'react';
-import { LanguageProvider } from './context/LanguageContext';
+import { LanguageProvider, useLang } from './context/LanguageContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { Sidebar } from './components/Sidebar';
@@ -29,8 +29,10 @@ import { LiveConsultancy } from './components/LiveConsultancy';
 import { AutoFeeder } from './components/AutoFeeder';
 import { SmartKhamari } from './components/SmartKhamari';
 import { FiltrationSystem } from './components/FiltrationSystem';
+import { ComingSoon } from './components/ComingSoon';
 import { LogOut } from 'lucide-react';
 import dmaLogo from './assets/DMA Logo.png';
+import poultryCareLogo from './assets/poultry care.png';
 import type { Ecosystem, Page } from './types/navigation';
 import {
   ecosystemToAuthFlow,
@@ -46,6 +48,7 @@ function AppInner() {
   const [fadeSplash, setFadeSplash] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const { tokens, profiles, logout, allProfiles, switchProfile, logoutProfile, viewMode } = useAuth();
+  const { t } = useLang();
 
   useEffect(() => {
     const fadeTimer = setTimeout(() => {
@@ -308,6 +311,12 @@ function AppInner() {
           return <Marketplace token={tokenOverride} userId={userIdOverride} />;
         case 'training':
           return <Training />;
+        case 'faq':
+          return <InfoPage type="faq" />;
+        case 'about-app':
+          return <InfoPage type="about-app" />;
+        case 'about-device':
+          return <InfoPage type="about-device" />;
         default:
           return <CattleCare token={tokenOverride} userId={userIdOverride} />;
       }
@@ -317,17 +326,36 @@ function AppInner() {
       switch (activePage) {
         case 'dashboard':
         case 'iot':
-        case 'automation':
           return <PoultryCare token={tokenOverride} userId={userIdOverride} />;
-        case 'fcr':
-          return <FCRCalculator token={tokenOverride} userId={userIdOverride} />;
+        case 'automation':
+          return <Automation flow="poultry" token={tokenOverride} userId={userIdOverride} />;
         case 'pond':
         case 'farm':
-          return <FarmManagement token={tokenOverride} userId={userIdOverride} />;
-        case 'marketplace':
-          return <Marketplace token={tokenOverride} userId={userIdOverride} />;
-        case 'training':
-          return <Training />;
+          return <ComingSoon title={t('farm_management') || "Farm Management"} logo={poultryCareLogo} isPoultry={true} />;
+        case 'feed-management':
+          return <ComingSoon title={t('feed_management') || "Feed Management"} logo={poultryCareLogo} isPoultry={true} />;
+        case 'disease-treatment':
+          return <ComingSoon title={t('poultry_disease_treatment') || "Poultry Disease Treatment"} logo={poultryCareLogo} isPoultry={true} />;
+        case 'chicks-marketplace':
+          return <ComingSoon title={t('chicks_marketplace') || "Chicks Marketplace"} logo={poultryCareLogo} isPoultry={true} />;
+        case 'poultry-feed-marketplace':
+          return <ComingSoon title={t('poultry_feed_marketplace') || "Poultry Feed Marketplace"} logo={poultryCareLogo} isPoultry={true} />;
+        case 'auto-feeder':
+          return <ComingSoon title={t('auto_feeder') || "Auto Feeder"} logo={poultryCareLogo} isPoultry={true} />;
+        case 'weather-forecast':
+          return <ComingSoon title={t('weather_forecast') || "Weather Forecast"} logo={poultryCareLogo} isPoultry={true} />;
+        case 'live-consultancy':
+          return <ComingSoon title={t('live_consultancy') || "Live Consultancy"} logo={poultryCareLogo} isPoultry={true} />;
+        case 'auto-water-system':
+          return <ComingSoon title={t('auto_water_system') || "Auto Water System"} logo={poultryCareLogo} isPoultry={true} />;
+        case 'financial-management':
+          return <ComingSoon title={t('financial_management') || "Financial Management"} logo={poultryCareLogo} isPoultry={true} />;
+        case 'faq':
+          return <InfoPage type="faq" />;
+        case 'about-app':
+          return <InfoPage type="about-app" />;
+        case 'about-device':
+          return <InfoPage type="about-device" />;
         default:
           return <PoultryCare token={tokenOverride} userId={userIdOverride} />;
       }
@@ -439,8 +467,8 @@ function AppInner() {
               <img src={dmaLogo} alt="DMA Logo" className="h-full w-full object-contain animate-pulse" />
             </div>
             <div className="space-y-2">
-              <h1 className="text-3xl font-black text-white tracking-widest uppercase">DMA Technologies</h1>
-              <p className="text-sm font-bold uppercase tracking-[0.15em] text-cyan-200/80">Harmonising Nature With Technology</p>
+              <h1 className="text-4xl font-black text-white tracking-widest uppercase">DMA Technologies</h1>
+              <p className="text-sm font-bold tracking-[0.15em] text-cyan-200/80">Harmonising Nature with Technology</p>
             </div>
             <div className="w-48 h-1.5 bg-white/10 rounded-full overflow-hidden relative">
               <div className="absolute top-0 bottom-0 left-0 bg-white rounded-full w-1/3 animate-[shimmer_1.5s_infinite_linear]" style={{
@@ -470,7 +498,7 @@ function AppInner() {
       />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <Header activeEcosystem={activeEcosystem} onNavigate={setActivePage} />
-        <main className="flex-1 overflow-hidden flex flex-col">
+        <main className={`flex-1 overflow-hidden flex flex-col ${activeEcosystem === 'poultry' ? 'bg-[#ebffff]' : ''}`}>
           {renderPage()}
         </main>
       </div>

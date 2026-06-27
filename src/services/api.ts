@@ -354,8 +354,8 @@ export const api = {
     return profile;
   },
 
-  async changePassword(oldPassword: string, newPassword: string, flow: ApiFlow) {
-    const token = getTokenForFlow(flow);
+  async changePassword(oldPassword: string, newPassword: string, flow: ApiFlow, tokenOverride?: string | null) {
+    const token = tokenOverride || getTokenForFlow(flow);
     const res = await fetch(`${BASE_URL}/auth/user/password/change/`, {
       method: 'POST',
       headers: getHeaders(token),
@@ -778,6 +778,39 @@ export const api = {
     return parseResponse(res);
   },
 
+  async addPoultryLightSchedule(farmId: number, startTime: string, endTime: string) {
+    const token = localStorage.getItem(STORAGE_KEYS.POULTRY_TOKEN);
+    const res = await fetch(`${BASE_URL}/poultry_care/automation/light-schedule/`, {
+      method: 'POST',
+      headers: getHeaders(token),
+      body: JSON.stringify({ farm_id: farmId, start_time: startTime, end_time: endTime }),
+    });
+    return parseResponse(res);
+  },
+
+  async deletePoultryLightSchedule(scheduleId: number) {
+    const token = localStorage.getItem(STORAGE_KEYS.POULTRY_TOKEN);
+    const res = await fetch(`${BASE_URL}/poultry_care/automation/light-schedule/${scheduleId}/`, {
+      method: 'DELETE',
+      headers: getHeaders(token),
+    });
+    return parseResponse(res);
+  },
+
+  async getPoultryGraph(farmId: number | string, sensorKey: string, type: 'daily' | 'weekly' | 'monthly' | 'yearly', tokenOverride?: string) {
+    const token = tokenOverride || localStorage.getItem(STORAGE_KEYS.POULTRY_TOKEN);
+    const params = new URLSearchParams({
+      farm_id: String(farmId),
+      sensor_key: String(sensorKey),
+      type: String(type),
+    });
+    const res = await fetch(`${BASE_URL}/poultry_care/data/graph/?${params.toString()}`, {
+      method: 'GET',
+      headers: getHeaders(token),
+    });
+    return parseResponse(res);
+  },
+
   // --- FCM TOKEN UPDATE ---
   async updateFcmToken(fcmToken: string, flow?: ApiFlow) {
     const token = flow
@@ -939,9 +972,12 @@ export const api = {
   },
 
   // --- UTILITIES / NOTIFICATIONS ---
-  async getNotifications(userId: string, flow: ApiFlow) {
-    const token = getTokenForFlow(flow);
-    const res = await fetch(`${BASE_URL}/notification/all/list/${userId}/`, {
+  async getNotifications(userId: string, flow: ApiFlow, tokenOverride?: string | null) {
+    const token = tokenOverride || getTokenForFlow(flow);
+    const url = flow === 'poultry'
+      ? `${BASE_URL}/poultry_care/notifications/`
+      : `${BASE_URL}/notification/all/list/${userId}/`;
+    const res = await fetch(url, {
       method: 'GET',
       headers: getHeaders(token),
     });

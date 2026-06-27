@@ -28,6 +28,10 @@ export type Page =
   | 'about-device'
   | 'settings'
   | 'view-settings'
+  | 'chicks-marketplace'
+  | 'poultry-feed-marketplace'
+  | 'auto-water-system'
+  | 'financial-management'
   | 'farm'; // legacy alias → pond
 
 export type Ecosystem = 'fish' | 'cattle' | 'poultry' | 'pharma' | 'beverage' | 'tex' | 'air' | 'crop';

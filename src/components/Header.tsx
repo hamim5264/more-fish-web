@@ -4,9 +4,12 @@ import { useAuth } from '../context/AuthContext';
 import { useLang } from '../context/LanguageContext';
 import { useNotifications } from '../context/NotificationContext';
 import { api } from '../services/api.ts';
-import type { Ecosystem } from '../types/navigation';
+import { type Ecosystem, ecosystemToAuthFlow } from '../types/navigation';
 import moreFishLogo from '../assets/dma_more_fish.png';
 import pharmaLogo from '../assets/dma_pharmaceutical.png';
+import poultryCareLogo from '../assets/poultry care.png';
+import cattleCareLogo from '../assets/cattle care.png';
+import dmaLogo from '../assets/DMA Logo.png';
 
 interface HeaderProps {
   activeEcosystem: Ecosystem;
@@ -159,11 +162,32 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
   const [weather, setWeather] = useState<HeaderWeather | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
   const [selectedWeatherProfileIndex, setSelectedWeatherProfileIndex] = useState<number | null>(null);
+  const [selectedPoultryFarmId, setSelectedPoultryFarmId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const handleFarmChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail?.farmId) {
+        setSelectedPoultryFarmId(String(customEvent.detail.farmId));
+      }
+    };
+    window.addEventListener('poultry:farm-changed', handleFarmChange);
+    return () => window.removeEventListener('poultry:farm-changed', handleFarmChange);
+  }, []);
 
   const isPharma = activeEcosystem === 'pharma';
-  const headerLogo = isPharma ? pharmaLogo : moreFishLogo;
-  const aquacultureFlow = activeEcosystem === 'pharma' ? 'pharma' : activeEcosystem === 'fish' ? 'fish' : null;
-  const sessions = aquacultureFlow ? (allProfiles[aquacultureFlow] || []) : [];
+  const isPoultry = activeEcosystem === 'poultry';
+  const isCattle = activeEcosystem === 'cattle';
+  
+  const headerLogo = 
+    isPharma ? pharmaLogo :
+    isPoultry ? poultryCareLogo :
+    isCattle ? cattleCareLogo :
+    activeEcosystem === 'fish' ? moreFishLogo :
+    dmaLogo;
+
+  const currentAuthFlow = ecosystemToAuthFlow(activeEcosystem);
+  const sessions = currentAuthFlow ? (allProfiles[currentAuthFlow] || []) : [];
 
   useEffect(() => {
     const timer = window.setInterval(() => setTime(new Date()), 1000);
@@ -177,37 +201,92 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
       setWeatherLoading(true);
       let location = 'Dhaka';
       try {
-        if (aquacultureFlow && tokens[aquacultureFlow]) {
-          const sessionsList = allProfiles[aquacultureFlow] || [];
+        const currentAuthFlow = ecosystemToAuthFlow(activeEcosystem);
+        if (currentAuthFlow && tokens[currentAuthFlow]) {
+          const sessionsList = allProfiles[currentAuthFlow] || [];
           const targetProfile = (viewMode === 'multiple' && selectedWeatherProfileIndex !== null && sessionsList[selectedWeatherProfileIndex])
             ? sessionsList[selectedWeatherProfileIndex]
-            : profiles[aquacultureFlow];
+            : profiles[currentAuthFlow];
 
-          const pondResponse = await api.getPondList(aquacultureFlow, targetProfile?.token);
-          const firstPond = pondResponse.data?.[0];
-          if (firstPond?.id) {
-            location = getDistrict(firstPond, null, targetProfile);
+          if (currentAuthFlow === 'fish' || currentAuthFlow === 'pharma') {
+            const pondResponse = await api.getPondList(currentAuthFlow, targetProfile?.token);
+            const firstPond = pondResponse.data?.[0];
+            if (firstPond?.id) {
+              location = getDistrict(firstPond, null, targetProfile);
+              try {
+                const dashboardResponse = await api.getPondData(firstPond.id, undefined, currentAuthFlow, targetProfile?.token);
+                location = getDistrict(firstPond, dashboardResponse?.raw?.data, targetProfile);
+                const dashboardWeather = getDashboardWeather(dashboardResponse, location);
+                if (dashboardWeather) {
+                  if (dashboardWeather.temperature == null || dashboardWeather.humidity == null) {
+                    try {
+                      const fallbackResponse = await api.getWeather(location);
+                      const fallbackWeather = getOpenWeather(fallbackResponse, location);
+                      dashboardWeather.temperature ??= fallbackWeather.temperature;
+                      dashboardWeather.humidity ??= fallbackWeather.humidity;
+                      dashboardWeather.description ||= fallbackWeather.description;
+                    } catch (error) {
+                      console.error('[MoreFish header] District weather fallback failed.', error);
+                    }
+                  }
+                  if (!cancelled) setWeather(dashboardWeather);
+                  return;
+                }
+              } catch (error) {
+                console.error('[MoreFish header] Dashboard weather failed; using district fallback.', error);
+              }
+            }
+          } else if (currentAuthFlow === 'poultry') {
             try {
-              const dashboardResponse = await api.getPondData(firstPond.id, undefined, aquacultureFlow, targetProfile?.token);
-              location = getDistrict(firstPond, dashboardResponse?.raw?.data, targetProfile);
-              const dashboardWeather = getDashboardWeather(dashboardResponse, location);
-              if (dashboardWeather) {
-                if (dashboardWeather.temperature == null || dashboardWeather.humidity == null) {
-                  try {
-                    const fallbackResponse = await api.getWeather(location);
-                    const fallbackWeather = getOpenWeather(fallbackResponse, location);
-                    dashboardWeather.temperature ??= fallbackWeather.temperature;
-                    dashboardWeather.humidity ??= fallbackWeather.humidity;
-                    dashboardWeather.description ||= fallbackWeather.description;
-                  } catch (error) {
-                    console.error('[MoreFish header] District weather fallback failed.', error);
+              const farmResponse = await api.getPoultryFarms(targetProfile?.token);
+              const farmsList = farmResponse.data || [];
+              const targetFarm = selectedPoultryFarmId 
+                ? farmsList.find((f: any) => String(f.id) === selectedPoultryFarmId) 
+                : farmsList[0];
+
+              if (targetFarm?.id) {
+                const dashboardResponse = await api.getPoultryDashboard(targetFarm.id, targetProfile?.token);
+                const farmData = dashboardResponse.data || dashboardResponse;
+                const weatherNode = farmData.weather;
+                if (weatherNode) {
+                  const locationName = weatherNode.weather_district?.district || weatherNode.weather_district || 'Dhaka';
+                  const temperature = weatherNode.weather_temperature != null ? Number(weatherNode.weather_temperature) : null;
+                  const humidity = weatherNode.weather_humidity != null ? Number(weatherNode.weather_humidity) : null;
+                  const description = weatherNode.weather_description || '';
+                  const sunlight = weatherNode.sunlight_level || null;
+                  if (!cancelled) {
+                    setWeather({
+                      location: locationName,
+                      temperature,
+                      humidity,
+                      description,
+                      sunlight,
+                      source: 'dashboard'
+                    });
+                    setWeatherLoading(false);
+                    return;
                   }
                 }
-                if (!cancelled) setWeather(dashboardWeather);
-                return;
+                location = farmData.location || farmData.district || getDistrict(null, null, targetProfile);
+              } else {
+                location = getDistrict(null, null, targetProfile);
               }
             } catch (error) {
-              console.error('[MoreFish header] Dashboard weather failed; using district fallback.', error);
+              location = getDistrict(null, null, targetProfile);
+            }
+          } else if (currentAuthFlow === 'cattle') {
+            try {
+              const farmResponse = await api.getCattleFarms(targetProfile?.token);
+              const firstFarm = farmResponse.data?.[0];
+              if (firstFarm?.id) {
+                const dashboardResponse = await api.getCattleDashboard(firstFarm.id, targetProfile?.token);
+                const farmData = dashboardResponse.data || dashboardResponse;
+                location = farmData.location || farmData.district || getDistrict(null, null, targetProfile);
+              } else {
+                location = getDistrict(null, null, targetProfile);
+              }
+            } catch (error) {
+              location = getDistrict(null, null, targetProfile);
             }
           }
         }
@@ -228,7 +307,7 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
       cancelled = true;
       window.clearInterval(refreshTimer);
     };
-  }, [tokens.fish, tokens.pharma, profiles.fish, profiles.pharma, activeEcosystem, selectedWeatherProfileIndex, viewMode]);
+  }, [tokens.fish, tokens.pharma, profiles.fish, profiles.pharma, tokens.poultry, tokens.cattle, profiles.poultry, profiles.cattle, activeEcosystem, selectedWeatherProfileIndex, selectedPoultryFarmId, viewMode]);
 
   const locale = lang === 'bn' ? 'bn-BD' : 'en-US';
   const dateParts = new Intl.DateTimeFormat(locale, {
@@ -265,16 +344,22 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
     return <CloudSun className="h-5 w-5 text-cyan-600" />;
   };
 
-  const title = isPharma
-    ? (lang === 'bn' ? 'ফার্মা কেয়ার' : 'Pharma Care')
-    : 'MoreFish - আরো মাছ';
+  const title = 
+    isPharma ? (lang === 'bn' ? 'ফার্মা কেয়ার' : 'Pharma Care') :
+    isPoultry ? (lang === 'bn' ? 'পোল্ট্রি কেয়ার' : 'Poultry Care') :
+    isCattle ? (lang === 'bn' ? 'ক্যাটল কেয়ার' : 'Cattle Care') :
+    'MoreFish - আরো মাছ';
   const airTempLabel = lang === 'bn' ? 'বাতাসের তাপমাত্রা' : 'Air Temp';
   const humidityLabel = lang === 'bn' ? 'আর্দ্রতা' : 'Humidity';
   const sunlightLabel = lang === 'bn' ? 'সূর্যালোক' : 'Sunlight';
   const languageLabel = lang === 'en' ? 'বাংলা' : 'Eng';
 
+  const headerBackgroundClass = isPoultry
+    ? 'bg-[#dbcc68] border-b border-[#dbcc68]/40'
+    : 'bg-linear-to-r from-[#ccfbf1]/65 via-[#e0f2fe]/75 to-[#bae6fd]/65 border-b border-[#0ea5e9]/20';
+
   return (
-    <header className="relative min-h-24 lg:min-h-32 shrink-0 overflow-hidden border-b border-[#0ea5e9]/20 bg-linear-to-r from-[#ccfbf1]/65 via-[#e0f2fe]/75 to-[#bae6fd]/65 px-4 py-3 lg:px-6 lg:py-4 shadow-md backdrop-blur-md">
+    <header className={`relative min-h-24 lg:min-h-32 shrink-0 overflow-hidden px-4 py-3 lg:px-6 lg:py-4 shadow-md backdrop-blur-md ${headerBackgroundClass}`}>
       <div className="pointer-events-none absolute -left-12 -top-20 h-48 w-48 rounded-full bg-cyan-300/30 blur-3xl" />
       <div className="pointer-events-none absolute -right-8 -top-16 h-52 w-52 rounded-full bg-blue-300/30 blur-3xl" />
       <div className="relative flex h-full flex-wrap items-center justify-between gap-3 lg:gap-5">
@@ -343,7 +428,11 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
                           const val = e.target.value;
                           setSelectedWeatherProfileIndex(val === '' ? null : Number(val));
                         }}
-                        className="small-select-weather bg-cyan-50/50 hover:bg-cyan-100/50 border border-cyan-100 rounded-lg text-[9px] lg:text-[9.5px] font-black text-primary focus:outline-none focus:ring-1 focus:ring-primary cursor-pointer px-1.5 py-0.5 transition-colors"
+                        className={`small-select-weather border rounded-lg text-[9px] lg:text-[9.5px] font-black focus:outline-none focus:ring-1 cursor-pointer px-1.5 py-0.5 transition-colors ${
+                          isPoultry 
+                            ? 'bg-[#dbcc68]/20 hover:bg-[#dbcc68]/40 border-[#c4b55c]/35 text-[#1f6f3c] focus:ring-[#1f6f3c]' 
+                            : 'bg-cyan-50/50 hover:bg-cyan-100/50 border border-cyan-100 text-primary focus:ring-primary'
+                        }`}
                       >
                         {sessions.map((session, index) => {
                           const displayName = session.first_name 

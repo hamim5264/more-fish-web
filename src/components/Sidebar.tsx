@@ -38,6 +38,8 @@ import {
 } from 'lucide-react';
 import dmaLogo from '../assets/DMA Logo.png';
 import pharmaLogo from '../assets/dma_pharmaceutical.png';
+import dmaMoreFishLogo from '../assets/dma_more_fish.png';
+import poultryCareLogo from '../assets/poultry care.png';
 import type { Ecosystem, Page } from '../types/navigation';
 import { ecosystemToAuthFlow } from '../types/navigation';
 
@@ -69,7 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     { id: 'fish', name: 'More Fish', icon: Layers, color: 'text-teal-500' },
     { id: 'pharma', name: 'Pharma Care', icon: Activity, color: 'text-emerald-500' },
     { id: 'cattle', name: 'Cattle Care', icon: Thermometer, color: 'text-amber-500', disabled: true },
-    { id: 'poultry', name: 'Poultry Care', icon: Wind, color: 'text-orange-500', disabled: true },
+    { id: 'poultry', name: 'Poultry Care', icon: Wind, color: 'text-orange-500' },
     { id: 'beverage', name: 'Food & Beverage', icon: Grid, color: 'text-blue-500', disabled: true },
     { id: 'tex', name: 'Tex Care', icon: Grid, color: 'text-purple-500', disabled: true },
     { id: 'air', name: 'Air Care', icon: Wind, color: 'text-sky-500', disabled: true },
@@ -77,7 +79,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   const currentEco = ecosystems.find((e) => e.id === activeEcosystem) || ecosystems[0];
-  const brandLogo = activeEcosystem === 'pharma' ? pharmaLogo : dmaLogo;
+  const brandLogo = 
+    activeEcosystem === 'pharma' ? pharmaLogo :
+    activeEcosystem === 'poultry' ? poultryCareLogo :
+    activeEcosystem === 'fish' ? dmaMoreFishLogo :
+    dmaLogo;
 
   const getAquacultureMenuItems = (isPharma: boolean): MenuItem[] => {
     const pondLabel = isPharma ? 'Asset Management' : t('farm_management');
@@ -125,7 +131,31 @@ export const Sidebar: React.FC<SidebarProps> = ({
       { id: 'view-settings', label: t('view_settings'), icon: Eye },
     ];
 
-    if (activeEcosystem === 'cattle' || activeEcosystem === 'poultry') {
+    if (activeEcosystem === 'poultry') {
+      return [
+        { id: 'iot', label: t('live_data_monitoring') || 'Live Data Monitoring', icon: Activity },
+        { id: 'pond', label: t('farm_management') || 'Farm Management', icon: Layers },
+        { id: 'feed-management', label: t('feed_management') || 'Feed Management', icon: Utensils },
+        { id: 'disease-treatment', label: t('poultry_disease_treatment') || 'Poultry Disease Treatment', icon: BookOpen },
+        { id: 'chicks-marketplace', label: t('chicks_marketplace') || 'Chicks Marketplace', icon: Store },
+        { id: 'poultry-feed-marketplace', label: t('poultry_feed_marketplace') || 'Poultry Feed Marketplace', icon: Store },
+        { id: 'auto-feeder', label: t('auto_feeder') || 'Auto Feeder', icon: Radio },
+        { id: 'weather-forecast', label: t('weather_forecast') || 'Weather Forecast', icon: CloudSun },
+        { id: 'live-consultancy', label: t('live_consultancy') || 'Live Consultancy', icon: Video },
+        { id: 'auto-water-system', label: t('auto_water_system') || 'Auto Water System', icon: Waves },
+        { id: 'financial-management', label: t('financial_management') || 'Financial Management', icon: Calculator },
+        { id: 'automation', label: t('automation_settings_menu') || 'Automation', icon: Settings },
+        { id: 'notifications', label: t('notifications'), icon: Bell },
+        { id: 'profile', label: t('profile'), icon: User },
+        { id: 'faq', label: t('faq_menu') || 'FAQ', icon: HelpCircle },
+        { id: 'about-app', label: t('about_app_menu') || 'About App', icon: BookOpen },
+        { id: 'about-device', label: t('about_device_menu') || 'About Device', icon: Cpu },
+        { id: 'settings', label: t('change_password'), icon: Lock },
+        { id: 'view-settings', label: t('view_settings'), icon: Eye },
+      ];
+    }
+
+    if (activeEcosystem === 'cattle') {
       return [{ id: 'dashboard', label: t('home'), icon: LayoutDashboard }, ...commonItems];
     }
 
@@ -166,10 +196,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
           {!isCollapsed && (
             <div className="min-w-0">
-              <div className="font-black text-[14.5px] text-primary leading-tight tracking-wide break-words">
+              <div className="font-black text-[24px] text-primary leading-tight tracking-wide break-words">
                 DMA <br /> Technologies
               </div>
-              <p className="text-[9.5px] text-font-light font-bold tracking-wider uppercase mt-0.5">Harmonising Nature With Technology</p>
+              <p className="text-[9.5px] text-font-light font-bold tracking-wide mt-0.5">Harmonising Nature with Technology</p>
             </div>
           )}
         </div>

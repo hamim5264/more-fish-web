@@ -7,6 +7,12 @@ import { Mail, Lock, Phone, MapPin, User, CheckCircle, AlertCircle, RefreshCw } 
 
 import type { AuthFlow } from '../types/aquaculture';
 
+import dmaMoreFishLogo from '../assets/dma_more_fish.png';
+import poultryCareLogo from '../assets/poultry care.png';
+import cattleCareLogo from '../assets/cattle care.png';
+import pharmaLogo from '../assets/dma_pharmaceutical.png';
+import dmaLogo from '../assets/DMA Logo.png';
+
 interface AuthProps {
   flow: AuthFlow;
   onSuccess?: () => void;
@@ -37,6 +43,28 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
     setError(null);
     setSuccess(null);
   };
+
+  const isPoultry = flow === 'poultry';
+  const wrapperBg = isPoultry ? 'bg-[#ebffff]' : 'bg-gradient-to-tr from-cyan-100 via-blue-50 to-indigo-100';
+  const cardBorder = isPoultry ? 'border-[#dbcc68]/60' : 'border-cyan-100/90';
+  const badgeBg = isPoultry ? 'bg-[#dbcc68] text-font-dark' : 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white';
+  const inputClass = `w-full pl-12 pr-5 py-4 bg-white border-2 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 transition-all shadow-sm icon-input-polished ${
+    isPoultry 
+      ? 'border-[#dbcc68]/50 hover:border-[#dbcc68] focus:ring-green-100/50 focus:border-[#1f6f3c]' 
+      : 'border-cyan-100 hover:border-cyan-300 focus:ring-cyan-200/50 focus:border-cyan-500'
+  }`;
+  const inputClassSmall = `w-full pl-11 pr-4 py-3 bg-white border-2 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 transition-all icon-input-polished ${
+    isPoultry 
+      ? 'border-[#dbcc68]/50 hover:border-[#dbcc68] focus:ring-green-100/50 focus:border-[#1f6f3c]' 
+      : 'border-cyan-100 hover:border-cyan-300 focus:ring-cyan-200/50 focus:border-cyan-500'
+  }`;
+  const inputIconColor = isPoultry ? 'text-[#1f6f3c]' : 'text-cyan-500';
+  const btnClass = `w-full py-4 px-5 text-white rounded-2xl text-base font-black transition-all cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.01] shadow-lg ${
+    isPoultry
+      ? 'bg-[#1f6f3c] hover:bg-[#1a5c32] shadow-green-100'
+      : 'bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 shadow-cyan-200'
+  }`;
+  const linkTextClass = isPoultry ? 'text-[#1f6f3c]' : 'text-primary';
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -148,12 +176,29 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
   };
 
   return (
-    <div className="flex-1 w-full h-full flex items-center justify-center p-6 bg-gradient-to-tr from-cyan-100 via-blue-50 to-indigo-100 overflow-y-auto select-none">
-      <div className="w-full max-w-lg bg-gradient-to-br from-white to-blue-50/95 backdrop-blur-xl border-2 border-cyan-100/90 rounded-[2.5rem] shadow-2xl overflow-hidden p-10 animate-in fade-in zoom-in-95 duration-200">
+    <div className={`flex-1 w-full h-full flex items-center justify-center p-6 overflow-y-auto select-none ${wrapperBg}`}>
+      <div className={`w-full max-w-lg bg-gradient-to-br from-white to-blue-50/95 backdrop-blur-xl border-2 ${cardBorder} rounded-[2.5rem] shadow-2xl overflow-hidden p-10 animate-in fade-in zoom-in-95 duration-200`}>
         
+        {/* Logo Container */}
+        <div className="flex justify-center mb-6">
+          <div className="h-20 w-24 p-2 bg-white rounded-2xl border border-cyan-50 flex items-center justify-center shadow-xs">
+            <img 
+              src={
+                flow === 'poultry' ? poultryCareLogo :
+                flow === 'fish' ? dmaMoreFishLogo :
+                flow === 'cattle' ? cattleCareLogo :
+                flow === 'pharma' ? pharmaLogo :
+                dmaLogo
+              } 
+              alt={flow} 
+              className="h-full w-full object-contain" 
+            />
+          </div>
+        </div>
+
         {/* Flow Header */}
         <div className="text-center mb-8">
-          <span className="text-sm font-black bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-5 py-2 rounded-full uppercase tracking-wider shadow-md">
+          <span className={`text-sm font-black px-5 py-2 rounded-full uppercase tracking-wider shadow-md ${badgeBg}`}>
             {flow === 'fish' ? 'More Fish' : flow === 'cattle' ? 'Cattle Care' : 'Poultry Care'}
           </span>
           <h2 className="text-3xl font-black text-font-dark mt-5 tracking-tight">
@@ -196,9 +241,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm icon-input-polished"
+                  className={inputClass}
                 />
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
@@ -208,7 +253,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                 <button
                   type="button"
                   onClick={() => { setMode('forgot'); clearMessages(); }}
-                  className="text-sm text-primary font-black hover:underline cursor-pointer"
+                  className={`text-sm font-black hover:underline cursor-pointer ${linkTextClass}`}
                 >
                   {t('forgot_password_q')}
                 </button>
@@ -220,16 +265,16 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_password')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm icon-input-polished"
+                  className={inputClass}
                 />
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 px-5 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 disabled:from-primary/50 disabled:to-blue-500/50 text-white rounded-2xl text-base font-black shadow-lg shadow-cyan-200 transition-all cursor-pointer flex items-center justify-center gap-2 hover:scale-[1.01]"
+              className={btnClass}
             >
               {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : t('login')}
             </button>
@@ -239,7 +284,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
               <button
                 type="button"
                 onClick={() => { setMode('register'); clearMessages(); }}
-                className="text-primary font-black hover:underline cursor-pointer"
+                className={`font-black hover:underline cursor-pointer ${linkTextClass}`}
               >
                 {t('register')}
               </button>
@@ -260,9 +305,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                     placeholder={t('enter_first_name')}
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
+                    className={inputClassSmall}
                   />
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                  <User className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
                 </div>
               </div>
               <div>
@@ -274,9 +319,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                     placeholder={t('enter_last_name')}
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
+                    className={inputClassSmall}
                   />
-                  <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                  <User className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
                 </div>
               </div>
             </div>
@@ -290,9 +335,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
+                  className={inputClassSmall}
                 />
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <Mail className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
@@ -305,9 +350,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="01712345678"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
+                  className={inputClassSmall}
                 />
-                <Phone className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <Phone className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
@@ -320,9 +365,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_address')}
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
+                  className={inputClassSmall}
                 />
-                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <MapPin className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
@@ -335,9 +380,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_password')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
+                  className={inputClassSmall}
                 />
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <Lock className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
@@ -350,16 +395,16 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('confirm_password_error')}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-11 pr-4 py-3 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
+                  className={inputClassSmall}
                 />
-                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <Lock className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-3 py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 disabled:from-primary/50 disabled:to-blue-500/50 text-white rounded-2xl text-base font-black shadow-lg shadow-cyan-200 transition-all cursor-pointer flex items-center justify-center gap-2"
+              className={btnClass}
             >
               {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : t('submit')}
             </button>
@@ -369,7 +414,7 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
               <button
                 type="button"
                 onClick={() => { setMode('login'); clearMessages(); }}
-                className="text-primary font-black hover:underline cursor-pointer"
+                className={`font-black hover:underline cursor-pointer ${linkTextClass}`}
               >
                 {t('login')}
               </button>
@@ -390,9 +435,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder={t('enter_email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm icon-input-polished"
+                  className={inputClass}
                 />
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <Mail className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
@@ -405,16 +450,16 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="017XXXXXXXX"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all shadow-sm icon-input-polished"
+                  className={inputClass}
                 />
-                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <Phone className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 disabled:from-primary/50 disabled:to-blue-500/50 text-white rounded-2xl text-base font-black shadow-lg shadow-cyan-200 transition-all cursor-pointer flex items-center justify-center gap-2"
+              className={btnClass}
             >
               {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : 'Get OTP Code'}
             </button>
@@ -441,14 +486,18 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                 placeholder="XXXXXX"
                 value={otpCode}
                 onChange={(e) => setOtpCode(e.target.value)}
-                className="w-full text-center py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-xl font-black tracking-widest focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all"
+                className={`w-full text-center py-4 bg-white border-2 rounded-2xl text-xl font-black tracking-widest focus:outline-none focus:ring-4 transition-all ${
+                  isPoultry
+                    ? 'border-[#dbcc68]/50 hover:border-[#dbcc68] focus:ring-green-100/50 focus:border-[#1f6f3c]'
+                    : 'border-cyan-100 hover:border-cyan-300 focus:ring-cyan-200/50 focus:border-cyan-500'
+                }`}
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 disabled:from-primary/50 disabled:to-blue-500/50 text-white rounded-2xl text-base font-black shadow-lg shadow-cyan-200 transition-all cursor-pointer flex items-center justify-center gap-2"
+              className={btnClass}
             >
               {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : 'Verify Code'}
             </button>
@@ -475,9 +524,9 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="Enter new password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
+                  className={inputClass}
                 />
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
@@ -490,16 +539,16 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
                   placeholder="Confirm new password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full pl-12 pr-5 py-4 bg-white border-2 border-cyan-100 hover:border-cyan-300 rounded-2xl text-base font-bold focus:outline-none focus:ring-4 focus:ring-cyan-200/50 focus:border-cyan-500 transition-all icon-input-polished"
+                  className={inputClass}
                 />
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-500" />
+                <Lock className={`absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 ${inputIconColor}`} />
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-gradient-to-r from-primary to-blue-600 hover:from-primary-hover hover:to-blue-700 disabled:from-primary/50 disabled:to-blue-500/50 text-white rounded-2xl text-base font-black shadow-lg shadow-cyan-200 transition-all cursor-pointer flex items-center justify-center gap-2"
+              className={btnClass}
             >
               {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : 'Update Password'}
             </button>
@@ -510,3 +559,4 @@ export const Auth: React.FC<AuthProps> = ({ flow, onSuccess }) => {
     </div>
   );
 };
+
