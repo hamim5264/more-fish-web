@@ -28,6 +28,7 @@ export const NotificationList: React.FC<NotificationListProps> = ({ activeEcosys
 
   const authFlow = ecosystemToAuthFlow(activeEcosystem);
   const isPoultry = activeEcosystem === 'poultry';
+  const isCattle = activeEcosystem === 'cattle';
   const sessions = authFlow ? (allProfiles[authFlow] || []) : [];
   const showProfilePicker = viewMode === 'multiple' && sessions.length > 1;
 
@@ -59,7 +60,11 @@ export const NotificationList: React.FC<NotificationListProps> = ({ activeEcosys
     try {
       const res = await api.getNotifications(userId, authFlow, token);
       setNotifications(Array.isArray(res?.data) ? res.data : []);
-      clearUnread();
+      if (authFlow) {
+        clearUnread(authFlow);
+      } else {
+        clearUnread();
+      }
     } catch (err: any) {
       console.error(err);
       setNotifications([]);
@@ -92,7 +97,13 @@ export const NotificationList: React.FC<NotificationListProps> = ({ activeEcosys
     <div className="flex-1 overflow-y-auto p-6 space-y-6 select-none max-w-4xl mx-auto w-full">
       <div className="flex items-center justify-between border-b border-cyan-55 pb-4">
         <div className="flex items-center gap-2.5">
-          <div className={`p-2.5 rounded-xl border ${isPoultry ? 'bg-[#dbcc68]/20 text-[#1f6f3c] border-[#c4b55c]/40' : 'bg-cyan-50 text-primary border-cyan-100'}`}>
+          <div className={`p-2.5 rounded-xl border ${
+            isPoultry 
+              ? 'bg-[#dbcc68]/20 text-[#1f6f3c] border-[#c4b55c]/40' 
+              : isCattle
+              ? 'bg-amber-50 text-amber-700 border-amber-200'
+              : 'bg-cyan-50 text-primary border-cyan-100'
+          }`}>
             <Bell className="w-6 h-6 animate-swing" />
           </div>
           <div>
@@ -105,7 +116,7 @@ export const NotificationList: React.FC<NotificationListProps> = ({ activeEcosys
           {/* Profile picker for multiple-view mode */}
           {showProfilePicker && (
             <div className="relative flex items-center gap-2">
-              <User className={`w-4 h-4 shrink-0 ${isPoultry ? 'text-[#1f6f3c]' : 'text-primary'}`} />
+              <User className={`w-4 h-4 shrink-0 ${isPoultry ? 'text-[#1f6f3c]' : isCattle ? 'text-amber-700' : 'text-primary'}`} />
               <div className="relative">
                 <select
                   value={selectedProfileIndex}
@@ -113,6 +124,8 @@ export const NotificationList: React.FC<NotificationListProps> = ({ activeEcosys
                   className={`appearance-none cursor-pointer rounded-xl border pl-3 pr-7 py-2 text-xs font-black focus:outline-none focus:ring-2 transition-colors ${
                     isPoultry
                       ? 'bg-[#dbcc68]/15 hover:bg-[#dbcc68]/30 border-[#c4b55c]/40 text-[#1f6f3c] focus:ring-[#1f6f3c]'
+                      : isCattle
+                      ? 'bg-amber-50 hover:bg-amber-100/60 border-amber-250 text-amber-700 focus:ring-amber-500'
                       : 'bg-cyan-50 hover:bg-cyan-100/60 border-cyan-200 text-primary focus:ring-primary'
                   }`}
                 >
@@ -138,6 +151,8 @@ export const NotificationList: React.FC<NotificationListProps> = ({ activeEcosys
             className={`p-3 border hover:bg-opacity-60 rounded-xl transition-colors cursor-pointer shadow-xs ${
               isPoultry
                 ? 'bg-[#dbcc68]/20 border-[#c4b55c]/40 hover:bg-[#dbcc68]/40 text-[#1f6f3c]'
+                : isCattle
+                ? 'bg-amber-50 border-amber-250 hover:bg-amber-100/60 text-amber-700'
                 : 'bg-white border-cyan-200 hover:bg-cyan-50 text-primary'
             }`}
           >
@@ -151,6 +166,8 @@ export const NotificationList: React.FC<NotificationListProps> = ({ activeEcosys
         <div className={`flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-black w-fit ${
           isPoultry
             ? 'bg-[#dbcc68]/20 border border-[#c4b55c]/30 text-[#1f6f3c]'
+            : isCattle
+            ? 'bg-amber-50 border border-amber-200 text-amber-700'
             : 'bg-cyan-50 border border-cyan-100 text-primary'
         }`}>
           <User className="w-3.5 h-3.5" />
@@ -164,36 +181,55 @@ export const NotificationList: React.FC<NotificationListProps> = ({ activeEcosys
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <RefreshCw className={`w-8 h-8 animate-spin ${isPoultry ? 'text-[#1f6f3c]' : 'text-primary'}`} />
+          <RefreshCw className={`w-8 h-8 animate-spin ${isPoultry ? 'text-[#1f6f3c]' : isCattle ? 'text-amber-700' : 'text-primary'}`} />
         </div>
       ) : (
-        <div className="bg-gradient-to-br from-red-50 to-orange-100/40 border border-red-200 p-6 rounded-3xl shadow-md space-y-4">
-          {notifications.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white border border-red-100 p-5 rounded-2xl shadow-xs flex items-start gap-4 hover:shadow-md transition-shadow"
-            >
-              <div className="p-2.5 bg-red-50 text-red-500 rounded-xl border border-red-150 shrink-0">
-                <AlertCircle className="w-6 h-6" />
-              </div>
-              <div className="space-y-1.5 w-full">
-                <div className="flex justify-between items-start gap-4">
-                  <h5 className="font-black text-base text-font-dark leading-snug">
-                    {item.title}
-                  </h5>
-                  {item.timestamp && (
-                    <span className="text-[10px] text-font-light font-black uppercase flex items-center gap-1 shrink-0">
-                      <Calendar className="w-3.5 h-3.5 text-primary" />
-                      {formatNotificationTimestamp(item.timestamp)}
-                    </span>
+        <div className={`${
+          isCattle
+            ? 'bg-slate-50 border border-slate-200'
+            : 'bg-gradient-to-br from-red-50 to-orange-100/40 border border-red-200'
+        } p-6 rounded-3xl shadow-md space-y-4`}>
+          {notifications.map((item) => {
+            const isHighUrgency = item.urgency?.toLowerCase() === 'high';
+            return (
+              <div
+                key={item.id}
+                className={`${
+                  isCattle
+                    ? isHighUrgency
+                      ? 'bg-[#FFEBEE] border border-red-200'
+                      : 'bg-white border border-slate-200'
+                    : 'bg-white border border-red-100'
+                } p-5 rounded-2xl shadow-xs flex items-start gap-4 hover:shadow-md transition-shadow`}
+              >
+                <div className={`p-2.5 rounded-xl border shrink-0 ${
+                  isCattle
+                    ? isHighUrgency
+                      ? 'bg-red-100/60 text-red-600 border-red-200'
+                      : 'bg-slate-100 text-slate-600 border-slate-200'
+                    : 'bg-red-50 text-red-500 border-red-150'
+                }`}>
+                  <AlertCircle className="w-6 h-6" />
+                </div>
+                <div className="space-y-1.5 w-full">
+                  <div className="flex justify-between items-start gap-4">
+                    <h5 className="font-black text-base text-font-dark leading-snug">
+                      {item.title}
+                    </h5>
+                    {item.timestamp && (
+                      <span className="text-[10px] text-font-light font-black uppercase flex items-center gap-1 shrink-0">
+                        <Calendar className={`w-3.5 h-3.5 ${isPoultry ? 'text-[#1f6f3c]' : isCattle ? 'text-slate-500' : 'text-primary'}`} />
+                        {formatNotificationTimestamp(item.timestamp)}
+                      </span>
+                    )}
+                  </div>
+                  {item.message && (
+                    <p className="text-sm text-font-light font-bold leading-relaxed">{item.message}</p>
                   )}
                 </div>
-                {item.message && (
-                  <p className="text-sm text-font-light font-bold leading-relaxed">{item.message}</p>
-                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {notifications.length === 0 && (
             <div className="text-center py-20 text-font-light text-base font-bold bg-white rounded-2xl border border-red-100/50">

@@ -157,12 +157,15 @@ const getOpenWeather = (response: any, location: string): HeaderWeather => ({
 export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) => {
   const { tokens, profiles, allProfiles, viewMode } = useAuth();
   const { lang, setLang, t } = useLang();
-  const { unreadCount } = useNotifications();
+  const { unreadCounts } = useNotifications();
+  const currentFlow = ecosystemToAuthFlow(activeEcosystem);
+  const unreadCount = currentFlow ? (unreadCounts[currentFlow] || 0) : 0;
   const [time, setTime] = useState(new Date());
   const [weather, setWeather] = useState<HeaderWeather | null>(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
   const [selectedWeatherProfileIndex, setSelectedWeatherProfileIndex] = useState<number | null>(null);
   const [selectedPoultryFarmId, setSelectedPoultryFarmId] = useState<string | null>(null);
+  const [selectedCattleFarmId, setSelectedCattleFarmId] = useState<string | null>(null);
 
   useEffect(() => {
     const handleFarmChange = (e: Event) => {
@@ -171,8 +174,18 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
         setSelectedPoultryFarmId(String(customEvent.detail.farmId));
       }
     };
+    const handleCattleFarmChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail?.farmId) {
+        setSelectedCattleFarmId(String(customEvent.detail.farmId));
+      }
+    };
     window.addEventListener('poultry:farm-changed', handleFarmChange);
-    return () => window.removeEventListener('poultry:farm-changed', handleFarmChange);
+    window.addEventListener('cattle:farm-changed', handleCattleFarmChange);
+    return () => {
+      window.removeEventListener('poultry:farm-changed', handleFarmChange);
+      window.removeEventListener('cattle:farm-changed', handleCattleFarmChange);
+    };
   }, []);
 
   const isPharma = activeEcosystem === 'pharma';
@@ -277,10 +290,34 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
           } else if (currentAuthFlow === 'cattle') {
             try {
               const farmResponse = await api.getCattleFarms(targetProfile?.token);
-              const firstFarm = farmResponse.data?.[0];
-              if (firstFarm?.id) {
-                const dashboardResponse = await api.getCattleDashboard(firstFarm.id, targetProfile?.token);
+              const farmsList = farmResponse.data || [];
+              const targetFarm = selectedCattleFarmId 
+                ? farmsList.find((f: any) => String(f.id) === selectedCattleFarmId) 
+                : farmsList[0];
+
+              if (targetFarm?.id) {
+                const dashboardResponse = await api.getCattleDashboard(targetFarm.id, targetProfile?.token);
                 const farmData = dashboardResponse.data || dashboardResponse;
+                const weatherNode = farmData.weather;
+                if (weatherNode) {
+                  const locationName = weatherNode.weather_district?.district || weatherNode.weather_district || 'Dhaka';
+                  const temperature = weatherNode.weather_temperature != null ? Number(weatherNode.weather_temperature) : null;
+                  const humidity = weatherNode.weather_humidity != null ? Number(weatherNode.weather_humidity) : null;
+                  const description = weatherNode.weather_description || '';
+                  const sunlight = weatherNode.sunlight_level || null;
+                  if (!cancelled) {
+                    setWeather({
+                      location: locationName,
+                      temperature,
+                      humidity,
+                      description,
+                      sunlight,
+                      source: 'dashboard'
+                    });
+                    setWeatherLoading(false);
+                    return;
+                  }
+                }
                 location = farmData.location || farmData.district || getDistrict(null, null, targetProfile);
               } else {
                 location = getDistrict(null, null, targetProfile);
@@ -307,7 +344,7 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
       cancelled = true;
       window.clearInterval(refreshTimer);
     };
-  }, [tokens.fish, tokens.pharma, profiles.fish, profiles.pharma, tokens.poultry, tokens.cattle, profiles.poultry, profiles.cattle, activeEcosystem, selectedWeatherProfileIndex, selectedPoultryFarmId, viewMode]);
+  }, [tokens.fish, tokens.pharma, profiles.fish, profiles.pharma, tokens.poultry, tokens.cattle, profiles.poultry, profiles.cattle, activeEcosystem, selectedWeatherProfileIndex, selectedPoultryFarmId, selectedCattleFarmId, viewMode]);
 
   const locale = lang === 'bn' ? 'bn-BD' : 'en-US';
   const dateParts = new Intl.DateTimeFormat(locale, {

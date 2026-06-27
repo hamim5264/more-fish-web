@@ -40,6 +40,7 @@ import dmaLogo from '../assets/DMA Logo.png';
 import pharmaLogo from '../assets/dma_pharmaceutical.png';
 import dmaMoreFishLogo from '../assets/dma_more_fish.png';
 import poultryCareLogo from '../assets/poultry care.png';
+import cattleCareLogo from '../assets/cattle care.png';
 import type { Ecosystem, Page } from '../types/navigation';
 import { ecosystemToAuthFlow } from '../types/navigation';
 
@@ -70,7 +71,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const ecosystems = [
     { id: 'fish', name: 'More Fish', icon: Layers, color: 'text-teal-500' },
     { id: 'pharma', name: 'Pharma Care', icon: Activity, color: 'text-emerald-500' },
-    { id: 'cattle', name: 'Cattle Care', icon: Thermometer, color: 'text-amber-500', disabled: true },
+    { id: 'cattle', name: 'Cattle Care', icon: Thermometer, color: 'text-amber-500' },
     { id: 'poultry', name: 'Poultry Care', icon: Wind, color: 'text-orange-500' },
     { id: 'beverage', name: 'Food & Beverage', icon: Grid, color: 'text-blue-500', disabled: true },
     { id: 'tex', name: 'Tex Care', icon: Grid, color: 'text-purple-500', disabled: true },
@@ -82,6 +83,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const brandLogo = 
     activeEcosystem === 'pharma' ? pharmaLogo :
     activeEcosystem === 'poultry' ? poultryCareLogo :
+    activeEcosystem === 'cattle' ? cattleCareLogo :
     activeEcosystem === 'fish' ? dmaMoreFishLogo :
     dmaLogo;
 
@@ -156,7 +158,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
 
     if (activeEcosystem === 'cattle') {
-      return [{ id: 'dashboard', label: t('home'), icon: LayoutDashboard }, ...commonItems];
+      return [
+        { id: 'iot', label: t('live_data_monitoring') || 'Live Data Monitoring', icon: Activity },
+        { id: 'pond', label: t('farm_management') || 'Farm Management', icon: Layers },
+        { id: 'feed-management', label: t('feed_management') || 'Feed Management', icon: Utensils },
+        { id: 'disease-treatment', label: t('cattle_disease_treatment') || 'Cattle Disease Treatment', icon: BookOpen },
+        { id: 'cattle-marketplace', label: t('cattle_marketplace') || 'Cattle Marketplace', icon: Store },
+        { id: 'cattle-feed-marketplace', label: t('cattle_feed_marketplace') || 'Cattle Feed Marketplace', icon: Store },
+        { id: 'auto-feeder', label: t('auto_feeder') || 'Auto Feeder', icon: Radio },
+        { id: 'weather-forecast', label: t('weather_forecast') || 'Weather Forecast', icon: CloudSun },
+        { id: 'live-consultancy', label: t('live_consultancy') || 'Live Consultancy', icon: Video },
+        { id: 'auto-water-system', label: t('auto_water_system') || 'Auto Water System', icon: Waves },
+        { id: 'financial-management', label: t('financial_management') || 'Financial Management', icon: Calculator },
+        { id: 'automation', label: t('automation_settings_menu') || 'Automation', icon: Settings },
+        { id: 'notifications', label: t('notifications'), icon: Bell },
+        { id: 'profile', label: t('profile'), icon: User },
+        { id: 'faq', label: t('faq_menu') || 'FAQ', icon: HelpCircle },
+        { id: 'about-app', label: t('about_app_menu') || 'About App', icon: BookOpen },
+        { id: 'about-device', label: t('about_device_menu') || 'About Device', icon: Cpu },
+        { id: 'settings', label: t('change_password'), icon: Lock },
+        { id: 'view-settings', label: t('view_settings'), icon: Eye },
+      ];
     }
 
     return commonItems;

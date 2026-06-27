@@ -233,6 +233,8 @@ export interface NormalizedNotification {
   pond?: string;
   urgency?: string;
   color?: string;
+  is_read?: boolean;
+  sensor_name?: string;
   raw: any;
 }
 
@@ -258,6 +260,7 @@ const normalizeAquacultureNotification = (item: any): NormalizedNotification => 
     pond: item.not_pond,
     urgency: item.not_urgency,
     color: item.not_color,
+    is_read: item.is_read ?? false,
     raw: item,
   };
 };
@@ -270,6 +273,8 @@ const normalizeLivestockNotification = (item: any): NormalizedNotification => {
     message: item.message || '',
     timestamp: item.notified_at || null,
     urgency: item.urgency,
+    sensor_name: item.sensor_name,
+    is_read: item.is_read ?? false,
     raw: item,
   };
 };
@@ -288,6 +293,19 @@ export const formatNotificationTimestamp = (value: string | null | undefined) =>
   if (!value) return '';
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
+
+  const now = new Date();
+  const diffMs = now.getTime() - parsed.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMins < 1) return 'Just now';
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays === 1) return 'Yesterday';
+  if (diffDays < 7) return `${diffDays}d ago`;
+
   return parsed.toLocaleString([], {
     month: 'short',
     day: 'numeric',
@@ -721,6 +739,20 @@ export const api = {
     return parseResponse(res);
   },
 
+  async getCattleGraph(farmId: number | string, sensorKey: string, type: 'daily' | 'weekly' | 'monthly' | 'yearly', tokenOverride?: string) {
+    const token = tokenOverride || localStorage.getItem(STORAGE_KEYS.CATTLE_TOKEN);
+    const params = new URLSearchParams({
+      farm_id: String(farmId),
+      sensor_key: String(sensorKey),
+      type: String(type),
+    });
+    const res = await fetch(`${BASE_URL}/cattle_care/data/graph/?${params.toString()}`, {
+      method: 'GET',
+      headers: getHeaders(token),
+    });
+    return parseResponse(res);
+  },
+
   // --- POULTRY CARE ---
   async getPoultryFarms(tokenOverride?: string) {
     const token = tokenOverride || localStorage.getItem(STORAGE_KEYS.POULTRY_TOKEN);
@@ -976,6 +1008,8 @@ export const api = {
     const token = tokenOverride || getTokenForFlow(flow);
     const url = flow === 'poultry'
       ? `${BASE_URL}/poultry_care/notifications/`
+      : flow === 'cattle'
+      ? `${BASE_URL}/cattle_care/notifications/`
       : `${BASE_URL}/notification/all/list/${userId}/`;
     const res = await fetch(url, {
       method: 'GET',

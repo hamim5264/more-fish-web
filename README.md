@@ -205,9 +205,13 @@ Poultry Care is a **complete, fully featured ecosystem** with its own theme (`#d
 
 ### Cattle Care
 
-| Feature | UI | Backend |
-|---|---|---|
-| Dashboard / IoT / Automation | `src/components/CattleCare.tsx` | `/cattle_care/farms/*`, switches, automation |
+Cattle Care is fully integrated with livestock sensor telemetry, automated switch controls, and a dedicated safety notification system.
+
+| Screen | UI Component | Description | Backend API |
+|---|---|---|---|
+| Dashboard / IoT / Automation | `src/components/CattleCare.tsx` | Live sensor telemetry, automated parameter controls, and switch commands. | `GET /cattle_care/farms/list/`, dashboard, switches, automation |
+| Notifications | `src/components/NotificationList.tsx` | Cattle Care safety alert history. Features a light red background (`#FFEBEE`) for high-urgency alerts. | `GET /cattle_care/notifications/` |
+| Notifications Polling | `src/context/NotificationContext.tsx` | Active 1-minute background polling for notifications and unread badge status counters. | `GET /cattle_care/notifications/` |
 
 ---
 

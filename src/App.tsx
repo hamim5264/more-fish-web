@@ -33,6 +33,7 @@ import { ComingSoon } from './components/ComingSoon';
 import { LogOut } from 'lucide-react';
 import dmaLogo from './assets/DMA Logo.png';
 import poultryCareLogo from './assets/poultry care.png';
+import cattleCareLogo from './assets/cattle care.png';
 import type { Ecosystem, Page } from './types/navigation';
 import {
   ecosystemToAuthFlow,
@@ -300,17 +301,30 @@ function AppInner() {
       switch (activePage) {
         case 'dashboard':
         case 'iot':
-        case 'automation':
           return <CattleCare token={tokenOverride} userId={userIdOverride} />;
-        case 'fcr':
-          return <FCRCalculator token={tokenOverride} userId={userIdOverride} />;
+        case 'automation':
+          return <Automation flow="cattle" token={tokenOverride} userId={userIdOverride} />;
         case 'pond':
         case 'farm':
-          return <FarmManagement token={tokenOverride} userId={userIdOverride} />;
-        case 'marketplace':
-          return <Marketplace token={tokenOverride} userId={userIdOverride} />;
-        case 'training':
-          return <Training />;
+          return <ComingSoon title={t('farm_management') || "Farm Management"} logo={cattleCareLogo} isCattle={true} />;
+        case 'feed-management':
+          return <ComingSoon title={t('feed_management') || "Feed Management"} logo={cattleCareLogo} isCattle={true} />;
+        case 'disease-treatment':
+          return <ComingSoon title={t('cattle_disease_treatment') || "Cattle Disease Treatment"} logo={cattleCareLogo} isCattle={true} />;
+        case 'cattle-marketplace':
+          return <ComingSoon title={t('cattle_marketplace') || "Cattle Marketplace"} logo={cattleCareLogo} isCattle={true} />;
+        case 'cattle-feed-marketplace':
+          return <ComingSoon title={t('cattle_feed_marketplace') || "Cattle Feed Marketplace"} logo={cattleCareLogo} isCattle={true} />;
+        case 'auto-feeder':
+          return <ComingSoon title={t('auto_feeder') || "Auto Feeder"} logo={cattleCareLogo} isCattle={true} />;
+        case 'weather-forecast':
+          return <ComingSoon title={t('weather_forecast') || "Weather Forecast"} logo={cattleCareLogo} isCattle={true} />;
+        case 'live-consultancy':
+          return <ComingSoon title={t('live_consultancy') || "Live Consultancy"} logo={cattleCareLogo} isCattle={true} />;
+        case 'auto-water-system':
+          return <ComingSoon title={t('auto_water_system') || "Auto Water System"} logo={cattleCareLogo} isCattle={true} />;
+        case 'financial-management':
+          return <ComingSoon title={t('financial_management') || "Financial Management"} logo={cattleCareLogo} isCattle={true} />;
         case 'faq':
           return <InfoPage type="faq" />;
         case 'about-app':

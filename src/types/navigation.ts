@@ -32,6 +32,8 @@ export type Page =
   | 'poultry-feed-marketplace'
   | 'auto-water-system'
   | 'financial-management'
+  | 'cattle-marketplace'
+  | 'cattle-feed-marketplace'
   | 'farm'; // legacy alias → pond
 
 export type Ecosystem = 'fish' | 'cattle' | 'poultry' | 'pharma' | 'beverage' | 'tex' | 'air' | 'crop';
