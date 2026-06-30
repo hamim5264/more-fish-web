@@ -166,6 +166,32 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
   const [selectedWeatherProfileIndex, setSelectedWeatherProfileIndex] = useState<number | null>(null);
   const [selectedPoultryFarmId, setSelectedPoultryFarmId] = useState<string | null>(null);
   const [selectedCattleFarmId, setSelectedCattleFarmId] = useState<string | null>(null);
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    let lastScrollTop = 0;
+    const handleScroll = (event: Event) => {
+      const target = event.target as HTMLElement;
+      if (!target || typeof target.scrollTop !== 'number') return;
+      
+      const currentScrollTop = target.scrollTop;
+      
+      if (currentScrollTop <= 10) {
+        setVisible(true);
+      } else if (currentScrollTop > lastScrollTop) {
+        setVisible(false);
+      } else if (currentScrollTop < lastScrollTop) {
+        setVisible(true);
+      }
+      
+      lastScrollTop = currentScrollTop;
+    };
+
+    window.addEventListener('scroll', handleScroll, true);
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true);
+    };
+  }, []);
 
   useEffect(() => {
     const handleFarmChange = (e: Event) => {
@@ -392,11 +418,15 @@ export const Header: React.FC<HeaderProps> = ({ activeEcosystem, onNavigate }) =
   const languageLabel = lang === 'en' ? 'বাংলা' : 'Eng';
 
   const headerBackgroundClass = isPoultry
-    ? 'bg-[#dbcc68] border-b border-[#dbcc68]/40'
-    : 'bg-linear-to-r from-[#ccfbf1]/65 via-[#e0f2fe]/75 to-[#bae6fd]/65 border-b border-[#0ea5e9]/20';
+    ? 'bg-[#dbcc68]'
+    : 'bg-linear-to-r from-[#ccfbf1]/65 via-[#e0f2fe]/75 to-[#bae6fd]/65';
 
   return (
-    <header className={`relative min-h-24 lg:min-h-32 shrink-0 overflow-hidden px-4 py-3 lg:px-6 lg:py-4 shadow-md backdrop-blur-md ${headerBackgroundClass}`}>
+    <header className={`absolute top-0 left-0 right-0 z-40 h-24 lg:h-32 shrink-0 overflow-hidden shadow-md backdrop-blur-md transition-all duration-300 ease-in-out ${headerBackgroundClass} ${
+      visible
+        ? 'opacity-100 px-4 py-3 lg:px-6 lg:py-4 border-b translate-y-0 ' + (isPoultry ? 'border-[#dbcc68]/40' : 'border-[#0ea5e9]/20')
+        : 'opacity-0 pointer-events-none -translate-y-full px-4 py-3 lg:px-6 lg:py-4'
+    }`}>
       <div className="pointer-events-none absolute -left-12 -top-20 h-48 w-48 rounded-full bg-cyan-300/30 blur-3xl" />
       <div className="pointer-events-none absolute -right-8 -top-16 h-52 w-52 rounded-full bg-blue-300/30 blur-3xl" />
       <div className="relative flex h-full flex-wrap items-center justify-between gap-3 lg:gap-5">

@@ -525,3 +525,14 @@ select.small-select-weather {
   height: 14px !important;
 }
 
+/* Auto-hide header page spacing */
+main > div {
+  padding-top: 6rem !important; /* 96px for mobile Header */
+}
+
+@media (min-width: 1024px) {
+  main > div {
+    padding-top: 8rem !important; /* 128px for lg Header */
+  }
+}
+

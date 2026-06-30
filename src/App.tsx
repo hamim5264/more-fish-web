@@ -510,7 +510,7 @@ function AppInner() {
         isCollapsed={isSidebarCollapsed}
         setIsCollapsed={setIsSidebarCollapsed}
       />
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
+      <div className="flex flex-col flex-1 min-w-0 overflow-hidden relative">
         <Header activeEcosystem={activeEcosystem} onNavigate={setActivePage} />
         <main className={`flex-1 overflow-hidden flex flex-col ${activeEcosystem === 'poultry' ? 'bg-[#ebffff]' : ''}`}>
           {renderPage()}

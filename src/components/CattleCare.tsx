@@ -91,8 +91,8 @@ export const CattleCare: React.FC<CattleCareProps> = ({ token }) => {
   const getCardIconContainer = () =>
     `mx-auto bg-white/70 backdrop-blur-xs rounded-xl lg:rounded-2xl flex items-center justify-center border border-white/80 group-hover:scale-110 transition-transform ${isCompact ? 'w-8 h-8 lg:w-10 lg:h-10 p-1.5' : 'w-10 h-10 lg:w-14 lg:h-14 p-2 lg:p-2.5'}`;
 
-  const cardTitleClass = `font-black text-font-dark/95 leading-tight block text-center tracking-wider mt-2 lg:mt-3 ${isCompact ? 'text-[9.5px]' : 'text-xs lg:text-sm'}`;
-  const getCardUnitClass = () => `font-black ml-1 text-inherit ${isCompact ? 'text-[10px] lg:text-sm' : 'text-lg lg:text-2xl xl:text-3xl'}`;
+  const cardTitleClass = `font-black text-font-dark/95 leading-tight block text-center tracking-wider mt-2 lg:mt-3 text-base lg:text-lg xl:text-xl`;
+  const getCardUnitClass = () => `font-black ml-1 text-inherit ${isCompact ? 'text-[9px] lg:text-xs' : 'text-base lg:text-xl xl:text-2xl'}`;
 
   const switchContainerClass = `bg-white rounded-3xl border border-slate-200 shadow-md ${isCompact ? 'p-4 space-y-3' : 'p-6 space-y-4'}`;
   const switchTitleClass = `font-black text-font-dark border-b border-slate-100 pb-2 ${isCompact ? 'text-base' : 'text-lg'}`;
@@ -338,7 +338,7 @@ export const CattleCare: React.FC<CattleCareProps> = ({ token }) => {
                       <span className={cardTitleClass}>{formattedName}</span>
                     </div>
                     <div className={`font-black block tracking-tight mt-3 lg:mt-4 ${isDanger ? 'text-red-600' : design.text} ${
-                      isCompact ? 'text-xl lg:text-3xl' : 'text-3xl lg:text-5xl xl:text-6xl'
+                      isCompact ? 'text-lg lg:text-2xl' : 'text-2xl lg:text-4xl xl:text-5xl'
                     }`}>
                       {value}
                       {unit && <span className={getCardUnitClass()}>{unit}</span>}

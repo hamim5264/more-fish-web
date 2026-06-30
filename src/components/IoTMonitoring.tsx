@@ -842,17 +842,17 @@ export const IoTMonitoring: React.FC<IoTMonitoringProps> = ({ flow = 'fish', tok
                     <div className="mx-auto w-10 h-10 lg:w-14 lg:h-14 bg-white/70 backdrop-blur-xs rounded-xl lg:rounded-2xl flex items-center justify-center p-2 lg:p-2.5 shadow-sm border border-white/80 group-hover:scale-110 transition-transform">
                       <Icon className={`w-5 h-5 lg:w-8 lg:h-8 ${isPerfect ? design.text : 'text-red-500'}`} />
                     </div>
-                    <div className="text-xs lg:text-sm xl:text-base font-black tracking-wider text-font-dark/95 leading-tight block text-center mt-2 lg:mt-3">{metric.label}</div>
+                    <div className="text-base lg:text-lg xl:text-xl font-black tracking-wider text-font-dark/95 leading-tight block text-center mt-2 lg:mt-3">{metric.label}</div>
                   </div>
                   <div className="mt-3 lg:mt-4 text-center">
                     <div
-                      className={`text-3xl lg:text-5xl xl:text-6xl font-black block tracking-tight ${
+                      className={`text-2xl lg:text-4xl xl:text-5xl font-black block tracking-tight ${
                         isPerfect ? design.text : 'text-red-600'
                       }`}
                     >
                       {isInvalid ? 'No Data' : value !== null && value !== undefined ? value : '--'}
                       {!isInvalid && value !== null && value !== undefined && (
-                        <span className="text-lg lg:text-2xl xl:text-3xl font-black ml-1 text-inherit">{getMetricUnit(metric.key)}</span>
+                        <span className="text-base lg:text-xl xl:text-2xl font-black ml-1 text-inherit">{getMetricUnit(metric.key)}</span>
                       )}
                     </div>
                     {warning && (

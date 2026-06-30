@@ -97,13 +97,11 @@ export const PoultryCare: React.FC<PoultryCareProps> = ({ token }) => {
     }`;
   };
 
-  const cardTitleClass = `font-black text-font-dark/95 leading-tight block text-center tracking-wider mt-2 lg:mt-3 ${
-    isCompact ? 'text-[9.5px]' : 'text-xs lg:text-sm'
-  }`;
+  const cardTitleClass = `font-black text-font-dark/95 leading-tight block text-center tracking-wider mt-2 lg:mt-3 text-base lg:text-lg xl:text-xl`;
 
   const getCardUnitClass = () => {
     return `font-black ml-1 text-inherit ${
-      isCompact ? 'text-[10px] lg:text-sm' : 'text-lg lg:text-2xl xl:text-3xl'
+      isCompact ? 'text-[9px] lg:text-xs' : 'text-base lg:text-xl xl:text-2xl'
     }`;
   };
 
@@ -382,8 +380,8 @@ export const PoultryCare: React.FC<PoultryCareProps> = ({ token }) => {
                       </div>
                       <span className={cardTitleClass}>{formattedName}</span>
                     </div>
-                    <div className={`font-black block tracking-tight mt-3 lg:mt-4 ${isDanger ? 'text-red-600' : design.text} ${
-                      isCompact ? 'text-xl lg:text-3xl' : 'text-3xl lg:text-5xl xl:text-6xl'
+                     <div className={`font-black block tracking-tight mt-3 lg:mt-4 ${isDanger ? 'text-red-600' : design.text} ${
+                      isCompact ? 'text-lg lg:text-2xl' : 'text-2xl lg:text-4xl xl:text-5xl'
                     }`}>
                       {value}
                       {unit && <span className={getCardUnitClass()}>{unit}</span>}
